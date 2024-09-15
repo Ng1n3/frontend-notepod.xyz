@@ -4,9 +4,9 @@ import styles from './NoteList.module.css'
 
 export default function NoteList() {
   return (
-    <div className={styles.body}>
+    <section className={styles.body}>
       <NoteListHeader/>
       <NoteListBody/>
-    </div>
+    </section>
   )
 }
