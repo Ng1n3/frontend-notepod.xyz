@@ -1,0 +1,17 @@
+.body {
+  padding: 1.2rem;
+  width: 24rem;
+  border: 1px solid var(--color-white-2);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.header h2 {
+  color: var(--color-white-2)
+}

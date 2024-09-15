@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input {
+  width: 30rem;
+  padding: .5rem;
+  border-radius: 5px;
+  font-size: 1.3rem;
+  border: 1.2px solid var(--color-white-2);
+  transition: input 0.2s;
+  color: var(--color-white-2);
+  background-color: var(--color-bg-1);
+}
+
+input:focus {
+  outline: none;
+  border: 1.8px solid var(--color-white-1);
+
+}
