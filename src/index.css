@@ -23,5 +23,7 @@ body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
   background: var(--color-bg-1);
-  margin: 1.1rem;
+  margin: 1.1rem auto;
+  max-width: 144rem;
+  padding: 0 2.5rem;
 }

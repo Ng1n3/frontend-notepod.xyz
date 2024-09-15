@@ -1,11 +1,12 @@
-import Todos from "./Pages/Todos"
+import Notes from "./Pages/Notes"
+// import Todos from "./Pages/Todos"
 
 
 function App() {
 
   return (
     <>
-      <Todos/>
+      <Notes/>
     </>
   )
 }
