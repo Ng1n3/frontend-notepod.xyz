@@ -1,0 +1,6 @@
+.logo {
+  font-size: 1.8rem;
+  color: var(--color-white-1);
+  font-weight: 500;
+  cursor: pointer;
+}
