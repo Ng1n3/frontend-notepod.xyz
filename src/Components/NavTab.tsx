@@ -1,7 +1,14 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import styles from './NavTab.module.css'
 
-export default function NavTab({text, icon}) {
+
+interface NavTabProps {
+  text: string
+  icon: IconProp
+}
+
+export default function NavTab({text, icon}: NavTabProps) {
   return (
     <div className={styles.tab}>
       <h2>{text}</h2>
