@@ -1,13 +1,13 @@
-import CurrentNote from './CurrentNote';
+import CurrentTodo from './CurrentTodo';
 import Footer from './Footer';
 import List from './List';
-import styles from './NoteBody.module.css';
+import styles from './TodoBody.module.css';
 
-export default function NotesBody() {
+export default function TodoBody() {
   return (
     <>
       <div className={styles.body}>
-        <CurrentNote />
+        <CurrentTodo />
         <List />
       </div>
       <Footer />

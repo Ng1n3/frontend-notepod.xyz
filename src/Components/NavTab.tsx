@@ -1,18 +1,21 @@
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import styles from './NavTab.module.css'
-
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { NavLink } from 'react-router-dom';
+import styles from './NavTab.module.css';
 
 interface NavTabProps {
-  text: string
-  icon: IconProp
+  text: string;
+  to: string;
+  icon: IconProp;
 }
 
-export default function NavTab({text, icon}: NavTabProps) {
+export default function NavTab({ text, icon, to }: NavTabProps) {
   return (
-    <div className={styles.tab}>
-      <h2>{text}</h2>
-      <FontAwesomeIcon icon={icon} size='lg' className={styles.icon}/>
-    </div>
-  )
+    <NavLink to={to}>
+      <div className={styles.tab}>
+        <h2>{text}</h2>
+        <FontAwesomeIcon icon={icon} size="lg" className={styles.icon} />
+      </div>
+    </NavLink>
+  );
 }

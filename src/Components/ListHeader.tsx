@@ -1,7 +1,7 @@
 import Button from "./Button";
-import styles from './NoteListHeader.module.css'
+import styles from './ListHeader.module.css'
 
-export default function NoteListHeader() {
+export default function ListHeader() {
   return (
     <header className={styles.header}>
       <input type="text" placeholder="Search for your notes..." />
