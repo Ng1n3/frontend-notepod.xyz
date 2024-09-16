@@ -56,7 +56,7 @@ export default function PasswordsList() {
                 <div className={styles.copy}>
                   {entry.username}{' '}
                   <span>
-                    <FontAwesomeIcon icon={faCopy} />
+                    <FontAwesomeIcon icon={faCopy} className={styles.pics}/>
                   </span>
                 </div>
               </td>
@@ -64,7 +64,7 @@ export default function PasswordsList() {
                 <div className={styles.copy}>
                   {entry.email}{' '}
                   <span>
-                    <FontAwesomeIcon icon={faCopy} />
+                    <FontAwesomeIcon icon={faCopy} className={styles.pics}/>
                   </span>
                 </div>
               </td>
@@ -73,13 +73,13 @@ export default function PasswordsList() {
                   {entry.password}{' '}
                   <div className={styles.copy2}>
                     <span>
-                      <FontAwesomeIcon icon={faCopy} />
+                      <FontAwesomeIcon icon={faCopy} className={styles.pics}/>
                     </span>{' '}
                     <span>
-                      <FontAwesomeIcon icon={faPen} />
+                      <FontAwesomeIcon icon={faPen} className={styles.pics}/>
                     </span>{' '}
                     <span>
-                      <FontAwesomeIcon icon={faTrash} />
+                      <FontAwesomeIcon icon={faTrash} className={styles.pics}/>
                     </span>
                   </div>
                 </div>

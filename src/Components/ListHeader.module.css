@@ -7,7 +7,8 @@
 input {
   width: 30rem;
   padding: .5rem;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  font-weight: 500;
   border: 1.2px solid var(--color-white-2);
   transition: input 0.2s;
   color: var(--color-white-2);
