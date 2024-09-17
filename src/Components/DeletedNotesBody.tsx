@@ -40,8 +40,8 @@ const notes = [
   },
 ];
 
-const WORDSBODYLIMIT = 10;
-const WORDSHEADLIMIT = 3;
+const WORDS_BODY_LIMIT = 10;
+const WORDS_HEAD_LIMIT = 3;
 
 function shortentext(text: string, wordsLimit: number) {
   const words = text.split(' ');
@@ -65,8 +65,8 @@ export default function DeletedNotesBody() {
           <tbody>
             {notes.map((entry, index) => (
               <tr key={index}>
-                <td>{shortentext(entry.title, WORDSHEADLIMIT)}</td>
-                <td>{shortentext(entry.body, WORDSBODYLIMIT)}</td>
+                <td>{shortentext(entry.title, WORDS_HEAD_LIMIT)}</td>
+                <td>{shortentext(entry.body, WORDS_BODY_LIMIT)}</td>
                 <td className={styles.copy}>
                   {entry.date}{' '}
                   <span>
