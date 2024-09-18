@@ -11,17 +11,6 @@ p {
   color: var(--color-white-2)
 }
 
-textarea {
-  max-width: 55rem;
-  background-color: var(--color-bg-1);
-  border: none;
-  width: 100%;
-  color: var(--color-white-2);
-  font-size: 1.4rem;
-  line-height: 1.6;
-  text-decoration: none;
-}
-
-textarea:focus {
-  border: none;
+.note h2, .note h3 {
+  color: var(--color-white-2)
 }

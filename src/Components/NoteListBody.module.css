@@ -1,11 +1,24 @@
 .listBody {
   display: grid;
+  width: 100%;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(6, 1fr);
   gap: 15px;
   height: 80vh;
   margin: 1.5rem;
-  overflow:scroll
+  overflow:auto;
 }
 
+.listBody::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.listBody::-webkit-scrollbar-track {
+  background: var(--color-btn-1)
+}
+
+.listBody::-webkit-scrollbar-thumb {
+  background: var(--color-bg-1)
+}
 

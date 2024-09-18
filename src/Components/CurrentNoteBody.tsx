@@ -1,11 +1,55 @@
-import LastSaved from './LastSaved'
+import { EditorContent, useEditor } from '@tiptap/react';
 
-export default function CurrentNoteBody() {
+// import TextStyle from '@tiptap/extension-text-style';
+// import { listItem } from '@tiptap/pm/schema-list';
+import Placeholder from '@tiptap/extension-placeholder';
+import StarterKit from '@tiptap/starter-kit';
+import MenuBar from './TipTap/MenuBar';
+import LastSaved from './LastSaved';
+
+const extensions = [
+  // TextStyle.configure({ types: [listItem.name] }),
+  Placeholder.configure({
+    placeholder: 'Start writing here ...',
+    emptyEditorClass: 'is-editor-empty',
+  }),
+  StarterKit.configure({
+    bulletList: {
+      keepMarks: true,
+      keepAttributes: false,
+    },
+    orderedList: {
+      keepMarks: true,
+      keepAttributes: false,
+    },
+  }),
+];
+const content = `<p></p>`;
+
+export default function CurrentNoteBody({ body, setBody }) {
+  const editor = useEditor({
+    extensions,
+    content,
+    onUpdate: ({ editor }) => {
+      setBody(editor.getText());
+    },
+  });
+
+  console.log(body);
   return (
-    <div>
-    <textarea>Lorem ipsum dolor sit amet consectetur. Semper est in a nam aliquet consectetur. Amet at aenean curabitur nulla eget. Eu sollicitudin tincidunt est purus et leo in et. Vitae ut at elementum at. Amet morbi tempus quis ut erat augue nam nunc. In convallis at in scelerisque amet lacus ut. Lorem est viverra at consectetur quam vitae phasellus ornare. Velit vitae sodales purus mattis urna porttitor vel adipiscing. Massa imperdiet risus commodo turpis penatibus accumsan volutpat nisi.</textarea>
+    <>
+      <MenuBar editor={editor} />
+      <EditorContent editor={editor} />
+      <LastSaved />
+    </>
+  );
+}
 
-  <LastSaved/>
-    </div>
-  )
+{
+  /* <EditorProvider
+  slotBefore={<MenuBar />}
+  extensions={extensions}
+  content={content}
+></EditorProvider>
+<LastSaved /> */
 }
