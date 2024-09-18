@@ -1,6 +1,7 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './DeletedPasswordBody.module.css';
+import { shortentext } from '../util/shortenText';
 
 const notes = [
   {
@@ -43,13 +44,7 @@ const notes = [
 const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
 
-function shortentext(text: string, wordsLimit: number) {
-  const words = text.split(' ');
-  if (words.length > wordsLimit) {
-    return words.slice(0, wordsLimit).join(' ') + '...';
-  }
-  return text;
-}
+
 
 export default function DeletedNotesBody() {
   return (

@@ -13,7 +13,7 @@ const extensions = [
 ];
 const content = `<h1></h1>`;
 
-export default function CurrentNoteHeader({ setTitle}) {
+export default function CurrentNoteHeader({ setTitle, handleSubmit}) {
   const editor = useEditor({
     content,
     extensions,
@@ -26,7 +26,7 @@ export default function CurrentNoteHeader({ setTitle}) {
     <header className={styles.title}>
       {/* <h1>Title</h1> */}
       <EditorContent editor={editor} />
-      <Button>Add Note</Button>
+      <Button onClick={handleSubmit}>Add Note</Button>
     </header>
   );
 }

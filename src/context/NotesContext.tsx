@@ -47,14 +47,14 @@ function reducer(state: NoteState, action: NotesAction) {
       return { ...state, isLoading: false, notes: action.payload };
 
     case 'note/loaded':
-      return { ...state, isLoading: false, CurrentNote: action.payload };
+      return { ...state, isLoading: false, currentNote: action.payload };
 
     case 'note/created':
       return {
         ...state,
         isLoading: false,
         notes: [...state.notes, action.payload],
-        CurrentNote: action.payload,
+        currentNote: action.payload,
       };
 
     case 'rejected':
@@ -81,12 +81,10 @@ function NotesProvider({ children }: NotesProvideProps) {
       try {
         const res = await fetch(`${BASE_URL}/notes`);
         const data = await res.json();
-        // const parsedData = data.map((note: Note) => ({
         //   ...note,
         //   lastChecked: new Date(note.lastChecked.split('/').reverse().join('-')),
         // }));
         dispatch({ type: 'notes/loaded', payload: data });
-        // console.log('data: ', data);
       } catch {
         dispatch({
           type: 'rejected',
@@ -108,8 +106,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         },
       });
       const data = await res.json();
-      // dispatch({type: 'note/created', payload: data})
-      console.log('created note: ', data);
+      dispatch({type: 'note/created', payload: data})
     } catch {
       dispatch({
         type: 'rejected',
