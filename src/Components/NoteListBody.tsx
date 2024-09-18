@@ -54,7 +54,7 @@ import Spinner from './Spinner';
 export default function NoteListBody() {
   const {notes, isLoading} = useNotes();
   if(isLoading) return <Spinner/>
-  // console.log(notes);
+
   return (
     <>
       <div className={styles.listBody}>
@@ -62,9 +62,7 @@ export default function NoteListBody() {
           
           <NoteListItem
             key={note.id}
-            title={note.title}
-            body={note.body}
-            lastChecked={note.lastChecked}
+            note={note}
           />
         ))}
       </div>
