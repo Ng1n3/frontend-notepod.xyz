@@ -26,7 +26,7 @@ const extensions = [
 ];
 const content = `<p></p>`;
 
-export default function CurrentNoteBody({ body, setBody }) {
+export default function CurrentNoteBody({  setBody }) {
   const editor = useEditor({
     extensions,
     content,
@@ -35,7 +35,6 @@ export default function CurrentNoteBody({ body, setBody }) {
     },
   });
 
-  console.log(body);
   return (
     <>
       <MenuBar editor={editor} />

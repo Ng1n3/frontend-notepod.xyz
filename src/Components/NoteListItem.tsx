@@ -10,6 +10,7 @@ interface NoteListItemProp {
 
 
 export default function NoteListItem({title, body, lastChecked}: NoteListItemProp) {
+  // console.log(title);
   return (
     <div className={style.body}>
       <header className={style.header}>
