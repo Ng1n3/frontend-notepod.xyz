@@ -1,6 +1,7 @@
 {
   "todos": [
     {
+      "id": 10,
       "task": "Complete project proposal",
       "description": "Write and submit the project proposal for the new client project. Include timeline, budget, and resource allocation.",
       "dueDate": "2027-10-31T15:59:59.138Z",
@@ -8,6 +9,7 @@
       "priority": "High"
     },
     {
+      "id": 11,
       "task": "Schedule team meeting",
       "description": "Arrange a team meeting to discuss the upcoming sprint goals and assign tasks to team members.",
       "dueDate": "2024-08-25",
@@ -15,6 +17,7 @@
       "priority": "Medium"
     },
     {
+      "id": 12,
       "task": "Update documentation",
       "description": "Review and update the user documentation for the latest software release. Ensure all new features are properly documented.",
       "dueDate": "2024-09-10",
@@ -22,6 +25,7 @@
       "priority": "Low"
     },
     {
+      "id": 13,
       "task": "Fix issue #34",
       "description": "Review codebase and fix the issues of  payment not being updated on the frontend page of the user when he logs in as a vip user.",
       "dueDate": "2024-09-12",
@@ -29,6 +33,7 @@
       "priority": "High"
     },
     {
+      "id": 14,
       "task": "Upgrade Axios package",
       "description": "Review the previous code for understanding and update the axios packages to take advantage of the new style of fetching so we do not have to use fetch",
       "dueDate": "2024-09-15",

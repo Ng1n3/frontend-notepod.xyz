@@ -2,6 +2,7 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { shortentext } from '../util/shortenText';
 import style from './NoteListItem.module.css';
+import { formatDate } from '../util/formatDate';
 // import useNotes from "../context/useNotes";
 
 interface NoteListItem {
@@ -14,17 +15,7 @@ interface NoteListItemProp {
   note: NoteListItem;
 }
 
-const formatDate = (date: Date | string | null | undefined) => {
-  if (!date) return 'Unknown date'; // Handle undefined or null
 
-  const formattedDate = typeof date === 'string' ? new Date(date) : date; // Convert string to Date if necessary
-
-  return new Intl.DateTimeFormat('en', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(formattedDate);
-};
 
 const BODY_TEXT_NUM = 15;
 const HEADING_TEXT_NUM = 3;
