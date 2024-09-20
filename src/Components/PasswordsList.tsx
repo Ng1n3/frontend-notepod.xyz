@@ -1,42 +1,15 @@
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import usePasswords from '../context/usePassword';
 import styles from './PasswordsList.module.css';
-
-const password = [
-  {
-    field: 'Instagram',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'X',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'Telegram',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'Facebook',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'Jira',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-];
+import Spinner from './Spinner';
 
 export default function PasswordsList() {
+  const { passwords, isLoading } = usePasswords();
+
+  if(isLoading) return <Spinner/>
+
   return (
     <div className={styles.container}>
       <table className={styles.table}>
@@ -49,14 +22,14 @@ export default function PasswordsList() {
           </tr>
         </thead>
         <tbody>
-          {password.map((entry, index) => (
+          {passwords.map((entry, index) => (
             <tr key={index}>
               <td>{entry.field}</td>
               <td>
                 <div className={styles.copy}>
                   {entry.username}{' '}
                   <span>
-                    <FontAwesomeIcon icon={faCopy} className={styles.pics}/>
+                    <FontAwesomeIcon icon={faCopy} className={styles.pics} />
                   </span>
                 </div>
               </td>
@@ -64,7 +37,7 @@ export default function PasswordsList() {
                 <div className={styles.copy}>
                   {entry.email}{' '}
                   <span>
-                    <FontAwesomeIcon icon={faCopy} className={styles.pics}/>
+                    <FontAwesomeIcon icon={faCopy} className={styles.pics} />
                   </span>
                 </div>
               </td>
@@ -73,13 +46,13 @@ export default function PasswordsList() {
                   {entry.password}{' '}
                   <div className={styles.copy2}>
                     <span>
-                      <FontAwesomeIcon icon={faCopy} className={styles.pics}/>
+                      <FontAwesomeIcon icon={faCopy} className={styles.pics} />
                     </span>{' '}
                     <span>
-                      <FontAwesomeIcon icon={faPen} className={styles.pics}/>
+                      <FontAwesomeIcon icon={faPen} className={styles.pics} />
                     </span>{' '}
                     <span>
-                      <FontAwesomeIcon icon={faTrash} className={styles.pics}/>
+                      <FontAwesomeIcon icon={faTrash} className={styles.pics} />
                     </span>
                   </div>
                 </div>

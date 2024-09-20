@@ -109,7 +109,6 @@ function TodoProvider({ children }: TodoProviderProps) {
         },
       });
       const data = await res.json();
-      console.log(data);
       dispatch({ type: 'todo/created', payload: data });
     } catch {
       dispatch({
