@@ -1,0 +1,30 @@
+
+.currentTodoBodyContainer input {
+  width: 10rem;
+}
+
+.currentTodoBodyContainer header {
+  margin-top: 1.5rem;
+  display:flex;
+  gap: 4rem;
+}
+.currentTodoBodyContainer label {
+  margin-right: 1.3rem;
+  color: var(--color-white-2);
+  font-size: 1.4rem;
+}
+
+.currentTodoBodyContainer select {
+  width: 10rem;
+  padding: .5rem;
+  background-color: var(--color-bg-1);
+  border: 1px solid var(--color-white-2);
+  color: var(--color-white-2);
+  font-size: 1.4rem;
+}
+
+:global(.react-datepicker) {
+  font-family: inherit;
+  font-size: 1.2rem;
+}
+

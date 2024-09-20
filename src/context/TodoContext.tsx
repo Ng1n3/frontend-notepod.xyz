@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:8000';
 enum Priority {
   Low,
   Medium,
-  High
+  High,
 }
 
 interface Todo {
@@ -13,13 +13,14 @@ interface Todo {
   task: string;
   description: string;
   dueDate: Date;
-  Priority: Priority;
+  priority: Priority;
 }
 
 interface TodoState {
   todos: Todo[];
   isLoading: boolean;
   currentTodo: Partial<Todo>;
+  priority: Priority;
   error: string;
 }
 
@@ -42,6 +43,7 @@ const initialState: TodoState = {
   todos: [],
   isLoading: false,
   currentTodo: {},
+  priority: Priority.Low,
   error: '',
 };
 
@@ -76,10 +78,8 @@ export const TodoContext = createContext<TodoContextType | undefined>(
 );
 
 function TodoProvider({ children }: TodoProviderProps) {
-  const [{ todos, error, currentTodo, isLoading }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ todos, error, currentTodo, isLoading, priority }, dispatch] =
+    useReducer(reducer, initialState);
 
   useEffect(function () {
     async function fetchTodos() {
@@ -109,6 +109,7 @@ function TodoProvider({ children }: TodoProviderProps) {
         },
       });
       const data = await res.json();
+      console.log(data);
       dispatch({ type: 'todo/created', payload: data });
     } catch {
       dispatch({
@@ -120,7 +121,7 @@ function TodoProvider({ children }: TodoProviderProps) {
 
   return (
     <TodoContext.Provider
-      value={{ error, isLoading, todos, currentTodo, createTodo }}
+      value={{ error, isLoading, todos, currentTodo, createTodo, priority }}
     >
       {children}
     </TodoContext.Provider>
