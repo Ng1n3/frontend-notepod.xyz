@@ -1,49 +1,9 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './DeletedPasswordBody.module.css';
-
-const todos = [
-  {
-    task: 'Complete project proposal',
-    description:
-      'Write and submit the project proposal for the new client project. Include timeline, budget, and resource allocation.',
-    dueDate: '2024-09-15',
-    deletedDate: '2024-08-20',
-    priority: 'High',
-  },
-  {
-    task: 'Schedule team meeting',
-    description:
-      'Arrange a team meeting to discuss the upcoming sprint goals and assign tasks to team members.',
-    dueDate: '2024-08-25',
-    deletedDate: '2024-08-19',
-    priority: 'Medium',
-  },
-  {
-    task: 'Update documentation',
-    description:
-      'Review and update the user documentation for the latest software release. Ensure all new features are properly documented.',
-    dueDate: '2024-09-10',
-    deletedDate: '2024-08-18',
-    priority: 'Low',
-  },
-  {
-    task: 'Fix issue #34',
-    description:
-      'Review codebase and fix the issues of  payment not being updated on the frontend page of the user when he logs in as a vip user.',
-    dueDate: '2024-09-12',
-    deletedDate: '2024-08-17',
-    priority: 'High',
-  },
-  {
-    task: 'Upgrade Axios package',
-    description:
-      'Review the previous code for understanding and update the axios packages to take advantage of the new style of fetching so we do not have to use fetch',
-    dueDate: '2024-09-15',
-    deletedDate: '2024-08-16',
-    priority: 'Medium',
-  },
-];
+import useDeleted from '../context/useDeleted';
+import Spinner from './Spinner';
+import { formatDate } from '../util/formatDate';
 
 const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
@@ -58,6 +18,8 @@ function shortentext(text: string, wordsLimit: number) {
 
 
 export default function DeletedTodos() {
+  const {deletedTodos, isLoading} = useDeleted()
+  if(isLoading)return <Spinner/>
   return (
     <div>
       <h1 className={styles.deletedHeading}>Deleted Todos</h1>
@@ -72,13 +34,13 @@ export default function DeletedTodos() {
             </tr>
           </thead>
           <tbody>
-            {todos.map((entry, index) => (
-              <tr key={index}>
+            {deletedTodos.map((entry) => (
+              <tr key={entry.id}>
                 <td>{shortentext(entry.task, WORDS_HEAD_LIMIT)}</td>
                 <td>{shortentext(entry.description, WORDS_BODY_LIMIT)} </td>
                 <td>{entry.priority} </td>
                 <td className={styles.copy}>
-                  {entry.deletedDate}
+                  {formatDate(entry.dueDate)}
                   <span>
                     <FontAwesomeIcon
                       icon={faTrashCanArrowUp}

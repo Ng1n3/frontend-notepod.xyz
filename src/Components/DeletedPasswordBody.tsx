@@ -1,41 +1,13 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './DeletedPasswordBody.module.css';
+import useDeleted from '../context/useDeleted';
+import Spinner from './Spinner';
 
-const password = [
-  {
-    field: 'Instagram',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'X',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'Telegram',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'Facebook',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-  {
-    field: 'Jira',
-    username: 'john123',
-    email: 'john@example.com',
-    password: '*******',
-  },
-];
 
 export default function DeletedPasswordBody() {
+  const {deletedPasswords, isLoading} = useDeleted()
+  if(isLoading) return <Spinner/>
   return (
     <div>
       <h1 className={styles.deletedHeading}>Deleted Passwords</h1>
@@ -50,9 +22,9 @@ export default function DeletedPasswordBody() {
             </tr>
           </thead>
           <tbody>
-            {password.map((entry, index) => (
-              <tr key={index}>
-                <td>{entry.field}</td>
+            {deletedPasswords.map((entry) => (
+              <tr key={entry.id}>
+                <td>{entry.fieldname}</td>
                 <td>{entry.username} </td>
                 <td>{entry.email} </td>
                 <td className={styles.copy}>

@@ -24,7 +24,7 @@ export default function PasswordsList() {
         <tbody>
           {passwords.map((entry, index) => (
             <tr key={index}>
-              <td>{entry.field}</td>
+              <td>{entry.fieldname}</td>
               <td>
                 <div className={styles.copy}>
                   {entry.username}{' '}

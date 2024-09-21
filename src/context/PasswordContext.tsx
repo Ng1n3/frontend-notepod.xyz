@@ -3,7 +3,8 @@ import { createContext, ReactNode, useEffect, useReducer } from 'react';
 const BASE_URL = 'http://localhost:8000';
 
 interface Password {
-  field: string;
+  id: number;
+  fieldname: string;
   username?: string;
   email?: string;
   password: string;
@@ -101,7 +102,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         },
       });
       const data = await res.json();
-      console.log(data);
       dispatch({ type: 'password/created', payload: data });
     } catch {
       dispatch({

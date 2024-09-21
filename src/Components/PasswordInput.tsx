@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldValues, useForm } from 'react-hook-form';
+import usePasswords from '../context/usePassword';
 import { signUpSchema, SignupSchema } from '../util/types';
 import Button from './Button';
 import styles from './PasswordInput.module.css';
@@ -14,9 +15,22 @@ export default function PasswordInput() {
     resolver: zodResolver(signUpSchema),
   });
 
-  function onSubmit(data: FieldValues) {
-    console.log(data);
-    reset();
+  const { createPassword, error } = usePasswords();
+
+  async function onSubmit(data: FieldValues) {
+    try {
+      const newPassword = {
+        id: Date.now(),
+        fieldname: data.fieldname,
+        email: data.email,
+        username: data.username,
+        password: data.password,
+      };
+      await createPassword(newPassword);
+      reset();
+    } catch {
+      console.error(error);
+    }
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -28,7 +42,7 @@ export default function PasswordInput() {
         <div className={styles.inputContainer}>
           <div className={styles.input}>
             <input
-              {...register('field', {
+              {...register('fieldname', {
                 required: 'Field Name is required',
                 minLength: {
                   value: 1,
@@ -38,7 +52,7 @@ export default function PasswordInput() {
               type="text"
               placeholder="field name"
             />
-            {errors.field && <p>{`${errors.field?.message}`}</p>}
+            {errors.fieldname && <p>{`${errors.fieldname?.message}`}</p>}
           </div>
           <div className={styles.input}>
             <input
