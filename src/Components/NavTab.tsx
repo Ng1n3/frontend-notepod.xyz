@@ -11,7 +11,10 @@ interface NavTabProps {
 
 export default function NavTab({ text, icon, to }: NavTabProps) {
   return (
-    <NavLink to={to}>
+    <NavLink
+      to={to}
+      className={({ isActive }) => (isActive ? `${styles.active}` : styles.tab)}
+    >
       <div className={styles.tab}>
         <h2>{text}</h2>
         <FontAwesomeIcon icon={icon} size="lg" className={styles.icon} />

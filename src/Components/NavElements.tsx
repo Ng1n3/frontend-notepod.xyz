@@ -8,6 +8,7 @@ import styles from './NavElement.module.css';
 import NavTab from './NavTab';
 
 export default function NavElements() {
+
   return (
     <div className={styles.elements}>
       <NavTab text="Notes" icon={faNoteSticky} to="/" />

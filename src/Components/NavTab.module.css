@@ -3,17 +3,23 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  border: 1px solid var(--color-white-1);
-  border-radius: 2px;
+  border-radius: 4px;
   width: 12rem;
-  padding: .5rem;
+  padding: 0.3rem;
   cursor: pointer;
   background-color: var(--color-btn-1);
 }
 
+.active {
+  border: 1px solid var(--color-white-1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
+}
+
 .tab:hover {
-  transform: scale(1.05);
-  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  transform: scale(1.02);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .tab h2 {

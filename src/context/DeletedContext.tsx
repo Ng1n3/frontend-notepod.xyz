@@ -160,7 +160,6 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       try {
         const res = await fetch(`${BASE_URL}/deleted`);
         const data = await res.json();
-        console.log(data.notes);
 
         if (data && data.notes) {
           dispatch({ type: 'deletedNotes/loaded', payload: data.notes });
