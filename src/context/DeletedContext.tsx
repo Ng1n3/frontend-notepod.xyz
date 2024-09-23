@@ -188,16 +188,20 @@ function DeletedProvider({ children }: DeletedProviderProps) {
   async function restoreDeletedNotes(noteId: number) {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}/deleted/notes/restore/${noteId}`, {
-        method: 'PATCH',
+      const res = await fetch(`${BASE_URL}/deleted`);
+      const data = await res.json();
+      const note = data.notes.find((note) => {
+        return note.id === noteId;
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to restore note');
-      }
-
-      const restoredNote = await res.json();
-      dispatch({ type: 'deletedNote/restore', payload: restoredNote });
+      await fetch(`${BASE_URL}/notes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(note),
+      });
+      dispatch({ type: 'deletedNote/restore', payload: note });
     } catch {
       dispatch({
         type: 'rejected',

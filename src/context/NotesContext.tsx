@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useEffect,
+  useReducer,
+} from 'react';
 
 const BASE_URL = 'http://localhost:8000';
 
@@ -22,6 +28,8 @@ interface NotesProvideProps {
 
 interface NotesContextType extends NoteState {
   createNote: (newNote: Note) => Promise<void>;
+  deleteNote: (id: number) => Promise<void>;
+  dispatch: Dispatch<NotesAction>;
 }
 
 type NotesAction =
@@ -29,6 +37,7 @@ type NotesAction =
   | { type: 'notes/loaded'; payload: Note[] }
   | { type: 'note/loaded'; payload: Note }
   | { type: 'note/created'; payload: Note }
+  | { type: 'note/deleted'; payload: Note }
   | { type: 'rejected'; payload: string };
 
 const initalState: NoteState = {
@@ -57,6 +66,17 @@ function reducer(state: NoteState, action: NotesAction) {
         currentNote: action.payload,
       };
 
+    case 'note/deleted':
+      return {
+        ...state,
+        isLoading: false,
+        notes: state.notes.filter((note) => note.id !== action.payload.id),
+        currentNote:
+          state.currentNote?.id === action.payload.id
+            ? null
+            : state.currentNote,
+      };
+
     case 'rejected':
       return { ...state, isLoading: false, error: action.payload };
 
@@ -81,9 +101,6 @@ function NotesProvider({ children }: NotesProvideProps) {
       try {
         const res = await fetch(`${BASE_URL}/notes`);
         const data = await res.json();
-        //   ...note,
-        //   lastChecked: new Date(note.lastChecked.split('/').reverse().join('-')),
-        // }));
         dispatch({ type: 'notes/loaded', payload: data });
       } catch {
         dispatch({
@@ -106,18 +123,61 @@ function NotesProvider({ children }: NotesProvideProps) {
         },
       });
       const data = await res.json();
-      dispatch({type: 'note/created', payload: data})
+      dispatch({ type: 'note/created', payload: data });
     } catch {
       dispatch({
         type: 'rejected',
-        payload: 'There was an error creating a new Note...',
+        payload: 'There was an error creating a new Note...'
+      });
+    }
+  }
+
+  async function deleteNote(id: number) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(`${BASE_URL}/notes/${id}`);
+      const data = await res.json();
+
+      const updateNote = { ...data, deletedDate: new Date().toISOString() };
+
+      //fetch deletedNotes
+      const deletedRes = await fetch(`${BASE_URL}/deleted`);
+      const deleteddata = await deletedRes.json();
+
+      //add updated note to deletednotes array
+      const updatedDeletedNotes = {
+        ...deleteddata,
+        notes: [...(deleteddata.notes || []), updateNote],
+      };
+
+      //Update the deleted note to the deleted note array
+      await fetch(`${BASE_URL}/deleted`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedDeletedNotes),
+      });
+      dispatch({ type: 'note/deleted', payload: data });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error loading note...',
       });
     }
   }
 
   return (
     <NotesContext.Provider
-      value={{ notes, isLoading, error, createNote, currentNote }}
+      value={{
+        notes,
+        isLoading,
+        error,
+        createNote,
+        currentNote,
+        deleteNote,
+        dispatch,
+      }}
     >
       {children}
     </NotesContext.Provider>

@@ -10,8 +10,12 @@ const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
 
 export default function DeletedNotesBody() {
-  const { deletedNotes, isLoading } = useDeleted();
+  const { deletedNotes, isLoading, restoreDeletedNotes } = useDeleted();
   if (isLoading) return <Spinner />;
+
+  function handleClick(noteId: number) {
+    restoreDeletedNotes(noteId);
+  }
   // console.log(deletedNotes);
   return (
     <div>
@@ -36,6 +40,7 @@ export default function DeletedNotesBody() {
                     <FontAwesomeIcon
                       icon={faTrashCanArrowUp}
                       className={styles.pics}
+                      onClick={() => handleClick(deletedNote.id)}
                     />
                   </span>
                 </td>

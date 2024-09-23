@@ -10,10 +10,27 @@
   background-color: var(--color-btn-1);
 }
 
+.tab h2 {
+  color: var(--color-white-2);
+  text-decoratin: none;
+  font-weight: 500;
+}
+
 .active {
   border: 1px solid var(--color-white-1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: background 0.3s ease;
+  border-radius: 4px;
+}
+
+.active:hover {
+  border: none;
+}
+
+.active h2 {
+  color: var(--color-white-1);
+  font-weight: 600;
+
 }
 
 .tab:hover {

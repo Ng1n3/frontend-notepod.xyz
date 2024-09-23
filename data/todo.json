@@ -1,275 +1,338 @@
 {
+  "notes": [
+    {
+      "id": 1,
+      "title": "Project Kickoff Meeting",
+      "body": "Discussed initial project scope and objectives with the team. Agreed on timeline and key deliverables for the next sprint. Need to follow up on the design mockups by the end of the week.",
+      "lastChecked": "2024-09-22T14:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Client Feedback on App Design",
+      "body": "Received feedback from the client on the app's initial design. They like the overall layout but requested changes to the color scheme and the addition of a new search feature. Next steps: update the design and schedule a review.",
+      "lastChecked": "2024-09-21T09:15:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Team Standup Notes",
+      "body": "Reviewed the team's progress on current tasks. Backend development is on track, but there are some issues with frontend integration. Jane will be handling the bug fixes, while Tom will continue with API optimization.",
+      "lastChecked": "2024-09-20T08:45:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Weekend Reading List",
+      "body": "Books to read: 'Atomic Habits' by James Clear, 'Deep Work' by Cal Newport, and 'The Lean Startup' by Eric Ries. Aim to finish at least one book by Sunday evening.",
+      "lastChecked": "2024-09-19T18:20:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Grocery Shopping List",
+      "body": "Items: Milk, eggs, bread, chicken, spinach, tomatoes, coffee, and a bottle of olive oil. Don’t forget to check for any available discounts at the store.",
+      "lastChecked": "2024-09-18T12:10:00.000Z"
+    },
+    {
+      "id": 6,
+      "title": "Fitness Routine",
+      "body": "Morning workout plan: 20 minutes of cardio (running or cycling), 30 minutes of strength training (focus on legs and core), followed by 10 minutes of stretching. Try to maintain consistency throughout the week.",
+      "lastChecked": "2024-09-17T07:30:00.000Z"
+    },
+    {
+      "id": 7,
+      "title": "Upcoming Travel Plans",
+      "body": "Trip to New York scheduled for November 10th-15th. Confirm hotel reservations and book tickets for the Broadway show. Also, make sure to pack comfortable walking shoes for sightseeing.",
+      "lastChecked": "2024-09-16T19:50:00.000Z"
+    },
+    {
+      "id": 1006,
+      "title": "Old Office Supplies List",
+      "body": "This was a list for office supplies needed for the previous location. Now that we’ve moved to a new office, these items are no longer required.",
+      "lastChecked": "2024-08-31T09:00:00.000Z",
+      "deletedDate": "2024-09-22T15:20:00.000Z"
+    }
+  ],
   "todos": [
     {
       "id": 10,
       "task": "Complete project proposal",
-      "description": "Write and submit the project proposal for the new client project. Include timeline, budget, and resource allocation.",
-      "dueDate": "2027-10-31T15:59:59.138Z",
+      "description": "Write and finalize the project proposal for the upcoming client project. Include details such as scope, timeline, budget, and resource allocation for the development phase.",
+      "dueDate": "2024-10-10T15:00:00.000Z",
       "deletedDate": "",
       "priority": "High"
     },
     {
       "id": 11,
       "task": "Schedule team meeting",
-      "description": "Arrange a team meeting to discuss the upcoming sprint goals and assign tasks to team members.",
-      "dueDate": "2024-08-25",
+      "description": "Organize a meeting with the team to review the upcoming sprint, distribute tasks, and set goals for the next development cycle.",
+      "dueDate": "2024-09-30T10:00:00.000Z",
       "deletedDate": "",
       "priority": "Medium"
     },
     {
       "id": 12,
-      "task": "Update documentation",
-      "description": "Review and update the user documentation for the latest software release. Ensure all new features are properly documented.",
-      "dueDate": "2024-09-10",
+      "task": "Update user documentation",
+      "description": "Review and update the user guide to reflect new features and changes in the latest software release. Ensure accuracy and clarity for the end-users.",
+      "dueDate": "2024-09-25T18:00:00.000Z",
       "deletedDate": "",
       "priority": "Low"
     },
     {
       "id": 13,
-      "task": "Fix issue #34",
-      "description": "Review codebase and fix the issues of  payment not being updated on the frontend page of the user when he logs in as a vip user.",
-      "dueDate": "2024-09-12",
+      "task": "Resolve issue #34",
+      "description": "Investigate and fix the bug related to the payment status not updating for VIP users. Test the functionality to ensure accurate updates on the frontend.",
+      "dueDate": "2024-09-22T12:00:00.000Z",
       "deletedDate": "",
       "priority": "High"
     },
     {
       "id": 14,
-      "task": "Upgrade Axios package",
-      "description": "Review the previous code for understanding and update the axios packages to take advantage of the new style of fetching so we do not have to use fetch",
-      "dueDate": "2024-09-15",
+      "task": "Upgrade Axios to latest version",
+      "description": "Update Axios to the latest version and refactor the codebase to use the new fetch APIs. Ensure compatibility across all HTTP requests in the app.",
+      "dueDate": "2024-09-20T16:00:00.000Z",
       "deletedDate": "",
       "priority": "Medium"
     },
     {
       "id": 15,
-      "task": "dafdf",
-      "description": "adsfdsfasdfa",
-      "dueDate": "2024-09-19T14:13:00.587Z",
-      "priority": 0
+      "task": "Refactor login component",
+      "description": "Simplify and refactor the login component using the latest React hooks and state management techniques. Improve code readability and performance.",
+      "dueDate": "2024-09-23T12:30:00.000Z",
+      "deletedDate": "",
+      "priority": "Medium"
     },
     {
       "id": 16,
-      "task": "dfafdasf",
-      "description": "asdfasdfasdfasdfasfas",
-      "dueDate": "2024-09-19T14:16:48.489Z",
-      "priority": 0
+      "task": "Prepare presentation for client review",
+      "description": "Create a slide deck for the client to present the current progress on the project. Include key milestones, deliverables, and next steps.",
+      "dueDate": "2024-09-24T14:00:00.000Z",
+      "deletedDate": "",
+      "priority": "High"
     },
     {
       "id": 17,
-      "task": "dasdfafd",
-      "description": "adfasdfadsfas",
-      "dueDate": "2024-09-19T14:18:06.719Z",
-      "priority": 0
+      "task": "Conduct code review for PR #987",
+      "description": "Review the pull request for the new feature implementation. Provide feedback and suggestions for improvement before merging into the main branch.",
+      "dueDate": "2024-09-21T10:00:00.000Z",
+      "deletedDate": "",
+      "priority": "Medium"
     },
     {
       "id": 18,
-      "task": "aasdfasdf",
-      "description": "sgfsdgsfsf",
-      "dueDate": "2024-09-19T14:24:25.017Z",
-      "priority": "low"
+      "task": "Optimize image loading",
+      "description": "Implement lazy loading and image optimization techniques to improve the performance of the landing page, reducing page load time for users.",
+      "dueDate": "2024-09-26T15:00:00.000Z",
+      "deletedDate": "",
+      "priority": "Low"
     },
     {
       "id": 19,
-      "task": "fdaffdsaf",
-      "description": "sgfsdfdasfsafagsfsf",
-      "dueDate": "2024-09-21T14:24:25.000Z",
-      "priority": "high"
-    }
-  ],
-  "notes": [
-    {
-      "id": 124,
-      "title": "Last trip to Mecca",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 125,
-      "title": "Welcome to Sango Ota",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 126,
-      "title": "Dope Stufs",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 127,
-      "title": "Welcome to San Diego",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 128,
-      "title": "My Experience in Dagastani",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 129,
-      "title": "My Experience in Dagastani",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 130,
-      "title": "My Experience in Dagastani",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 131,
-      "title": "My Experience in Dagastani",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 132,
-      "title": "My Experience in Dagastani",
-      "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-      "lastChecked": "2027-10-31T15:59:59.138Z"
-    },
-    {
-      "id": 133,
-      "title": "First new note",
-      "body": "Welcome to the new note era and now we are running a new note togehter, heppy man",
-      "lastChecked": "2024-09-18T19:19:52.744Z"
+      "task": "Test new API endpoints",
+      "description": "Conduct thorough testing of the newly implemented API endpoints for the user profile management feature. Ensure all CRUD operations work as expected.",
+      "dueDate": "2024-09-27T09:00:00.000Z",
+      "deletedDate": "",
+      "priority": "High"
     }
   ],
   "passwords": [
     {
-      "id": 155,
-      "fieldname": "Instagram",
-      "username": "john123",
-      "email": "john@example.com",
-      "password": "*******"
+      "id": 1,
+      "fieldname": "Gmail",
+      "username": "johndoe123",
+      "email": "johndoe@gmail.com",
+      "password": "SuperSecurePassword123!"
     },
     {
-      "id": 1557,
-      "fieldname": "X",
-      "username": "john123",
-      "email": "john@example.com",
-      "password": "*******"
+      "id": 2,
+      "fieldname": "Twitter",
+      "username": "johndoe_tweet",
+      "email": "johndoe123@twitter.com",
+      "password": "TweetPass456!"
     },
     {
-      "id": 15588,
-      "fieldname": "Telegram",
-      "username": "john123",
-      "email": "john@example.com",
-      "password": "*******"
+      "id": 3,
+      "fieldname": "LinkedIn",
+      "username": "john_professional",
+      "email": "johndoe@linkedin.com",
+      "password": "LinkedInPro789#"
     },
     {
-      "id": 15566,
-      "fieldname": "Facebook",
-      "username": "john123",
-      "email": "john@example.com",
-      "password": "*******"
+      "id": 4,
+      "fieldname": "Netflix",
+      "username": "johndoe_stream",
+      "email": "john_doe@streaming.com",
+      "password": "NetflixAndChill098!"
     },
     {
-      "id": 15590,
-      "fieldname": "Jira",
-      "username": "john123",
-      "email": "john@example.com",
-      "password": "*******"
+      "id": 5,
+      "fieldname": "GitHub",
+      "username": "code_master_john",
+      "email": "johndoe@github.com",
+      "password": "GitHubSecureKey999!"
     },
     {
-      "id": 1726865981749,
-      "fieldname": "Tinder",
-      "email": "hackhazz1000@gmail.com",
-      "username": "Emma1122",
-      "password": "12345678"
+      "id": 6,
+      "fieldname": "Spotify",
+      "username": "john_music123",
+      "email": "johndoe@music.com",
+      "password": "MelodyMaker987$"
+    },
+    {
+      "id": 7,
+      "fieldname": "Amazon",
+      "username": "shopper_johndoe",
+      "email": "johndoe@shopping.com",
+      "password": "AmazonPrime456$"
     }
   ],
   "deleted": {
     "notes": [
       {
-        "id": 1333414,
-        "title": "Last trip to Mecca",
-        "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-        "lastChecked": "2024-09-18T19:19:52.744Z"
+        "id": 1001,
+        "title": "Old Marketing Strategy",
+        "body": "This strategy focused primarily on social media ads and email campaigns. Given the recent changes in customer behavior, it's no longer relevant. Will work on a revised approach.",
+        "lastChecked": "2024-09-12T13:45:00.000Z",
+        "deletedDate": "2024-09-22T10:30:00.000Z"
       },
       {
-        "id": 840083,
-        "title": "Welcome to Sango Ota",
-        "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-        "lastChecked": "2024-09-18T19:19:52.744Z"
+        "id": 1002,
+        "title": "Obsolete Product Features",
+        "body": "Features such as the 'old dashboard' and 'manual reports' are outdated with the new update. Users no longer need them, so we've removed these from future releases.",
+        "lastChecked": "2024-09-10T09:20:00.000Z",
+        "deletedDate": "2024-09-22T11:05:00.000Z"
       },
       {
-        "id": 133436,
-        "title": "Dope Stufs",
-        "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-        "lastChecked": "2024-09-18T19:19:52.744Z"
+        "id": 1003,
+        "title": "Canceled Meeting with Vendor",
+        "body": "The meeting with our old hardware vendor was canceled as we’ve shifted to a new supplier. No need to reschedule. All future orders will be handled by the new vendor.",
+        "lastChecked": "2024-09-09T15:00:00.000Z",
+        "deletedDate": "2024-09-22T12:45:00.000Z"
       },
       {
-        "id": 88568,
-        "title": "Welcome to San Diego",
-        "body": "Lorem ipsum dolor sit amet consectetur. Porttitor a sed lectus quam. Ultricies elit pharetra nulla ut mollis habitasse neque non donec. Et massa sapien lectus aliquet amet ut viverra massa.",
-        "lastChecked": "2024-09-18T19:19:52.744Z"
+        "id": 1004,
+        "title": "Event Planning Ideas",
+        "body": "Originally planned ideas for last year’s company retreat, but this concept was scrapped in favor of a virtual event. No longer applicable since we are going back to in-person events.",
+        "lastChecked": "2024-09-05T14:00:00.000Z",
+        "deletedDate": "2024-09-22T13:00:00.000Z"
+      },
+      {
+        "id": 1005,
+        "title": "Discontinued Product Line",
+        "body": "Notes on the 'X1 Series' of laptops which were discontinued due to low sales. No longer relevant to ongoing projects, as the focus is now on the 'Pro Series'.",
+        "lastChecked": "2024-09-03T11:10:00.000Z",
+        "deletedDate": "2024-09-22T14:30:00.000Z"
+      },
+      {
+        "id": 1006,
+        "title": "Old Office Supplies List",
+        "body": "This was a list for office supplies needed for the previous location. Now that we’ve moved to a new office, these items are no longer required.",
+        "lastChecked": "2024-08-31T09:00:00.000Z",
+        "deletedDate": "2024-09-22T15:20:00.000Z"
+      },
+      {
+        "id": 7,
+        "title": "Upcoming Travel Plans",
+        "body": "Trip to New York scheduled for November 10th-15th. Confirm hotel reservations and book tickets for the Broadway show. Also, make sure to pack comfortable walking shoes for sightseeing.",
+        "lastChecked": "2024-09-16T19:50:00.000Z",
+        "deletedDate": "2024-09-23T17:17:08.685Z"
       }
     ],
     "todos": [
       {
-        "id": 15,
-        "task": "Complete project proposal",
-        "description": "Write and submit the project proposal for the new client project. Include timeline, budget, and resource allocation.",
-        "dueDate": "2024-09-15",
-        "deletedDate": "",
+        "id": 2001,
+        "task": "Prepare Q1 Report",
+        "description": "This report was canceled as the client requested a different format for presenting the data. The new format is already in progress.",
+        "dueDate": "2024-03-31T17:00:00.000Z",
+        "deletedDate": "2024-09-22T09:30:00.000Z",
         "priority": "High"
       },
       {
-        "id": 16,
-        "task": "Schedule team meeting",
-        "description": "Arrange a team meeting to discuss the upcoming sprint goals and assign tasks to team members.",
-        "dueDate": "2024-08-25",
-        "deletedDate": "",
+        "id": 2002,
+        "task": "Finalize Office Lease Renewal",
+        "description": "No longer needed since we moved to a new location. The old lease was terminated early.",
+        "dueDate": "2024-06-01T12:00:00.000Z",
+        "deletedDate": "2024-09-22T10:00:00.000Z",
         "priority": "Medium"
       },
       {
-        "id": 17,
-        "task": "Update documentation",
-        "description": "Review and update the user documentation for the latest software release. Ensure all new features are properly documented.",
-        "dueDate": "2024-09-10",
-        "deletedDate": "",
+        "id": 2003,
+        "task": "Review Legacy Codebase",
+        "description": "The codebase was deprecated and replaced with a new system. No need to continue reviewing outdated code.",
+        "dueDate": "2024-07-15T09:30:00.000Z",
+        "deletedDate": "2024-09-22T11:15:00.000Z",
+        "priority": "Low"
+      },
+      {
+        "id": 2004,
+        "task": "Organize Team Training Session",
+        "description": "This session was originally planned for an old software tool that has since been phased out. No further action required.",
+        "dueDate": "2024-08-01T14:00:00.000Z",
+        "deletedDate": "2024-09-22T12:45:00.000Z",
+        "priority": "High"
+      },
+      {
+        "id": 2005,
+        "task": "Submit Performance Reviews",
+        "description": "The performance review process was postponed to next quarter. No need to submit them at this time.",
+        "dueDate": "2024-09-10T10:00:00.000Z",
+        "deletedDate": "2024-09-22T13:30:00.000Z",
+        "priority": "Medium"
+      },
+      {
+        "id": 2006,
+        "task": "Conduct Market Research",
+        "description": "This research task was removed from the agenda after the company decided to pivot into a different market.",
+        "dueDate": "2024-09-15T16:00:00.000Z",
+        "deletedDate": "2024-09-22T14:00:00.000Z",
         "priority": "Low"
       }
     ],
     "passwords": [
       {
-        "id": 4848,
-        "fieldname": "Instagram",
-        "username": "john123",
-        "email": "john@example.com",
-        "password": "*******"
+        "id": 301,
+        "fieldname": "Spotify",
+        "username": "music_lover92",
+        "email": "lover92@example.com",
+        "password": "********",
+        "deletedDate": "2024-09-22T09:45:00.000Z"
       },
       {
-        "id": 48487,
-        "fieldname": "X",
-        "username": "john123",
-        "email": "john@example.com",
-        "password": "*******"
+        "id": 302,
+        "fieldname": "Netflix",
+        "username": "john_netflix",
+        "email": "john_doe@example.com",
+        "password": "********",
+        "deletedDate": "2024-09-22T10:20:00.000Z"
       },
       {
-        "id": 4846,
-        "fieldname": "Telegram",
-        "username": "john123",
-        "email": "john@example.com",
-        "password": "*******"
+        "id": 303,
+        "fieldname": "Twitter",
+        "username": "jdoe123",
+        "email": "johndoe@example.com",
+        "password": "********",
+        "deletedDate": "2024-09-22T11:05:00.000Z"
       },
       {
-        "id": 4845,
-        "fieldname": "Facebook",
-        "username": "john123",
-        "email": "john@example.com",
-        "password": "*******"
+        "id": 304,
+        "fieldname": "LinkedIn",
+        "username": "john_professional",
+        "email": "john_doe_prof@example.com",
+        "password": "********",
+        "deletedDate": "2024-09-22T11:45:00.000Z"
       },
       {
-        "id": 48458,
-        "fieldname": "Jira",
-        "username": "john123",
-        "email": "john@example.com",
-        "password": "*******"
+        "id": 305,
+        "fieldname": "GitHub",
+        "username": "dev_john",
+        "email": "john.dev@example.com",
+        "password": "********",
+        "deletedDate": "2024-09-22T12:30:00.000Z"
+      },
+      {
+        "id": 306,
+        "fieldname": "Zoom",
+        "username": "john_zoom",
+        "email": "john_doe_zoom@example.com",
+        "password": "********",
+        "deletedDate": "2024-09-22T13:00:00.000Z"
       }
     ]
   }

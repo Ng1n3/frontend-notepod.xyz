@@ -12,6 +12,11 @@ align-items: center;
 justify-content: space-between;
 }
 
+
+.header .icon:hover {
+  transform: size(2);
+}
+
 .header h2 {
   color: var(--color-white-2)
 }
