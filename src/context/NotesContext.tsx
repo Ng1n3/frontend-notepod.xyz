@@ -6,13 +6,16 @@ import {
   useReducer,
 } from 'react';
 
-const BASE_URL = 'http://localhost:8000';
+// const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'http://localhost:4000/graphql';
 
 interface Note {
   id: number;
   title: string;
   body: string;
-  lastChecked: Date;
+  lastUpdated: Date;
+  userId: string;
+  deletedAt: Date;
 }
 
 interface NoteState {
@@ -99,8 +102,30 @@ function NotesProvider({ children }: NotesProvideProps) {
     async function fetchNotes() {
       dispatch({ type: 'loading' });
       try {
-        const res = await fetch(`${BASE_URL}/notes`);
+        const res = await fetch(`${BASE_URL}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-apollo-operation-name': 'GetNotes',
+          },
+          body: JSON.stringify({
+            query: ` query GetNotes {
+            getNotes {
+            id,
+            title,
+            body,
+            updatedAt,
+            user {
+            email,
+            username
+            },
+            deletedAt
+            }
+            }`,
+          }),
+        });
         const data = await res.json();
+        // console.log('data', data);
         dispatch({ type: 'notes/loaded', payload: data });
       } catch {
         dispatch({
@@ -127,7 +152,7 @@ function NotesProvider({ children }: NotesProvideProps) {
     } catch {
       dispatch({
         type: 'rejected',
-        payload: 'There was an error creating a new Note...'
+        payload: 'There was an error creating a new Note...',
       });
     }
   }
@@ -138,7 +163,7 @@ function NotesProvider({ children }: NotesProvideProps) {
       const res = await fetch(`${BASE_URL}/notes/${id}`);
       const data = await res.json();
 
-      const updateNote = { ...data, deletedDate: new Date().toISOString() };
+      const updateNote = { ...data, deletedAt: new Date().toISOString() };
 
       //fetch deletedNotes
       const deletedRes = await fetch(`${BASE_URL}/deleted`);

@@ -9,7 +9,7 @@ interface NoteListItem {
   id: number;
   title: string;
   body: string;
-  lastChecked: string;
+  updatedAt: Date;
 }
 
 interface NoteListItemProp {
@@ -26,7 +26,7 @@ export default function NoteListItem({
   showModal,
   setShowModal,
 }: NoteListItemProp) {
-  const { id, title, body, lastChecked } = note;
+  const { id, title, body, updatedAt } = note;
 
   function handleClick() {
     setShowModal(true);
@@ -51,7 +51,7 @@ export default function NoteListItem({
           </header>
           <p>{shortentext(body, BODY_TEXT_NUM)}</p>
           {/* <p>{body}</p> */}
-          <p>last checked: {formatDate(lastChecked)}</p>
+          {updatedAt && <p>last checked: {formatDate(updatedAt)}</p>}
         </>
       )}
     </div>

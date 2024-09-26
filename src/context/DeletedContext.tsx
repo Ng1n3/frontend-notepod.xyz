@@ -201,7 +201,16 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         },
         body: JSON.stringify(note),
       });
-      dispatch({ type: 'deletedNote/restore', payload: note });
+
+      const updatedDeletedNote = data.notes.filter(
+        (note) => note.id !== noteId
+      );
+      const newRes = await fetch(`${BASE_URL}/deleted`);
+      const newData = await newRes.json();
+      console.log('newData: ', newData);
+      console.log('newly Updated Deleted note: ', updatedDeletedNote);
+
+      // dispatch({ type: 'deletedNote/restore', payload: note });
     } catch {
       dispatch({
         type: 'rejected',
