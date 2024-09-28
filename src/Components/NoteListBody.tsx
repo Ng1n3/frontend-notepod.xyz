@@ -6,7 +6,6 @@ import Spinner from './Spinner';
 
 export default function NoteListBody() {
   const { notes, isLoading } = useNotes();
-  console.log("notes: ", notes.data?.getNotes);
   const [modalOpenId, setModalOpenId] = useState<number | null>(null);
 
   if (isLoading) return <Spinner />;
@@ -14,7 +13,7 @@ export default function NoteListBody() {
   return (
     <>
       <div className={styles.listBody}>
-        {notes.data && notes.data.getNotes.map((note) => (
+        {notes && notes.map((note) => (
           <NoteListItem
             key={note.id}
             note={note}

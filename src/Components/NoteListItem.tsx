@@ -51,7 +51,7 @@ export default function NoteListItem({
           </header>
           <p>{shortentext(body, BODY_TEXT_NUM)}</p>
           {/* <p>{body}</p> */}
-          {updatedAt && <p>last checked: {formatDate(updatedAt)}</p>}
+          {updatedAt && <p>Last Updated: {formatDate(updatedAt)}</p>}
         </>
       )}
     </div>

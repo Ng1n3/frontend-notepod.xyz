@@ -65,7 +65,7 @@ function reducer(state: NoteState, action: NotesAction) {
       return {
         ...state,
         isLoading: false,
-        notes: [...state.notes, action.payload],
+        notes:  [...state.notes, action.payload],
         currentNote: action.payload,
       };
 
@@ -98,57 +98,92 @@ function NotesProvider({ children }: NotesProvideProps) {
     initalState
   );
 
+  // useEffect(
+  //   function () {
+  //     if (currentNote) {
+  //       fetchNotes();
+  //     }
+  //   },
+  //   [currentNote]
+  // );
+
   useEffect(function () {
-    async function fetchNotes() {
-      dispatch({ type: 'loading' });
-      try {
-        const res = await fetch(`${BASE_URL}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-apollo-operation-name': 'GetNotes',
+    fetchNotes();
+  }, []);
+
+  async function fetchNotes() {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(`${BASE_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-apollo-operation-name': 'GetNotes',
+        },
+        body: JSON.stringify({
+          query: ` query GetNotes {
+          getNotes {
+          id,
+          title,
+          body,
+          updatedAt,
+          user {
+          email,
+          username
           },
-          body: JSON.stringify({
-            query: ` query GetNotes {
-            getNotes {
+          deletedAt
+          }
+          }`,
+        }),
+      });
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      console.log(data.data.getNotes);
+      dispatch({ type: 'notes/loaded', payload: data.data.getNotes});
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error loading data...',
+      });
+    }
+  }
+
+  async function createNote(newNote: Note) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(`${BASE_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation CreateNote($title: String!, $body: String!) {
+          createNote(title: $title, body: $body) {
             id,
             title,
             body,
             updatedAt,
             user {
+            id,
             email,
             username
             },
             deletedAt
-            }
-            }`,
-          }),
-        });
-        const data = await res.json();
-        // console.log('data', data);
-        dispatch({ type: 'notes/loaded', payload: data });
-      } catch {
-        dispatch({
-          type: 'rejected',
-          payload: 'There was an error loading data...',
-        });
-      }
-    }
-    fetchNotes();
-  }, []);
-
-  async function createNote(newNote: Note) {
-    dispatch({ type: 'loading' });
-    try {
-      const res = await fetch(`${BASE_URL}/notes`, {
-        method: 'POST',
-        body: JSON.stringify(newNote),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+          }            
+        }`,
+          variables: {
+            title: newNote.title,
+            body: newNote.body,
+          },
+        }),
       });
       const data = await res.json();
-      dispatch({ type: 'note/created', payload: data });
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      dispatch({ type: 'note/created', payload: data.data.createNote });
     } catch {
       dispatch({
         type: 'rejected',
