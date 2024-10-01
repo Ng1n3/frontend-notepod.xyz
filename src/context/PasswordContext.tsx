@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import { BASE_URL } from '../util/Interfaces';
 
-const BASE_URL = 'http://localhost:8000';
+// const BASE_URL = 'http://localhost:8000';
 
 interface Password {
   id: number;
@@ -78,9 +79,38 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     async function fetchPasswords() {
       dispatch({ type: 'loading' });
       try {
-        const res = await fetch(`${BASE_URL}/passwords`);
+        const res = await fetch(BASE_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: `query GetPasswords($isDeleted: Boolean) {
+              getPasswordField(isDeleted: $isDeleted) {
+                id,
+                fieldname,
+                username,
+                email,
+                password,
+                isDeleted,
+                deletedAt,
+                user {
+                  email,
+                  username
+                }
+              }
+            }`,
+            variables: {
+              isDeleted: false,
+            },
+          }),
+        });
         const data = await res.json();
-        dispatch({ type: 'passwords/loaded', payload: data });
+        // console.log("password context: ", data);
+        dispatch({
+          type: 'passwords/loaded',
+          payload: data.data.getPasswordField,
+        });
       } catch {
         dispatch({
           type: 'rejected',

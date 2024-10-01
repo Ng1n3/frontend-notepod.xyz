@@ -65,7 +65,7 @@ function reducer(state: NoteState, action: NotesAction) {
       return {
         ...state,
         isLoading: false,
-        notes:  [...state.notes, action.payload],
+        notes: [...state.notes, action.payload],
         currentNote: action.payload,
       };
 
@@ -98,15 +98,6 @@ function NotesProvider({ children }: NotesProvideProps) {
     initalState
   );
 
-  // useEffect(
-  //   function () {
-  //     if (currentNote) {
-  //       fetchNotes();
-  //     }
-  //   },
-  //   [currentNote]
-  // );
-
   useEffect(function () {
     fetchNotes();
   }, []);
@@ -121,8 +112,8 @@ function NotesProvider({ children }: NotesProvideProps) {
           'x-apollo-operation-name': 'GetNotes',
         },
         body: JSON.stringify({
-          query: ` query GetNotes {
-          getNotes {
+          query: ` query GetNotes($isDeleted: Boolean) {
+          getNotes(isDeleted: $isDeleted) {
           id,
           title,
           body,
@@ -134,14 +125,17 @@ function NotesProvider({ children }: NotesProvideProps) {
           deletedAt
           }
           }`,
+          variables: {
+            isDeleted: false,
+          },
         }),
       });
       const data = await res.json();
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      console.log(data.data.getNotes);
-      dispatch({ type: 'notes/loaded', payload: data.data.getNotes});
+      // console.log(data.data.getNotes);
+      dispatch({ type: 'notes/loaded', payload: data.data.getNotes });
     } catch {
       dispatch({
         type: 'rejected',
@@ -192,33 +186,63 @@ function NotesProvider({ children }: NotesProvideProps) {
     }
   }
 
-  async function deleteNote(id: number) {
+  async function deleteNote(id: string) {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}/notes/${id}`);
-      const data = await res.json();
-
-      const updateNote = { ...data, deletedAt: new Date().toISOString() };
-
-      //fetch deletedNotes
-      const deletedRes = await fetch(`${BASE_URL}/deleted`);
-      const deleteddata = await deletedRes.json();
-
-      //add updated note to deletednotes array
-      const updatedDeletedNotes = {
-        ...deleteddata,
-        notes: [...(deleteddata.notes || []), updateNote],
-      };
-
-      //Update the deleted note to the deleted note array
-      await fetch(`${BASE_URL}/deleted`, {
+      const res = await fetch(`${BASE_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-apollo-operation-name': 'DeleteNote',
         },
-        body: JSON.stringify(updatedDeletedNotes),
+        body: JSON.stringify({
+          query: `mutation DeleteNote($id: String!) {
+            updateNote(id: $id, isDeleted: true, deletedAt: "${new Date().toISOString()}") {
+              id
+              title
+              body
+              isDeleted
+              updatedAt
+              deletedAt
+              user {
+                id
+                username
+                email
+              }
+            }
+          }`,
+          variables: { id },
+        }),
       });
-      dispatch({ type: 'note/deleted', payload: data });
+
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      console.log('data from notes Context: ', data);
+
+      // const updatedNote = { ...data.data.getNote, deletedAt: new Date().toISOString(), isDeleted: true };
+
+      // fetch deletedNotes
+      // const deletedRes = await fetch(`${BASE_URL}/deleted`);
+      // const deleteddata = await deletedRes.json();
+
+      //add updated note to deletednotes array
+      // const updatedDeletedNotes = {
+      //   ...deleteddata,
+      //   notes: [...(deleteddata.notes || []), updatedNote],
+      // };
+
+      // Update the deleted note to the deleted note array
+      // await fetch(`${BASE_URL}/deleted`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(updatedDeletedNotes),
+      // });
+
+      // dispatch({ type: 'note/deleted', payload: data.updateNote });
     } catch {
       dispatch({
         type: 'rejected',

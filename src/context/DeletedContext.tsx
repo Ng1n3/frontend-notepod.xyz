@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'http://localhost:4000/graphql';
 
 interface deletedPasswords {
   id: number;
@@ -63,15 +63,20 @@ interface DeletedContextType extends DeletedState {
 
 type actionTypes =
   | { type: 'loading' }
-  | { type: 'deletedPasswords/loaded'; payload: deletedPasswords[] }
+  | {
+      type: 'deletedPasswords/loaded';
+      payload: { passwords: deletedPasswords[] };
+    }
   | { type: 'deletedPassword/loaded'; payload: deletedPasswords }
-  | { type: 'deletedPassword/restore'; payload: deletedPasswords }
-  | { type: 'deletedNotes/loaded'; payload: deletedNotes[] }
+  | { type: 'deletedPassword/restore'; payload: { id: string } }
+  | { type: 'deletedNotes/loaded'; payload: { notes: deletedNotes[] } }
   | { type: 'deletedNote/loaded'; payload: deletedNotes }
-  | { type: 'deletedNote/restore'; payload: deletedNotes }
-  | { type: 'deletedTodos/loaded'; payload: deletedTodos[] }
-  | { type: 'deletedTodo/loaded'; payload: deletedTodos }
-  | { type: 'deletedTodo/restore'; payload: deletedTodos }
+  | { type: 'deletedNote/restore'; payload: { id: string } }
+  | {
+      type: 'deletedTodos/loaded';
+      payload: { todos: deletedTodos[] };
+    }
+  | { type: 'deletedTodo/restore'; payload: { id: string } }
   | { type: 'rejected'; payload: string };
 
 export const DeletedContext = createContext<DeletedContextType | undefined>(
@@ -157,13 +162,39 @@ function DeletedProvider({ children }: DeletedProviderProps) {
 
   useEffect(function () {
     async function fetchDeletedItems() {
+      dispatch({type: 'loading'})
       try {
-        const res = await fetch(`${BASE_URL}/deleted`);
+        const res = await fetch(BASE_URL, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            query: `query {
+              getNotes(isDeleted: true) {
+                id
+                title
+                body
+                isDeleted
+                deletedAt
+              }
+              getTodos(isDeleted: true) {
+                id
+                title
+                body
+                priority
+              }
+              getPasswordField(isDeleted: true) {
+                id
+                fieldname
+                isDeleted
+                deletedAt
+              }
+            }`
+          })
+        });
         const data = await res.json();
+        // console.log("data from deletedContext: ", data);
 
-        if (data && data.notes) {
-          dispatch({ type: 'deletedNotes/loaded', payload: data.notes });
-        }
+          // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
 
         if (data && data.passwords) {
           dispatch({

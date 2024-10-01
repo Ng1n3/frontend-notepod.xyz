@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import { BASE_URL } from '../util/Interfaces';
 
-const BASE_URL = 'http://localhost:8000';
+// const BASE_URL = 'http://localhost:8000';
 
 enum Priority {
   Low,
@@ -85,9 +86,39 @@ function TodoProvider({ children }: TodoProviderProps) {
     async function fetchTodos() {
       dispatch({ type: 'loading' });
       try {
-        const res = await fetch(`${BASE_URL}/todos`);
+        const res = await fetch(BASE_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: `query GetTodos($isDeleted: Boolean) {
+                getTodos(isDeleted: $isDeleted) {
+                  id,
+                  title,
+                  body,
+                  updatedAt,
+                  priority,
+                  dueDate,
+                  user {
+                    id,
+                    email,
+                    username
+                  },
+                  deletedAt
+                  }
+                }`,
+            variables: {
+              isDeleted: false,
+            },
+          }),
+        });
         const data = await res.json();
-        dispatch({ type: 'todos/loaded', payload: data });
+        // console.log('data from todoContext: ', data.data.getTodos);
+        if (data.errors) {
+          throw new Error(data.errors[0].message);
+        }
+        dispatch({ type: 'todos/loaded', payload: data.data.getTodos });
       } catch {
         dispatch({
           type: 'rejected',

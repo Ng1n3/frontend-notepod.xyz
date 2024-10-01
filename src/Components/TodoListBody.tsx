@@ -6,6 +6,7 @@ import Spinner from './Spinner';
 
 export default function TodoListBody() {
   const {todos, isLoading} = useTodos()
+  // console.log("todos from todolist body: ", todos);
   if(isLoading) return <Spinner/>
   return (
     <div>
