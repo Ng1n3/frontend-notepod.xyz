@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import { BASE_URL } from '../util/Interfaces';
 
-const BASE_URL = 'http://localhost:4000/graphql';
+// const BASE_URL = 'http://localhost:4000/graphql';
 
 interface deletedPasswords {
   id: number;
@@ -162,11 +163,11 @@ function DeletedProvider({ children }: DeletedProviderProps) {
 
   useEffect(function () {
     async function fetchDeletedItems() {
-      dispatch({type: 'loading'})
+      dispatch({ type: 'loading' });
       try {
         const res = await fetch(BASE_URL, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             query: `query {
               getNotes(isDeleted: true) {
@@ -188,23 +189,29 @@ function DeletedProvider({ children }: DeletedProviderProps) {
                 isDeleted
                 deletedAt
               }
-            }`
-          })
+            }`,
+          }),
         });
         const data = await res.json();
-        // console.log("data from deletedContext: ", data);
+        console.log('data from deletedContext: ', data);
+        // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
 
-          // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
-
-        if (data && data.passwords) {
+        if (data && data.data.getNotes) {
           dispatch({
-            type: 'deletedPasswords/loaded',
-            payload: data.passwords,
+            type: 'deletedNotes/loaded',
+            payload: data.data.getNotes,
           });
         }
 
-        if (data && data.todos) {
-          dispatch({ type: 'deletedTodos/loaded', payload: data.todos });
+        if (data && data.data.getPasswordField) {
+          dispatch({
+            type: 'deletedPasswords/loaded',
+            payload: data.data.getPasswordField,
+          });
+        }
+
+        if (data && data.data.getTodos) {
+          dispatch({ type: 'deletedTodos/loaded', payload: data.data.getTodos });
         }
       } catch {
         dispatch({
