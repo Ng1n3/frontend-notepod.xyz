@@ -45,9 +45,10 @@ export default function CurrentTodoBody({
         <div>
           <label htmlFor="priority">Priority</label>
           <select onChange={(e) => setOption(e.target.value)}>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+            <option value="CRITICAL">CRITICAL</option>
           </select>
         </div>
         <DatePicker

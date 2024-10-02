@@ -9,20 +9,21 @@ export default function CurrentTodo() {
   const [description, setDescription] = useState<string>('');
   const { createTodo } = useTodos();
   const [date, setDate] = useState<Date>(new Date());
-  const [option, setOption] = useState<string>('low');
+  const [option, setOption] = useState<string>('LOW');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!task) return;
 
     enum Priority {
-      Low = 'Low',
-      Medium = 'Medium',
-      High = 'High',
+      LOW = 'LOW',
+      MEDIUM = 'MEDIUM',
+      HIGH = 'HIGH',
+      CRITICAL = 'CRITICAL'
     }
 
     interface newTodoProp {
-      id: number;
+      // id: string;
       task: string;
       description: string;
       dueDate: Date;
@@ -30,7 +31,7 @@ export default function CurrentTodo() {
     }
 
     const newTodo: newTodoProp = {
-      id: 0,
+      // id,
       task,
       description,
       dueDate: date,

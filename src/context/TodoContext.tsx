@@ -4,9 +4,10 @@ import { BASE_URL } from '../util/Interfaces';
 // const BASE_URL = 'http://localhost:8000';
 
 enum Priority {
-  Low,
-  Medium,
-  High,
+  LOW,
+  MEDIUM,
+  HIGH,
+  CRITICAL
 }
 
 interface Todo {
@@ -44,7 +45,7 @@ const initialState: TodoState = {
   todos: [],
   isLoading: false,
   currentTodo: {},
-  priority: Priority.Low,
+  priority: Priority.LOW,
   error: '',
 };
 
@@ -132,15 +133,38 @@ function TodoProvider({ children }: TodoProviderProps) {
   async function createTodo(newTodo: Todo) {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}/todos`, {
+      const res = await fetch(BASE_URL, {
         method: 'POST',
-        body: JSON.stringify(newTodo),
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          query: `mutation CreateTodo($title: String! $body: String! $priority: String!, $dueDate: String!) {
+            createTodo(title: $title, body: $body, priority: $priority, dueDate: $dueDate) {
+              id,
+              title,
+              body,
+              dueDate,
+              priority,
+              deletedAt,
+              isDeleted
+              user {
+                email
+                username
+                }
+            }
+          }`,
+          variables: {
+            title: newTodo.task,
+            body: newTodo.description,
+            priority: newTodo.priority,
+            dueDate: newTodo.dueDate,
+          },
+        }),
       });
       const data = await res.json();
-      dispatch({ type: 'todo/created', payload: data });
+      console.log('newly created todo: ', data);
+      dispatch({ type: 'todo/created', payload: data.data.createTodo });
     } catch {
       dispatch({
         type: 'rejected',

@@ -193,7 +193,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
           }),
         });
         const data = await res.json();
-        console.log('data from deletedContext: ', data);
+        // console.log('data from deletedContext: ', data);
         // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
 
         if (data && data.data.getNotes) {
