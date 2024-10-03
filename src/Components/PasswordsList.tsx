@@ -6,10 +6,17 @@ import styles from './PasswordsList.module.css';
 import Spinner from './Spinner';
 
 export default function PasswordsList() {
-  const { passwords, isLoading } = usePasswords();
+  const { passwords, isLoading, error } = usePasswords();
 
-  if(isLoading) return <Spinner/>
+  console.log("Passwords from list: ", passwords);
 
+  if (isLoading) return <Spinner />;
+
+  if (error) return <div>Error: ${error}</div>;
+
+  if (!passwords || passwords.length === 0) {
+    return <div>No passwords found.</div>;
+  }
   return (
     <div className={styles.container}>
       <table className={styles.table}>
@@ -22,8 +29,8 @@ export default function PasswordsList() {
           </tr>
         </thead>
         <tbody>
-          {passwords.map((entry, index) => (
-            <tr key={index}>
+          {passwords.map((entry) => (
+            <tr key={entry.id}>
               <td>{entry.fieldname}</td>
               <td>
                 <div className={styles.copy}>

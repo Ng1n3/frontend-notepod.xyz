@@ -20,12 +20,12 @@ export default function PasswordInput() {
   async function onSubmit(data: FieldValues) {
     try {
       const newPassword = {
-        id: Date.now(),
         fieldname: data.fieldname,
         email: data.email,
         username: data.username,
         password: data.password,
       };
+      // console.log("new Password: ", newPassword);
       await createPassword(newPassword);
       reset();
     } catch {

@@ -6,7 +6,7 @@ import TodoListItem from './TodoListItem';
 
 export default function TodoListBody() {
   const { todos, isLoading } = useTodos();
-  console.log('todos from todolist body: ', todos);
+  // console.log('todos from todolist body: ', todos);
 
   if (isLoading) return <Spinner />;
   return (
