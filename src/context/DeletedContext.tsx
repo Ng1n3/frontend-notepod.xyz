@@ -19,8 +19,8 @@ enum Priority {
 
 interface deletedTodos {
   id: number;
-  task: string;
-  description: string;
+  title: string;
+  body: string;
   dueDate: Date;
   priority: Priority;
 }
@@ -29,7 +29,7 @@ interface deletedNotes {
   id: number;
   title: string;
   body: string;
-  lastChecked: Date;
+  deletedAt: Date;
 }
 
 interface DeletedState {
@@ -182,10 +182,15 @@ function DeletedProvider({ children }: DeletedProviderProps) {
                 title
                 body
                 priority
+                deletedAt
+                dueDate
               }
               getPasswordField(isDeleted: true) {
                 id
                 fieldname
+                username
+                email
+                password
                 isDeleted
                 deletedAt
               }

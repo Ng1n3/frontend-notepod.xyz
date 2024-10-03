@@ -4,21 +4,15 @@ import styles from './DeletedPasswordBody.module.css';
 import useDeleted from '../context/useDeleted';
 import Spinner from './Spinner';
 import { formatDate } from '../util/formatDate';
+import { shortentext } from '../util/shortenText';
 
 const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
 
-function shortentext(text: string, wordsLimit: number) {
-  const words = text.split(' ');
-  if (words.length > wordsLimit) {
-    return words.slice(0, wordsLimit).join(' ') + '...';
-  }
-  return text;
-}
-
-
 export default function DeletedTodos() {
   const {deletedTodos, isLoading} = useDeleted()
+
+  // console.log("deleted Todos: ", deletedTodos);
   if(isLoading)return <Spinner/>
   return (
     <div>
@@ -28,16 +22,16 @@ export default function DeletedTodos() {
           <thead>
             <tr>
               <th>Task</th>
-              <th>Descriptoin</th>
+              <th>Description</th>
               <th>Priority</th>
-              <th>deletedDate</th>
+              <th>Due Date</th>
             </tr>
           </thead>
           <tbody>
             {deletedTodos.map((entry) => (
               <tr key={entry.id}>
-                <td>{shortentext(entry.task, WORDS_HEAD_LIMIT)}</td>
-                <td>{shortentext(entry.description, WORDS_BODY_LIMIT)} </td>
+                <td>{shortentext(entry.title, WORDS_HEAD_LIMIT)}</td>
+                <td>{shortentext(entry.body, WORDS_BODY_LIMIT)} </td>
                 <td>{entry.priority} </td>
                 <td className={styles.copy}>
                   {formatDate(entry.dueDate)}

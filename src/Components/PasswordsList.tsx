@@ -8,7 +8,7 @@ import Spinner from './Spinner';
 export default function PasswordsList() {
   const { passwords, isLoading, error } = usePasswords();
 
-  console.log("Passwords from list: ", passwords);
+  // console.log("Passwords from list: ", passwords);
 
   if (isLoading) return <Spinner />;
 

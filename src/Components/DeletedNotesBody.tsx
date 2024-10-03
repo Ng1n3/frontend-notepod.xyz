@@ -35,7 +35,7 @@ export default function DeletedNotesBody() {
                 <td>{shortentext(deletedNote.title, WORDS_HEAD_LIMIT)}</td>
                 <td>{shortentext(deletedNote.body, WORDS_BODY_LIMIT)}</td>
                 <td className={styles.copy}>
-                  {formatDate(deletedNote.lastChecked)}{' '}
+                  {formatDate(deletedNote.deletedAt)}{' '}
                   <span>
                     <FontAwesomeIcon
                       icon={faTrashCanArrowUp}
