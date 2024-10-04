@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import useNotes from '../context/useNotes';
+import useSafeNavigate from '../hook/useSafeNavigate';
 import styles from './CurrentNote.module.css';
 import CurrentNoteBody from './CurrentNoteBody';
 import CurrentNoteHeader from './CurrentNoteHeader';
@@ -21,6 +22,7 @@ export default function CurrentNote() {
   //   lastChecked: new Date(),
   // };
 
+  const navigate = useSafeNavigate();
   useEffect(
     function () {
       if (currentNote) {
@@ -39,15 +41,22 @@ export default function CurrentNote() {
       e.preventDefault();
       if (!title) return;
 
+      console.log('currentNote', currentNote);
+
       if (currentNote) {
-        await updateNote({ ...currentNote, title, body });
+        await updateNote({ ...currentNote, title, body, id: currentNote.id });
+        // console.log("updated Note", updateNote);
       } else {
         await createNote({ title, body });
       }
 
-      // if (currentNote?.title === title) return;
+      setTitle('');
+      setBody('');
+
+      if (currentNote?.title === title) return;
+      navigate('/');
     },
-    [title, body, currentNote, updateNote, createNote]
+    [title, body, currentNote, updateNote, createNote, navigate]
   );
 
   return (

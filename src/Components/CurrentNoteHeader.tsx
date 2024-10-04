@@ -36,6 +36,9 @@ export default function CurrentNoteHeader({ setTitle, handleSubmit }) {
         editor.commands.setHeading({ level: 1 });
         editor.commands.insertContent(currentNote.title || '');
       }
+      else {
+        editor?.commands.clearContent();
+      }
     },
     [currentNote, editor]
   );

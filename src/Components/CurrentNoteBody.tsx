@@ -54,7 +54,8 @@ export default function CurrentNoteBody({
   useEffect(
     function () {
       if (editor && body !== editor.getText()) {
-        editor.commands.setContent(body);
+        editor.commands.setContent('');
+        editor.commands.insertContent(body);
       }
     },
     [body, editor]

@@ -11,7 +11,7 @@ import useSafeNavigate from '../hook/useSafeNavigate';
 const BASE_URL = 'http://localhost:4000/graphql';
 
 interface Note {
-  id: number;
+  id: string;
   title: string;
   body: string;
   lastUpdated: Date;
@@ -312,6 +312,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   }
 
   async function updateNote(updatedNote: Note) {
+    
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -333,7 +334,7 @@ function NotesProvider({ children }: NotesProvideProps) {
               }
             }
           }`,
-          varaiables: {
+          variables: {
             id: updatedNote.id,
             title: updatedNote.title,
             body: updatedNote.body,
@@ -345,8 +346,9 @@ function NotesProvider({ children }: NotesProvideProps) {
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      console.log('updated Note: ', data);
+      // console.log('updated Note: ', data);
       dispatch({ type: 'note/updated', payload: data.data.updateNote });
+      navigate('/');
     } catch {
       dispatch({
         type: 'rejected',
