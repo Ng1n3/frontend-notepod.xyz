@@ -4,8 +4,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 // import { listItem } from '@tiptap/pm/schema-list';
 import Placeholder from '@tiptap/extension-placeholder';
 import StarterKit from '@tiptap/starter-kit';
-import MenuBar from './TipTap/MenuBar';
+import { useCallback, useEffect } from 'react';
 import LastSaved from './LastSaved';
+import MenuBar from './TipTap/MenuBar';
 
 const extensions = [
   // TextStyle.configure({ types: [listItem.name] }),
@@ -24,16 +25,40 @@ const extensions = [
     },
   }),
 ];
-const content = `<p></p>`;
 
-export default function CurrentNoteBody({  setBody }) {
+interface CurrentNoteBodyProps {
+  body: string;
+  setBody: (body: string) => void;
+}
+
+export default function CurrentNoteBody({
+  body,
+  setBody,
+}: CurrentNoteBodyProps) {
+  const onUpdate = useCallback(
+    ({ editor }) => {
+      const newBody = editor.getText();
+      if (newBody !== body) {
+        setBody(newBody);
+      }
+    },
+    [setBody, body]
+  );
+
   const editor = useEditor({
     extensions,
-    content,
-    onUpdate: ({ editor }) => {
-      setBody(editor.getText());
-    },
+    content: '',
+    onUpdate,
   });
+
+  useEffect(
+    function () {
+      if (editor && body !== editor.getText()) {
+        editor.commands.setContent(body);
+      }
+    },
+    [body, editor]
+  );
 
   return (
     <>

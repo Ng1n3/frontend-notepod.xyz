@@ -5,6 +5,7 @@ import {
   useEffect,
   useReducer,
 } from 'react';
+import useSafeNavigate from '../hook/useSafeNavigate';
 
 // const BASE_URL = 'http://localhost:8000';
 const BASE_URL = 'http://localhost:4000/graphql';
@@ -33,6 +34,9 @@ interface NotesContextType extends NoteState {
   createNote: (newNote: Note) => Promise<void>;
   deleteNote: (id: number) => Promise<void>;
   dispatch: Dispatch<NotesAction>;
+  fetchNote: (id: string) => Promise<void>;
+  updateNote: (updatedNote: Note) => Promise<void>;
+  setCurrentNote: (note: Note | null) => void;
 }
 
 type NotesAction =
@@ -41,6 +45,7 @@ type NotesAction =
   | { type: 'note/loaded'; payload: Note }
   | { type: 'note/created'; payload: Note }
   | { type: 'note/deleted'; payload: Note }
+  | { type: 'note/updated'; payload: Note }
   | { type: 'rejected'; payload: string };
 
 const initalState: NoteState = {
@@ -80,6 +85,16 @@ function reducer(state: NoteState, action: NotesAction) {
             : state.currentNote,
       };
 
+    case 'note/updated':
+      return {
+        ...state,
+        isLoading: false,
+        notes: state.notes.map((note) =>
+          note.id === action.payload.id ? action.payload : note
+        ),
+        currentNote: action.payload,
+      };
+
     case 'rejected':
       return { ...state, isLoading: false, error: action.payload };
 
@@ -97,6 +112,7 @@ function NotesProvider({ children }: NotesProvideProps) {
     reducer,
     initalState
   );
+  const navigate = useSafeNavigate();
 
   useEffect(function () {
     fetchNotes();
@@ -251,6 +267,103 @@ function NotesProvider({ children }: NotesProvideProps) {
     }
   }
 
+  async function fetchNote(id: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query GetNote($id: String!) {
+          getNote(id: $id) {
+            id,
+            title,
+            body,
+            updatedAt,
+            user {
+              email,
+              username
+            },
+            deletedAt
+            }  
+        }`,
+          variables: {
+            id: id,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      // console.log('fetch single note from context: ', data);
+      const note = data.data.getNote;
+      dispatch({ type: 'note/loaded', payload: note });
+      navigate(`/note/${note.id}`);
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error fetching note...',
+      });
+    }
+  }
+
+  async function updateNote(updatedNote: Note) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation UpdateNote($title:String!, $body: String!, $id: String!) {
+            updateNote(id:$id, body:$body, title:$title) {
+              id,
+              title,
+              body,
+              isDeleted,
+              deletedAt,
+              user {
+                email,
+                username,
+              }
+            }
+          }`,
+          varaiables: {
+            id: updatedNote.id,
+            title: updatedNote.title,
+            body: updatedNote.body,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      console.log('updated Note: ', data);
+      dispatch({ type: 'note/updated', payload: data.data.updateNote });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error updating note...',
+      });
+    }
+  }
+
+  function setCurrentNote(note: Note | null) {
+    dispatch({ type: 'note/loaded', payload: note });
+    if (note) {
+      navigate(`/note/${note.id}`);
+    } else {
+      navigate('/');
+    }
+  }
+
   return (
     <NotesContext.Provider
       value={{
@@ -260,6 +373,9 @@ function NotesProvider({ children }: NotesProvideProps) {
         createNote,
         currentNote,
         deleteNote,
+        fetchNote,
+        updateNote,
+        setCurrentNote,
         dispatch,
       }}
     >

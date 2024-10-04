@@ -10,22 +10,23 @@ import { TodoProvider } from './context/TodoContext';
 
 function App() {
   return (
-    <DeletedProvider>
-      <NotesProvider>
-        <TodoProvider>
-          <PasswordProvider>
-            <BrowserRouter>
+    <BrowserRouter>
+      <DeletedProvider>
+        <NotesProvider>
+          <TodoProvider>
+            <PasswordProvider>
               <Routes>
                 <Route path="/" element={<Notes />} />
+                <Route path="/note/:id" element={<Notes />} />
                 <Route path="/todos" element={<Todos />} />
                 <Route path="/passwords" element={<Passwords />} />
                 <Route path="/deleted" element={<Deleted />} />
               </Routes>
-            </BrowserRouter>
-          </PasswordProvider>
-        </TodoProvider>
-      </NotesProvider>
-    </DeletedProvider>
+            </PasswordProvider>
+          </TodoProvider>
+        </NotesProvider>
+      </DeletedProvider>
+    </BrowserRouter>
   );
 }
 
