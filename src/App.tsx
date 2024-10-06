@@ -19,6 +19,7 @@ function App() {
                 <Route path="/" element={<Notes />} />
                 <Route path="/note/:id" element={<Notes />} />
                 <Route path="/todos" element={<Todos />} />
+                <Route path="/todo/:id" element={<Todos />} />
                 <Route path="/passwords" element={<Passwords />} />
                 <Route path="/deleted" element={<Deleted />} />
               </Routes>

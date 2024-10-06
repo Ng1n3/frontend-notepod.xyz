@@ -41,10 +41,11 @@ export default function CurrentNote() {
       e.preventDefault();
       if (!title) return;
 
-      console.log('currentNote', currentNote);
+      // console.log('currentNote', currentNote);
 
       if (currentNote) {
         await updateNote({ ...currentNote, title, body, id: currentNote.id });
+        console.log("currentNote: ", currentNote);
         // console.log("updated Note", updateNote);
       } else {
         await createNote({ title, body });

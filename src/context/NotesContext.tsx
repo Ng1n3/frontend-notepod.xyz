@@ -312,7 +312,6 @@ function NotesProvider({ children }: NotesProvideProps) {
   }
 
   async function updateNote(updatedNote: Note) {
-    
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -326,6 +325,7 @@ function NotesProvider({ children }: NotesProvideProps) {
               id,
               title,
               body,
+              updatedAt,
               isDeleted,
               deletedAt,
               user {

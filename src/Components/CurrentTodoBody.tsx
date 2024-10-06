@@ -1,6 +1,7 @@
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useCallback, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './CurrentTodoBody.module.css';
@@ -23,21 +24,41 @@ const extensions = [
   }),
 ];
 
-const content = `<p></p>`;
+// const content = `<p></p>`;
 
 export default function CurrentTodoBody({
   setDescription,
+  description,
   date,
   setDate,
   setOption,
 }) {
+  const onUpdate = useCallback(
+    ({ editor }) => {
+      const newDescription = editor.getText();
+      if (newDescription !== description) {
+        setDescription(newDescription);
+      }
+    },
+    [setDescription, description]
+  );
+
   const editor = useEditor({
     extensions,
-    content,
-    onUpdate: ({ editor }) => {
-      setDescription(editor.getText());
-    },
+    content: '',
+    onUpdate,
   });
+
+  useEffect(
+    function () {
+      if (editor && description !== editor.getText()) {
+        editor.commands.setContent('');
+        editor.commands.insertContent(description);
+      }
+    },
+    [description, editor]
+  );
+  
   return (
     <div className={styles.currentTodoBodyContainer}>
       <MenuBar editor={editor} />

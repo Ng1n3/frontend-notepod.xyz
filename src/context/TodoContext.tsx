@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import useSafeNavigate from '../hook/useSafeNavigate';
 import { BASE_URL } from '../util/Interfaces';
 
 // const BASE_URL = 'http://localhost:8000';
@@ -7,13 +8,13 @@ enum Priority {
   LOW,
   MEDIUM,
   HIGH,
-  CRITICAL
+  CRITICAL,
 }
 
 interface Todo {
-  id: number;
-  task: string;
-  description: string;
+  id: string;
+  title: string;
+  body: string;
   dueDate: Date;
   priority: Priority;
 }
@@ -32,6 +33,9 @@ interface TodoProviderProps {
 
 interface TodoContextType extends TodoState {
   createTodo: (newTodo: Todo) => Promise<void>;
+  fetchTodo: (id: string) => Promise<void>;
+  setCurrentTodo: (todo: Todo | null) => void;
+  updateTodo: (update: Todo) => Promise<void>;
 }
 
 type TodoActions =
@@ -39,6 +43,7 @@ type TodoActions =
   | { type: 'todos/loaded'; payload: Todo[] }
   | { type: 'todo/loaded'; payload: Todo }
   | { type: 'todo/created'; payload: Todo }
+  | { type: 'todo/updated'; payload: Todo }
   | { type: 'rejected'; payload: string };
 
 const initialState: TodoState = {
@@ -67,6 +72,16 @@ function reducer(state: TodoState, action: TodoActions) {
         currentTodo: action.payload,
       };
 
+    case 'todo/updated':
+      return {
+        ...state,
+        isLoading: false,
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload.id ? action.payload : todo
+        ),
+        currentTodo: action.payload
+      };
+
     case 'rejected':
       return { ...state, isLoading: false, error: action.payload };
 
@@ -82,6 +97,8 @@ export const TodoContext = createContext<TodoContextType | undefined>(
 function TodoProvider({ children }: TodoProviderProps) {
   const [{ todos, error, currentTodo, isLoading, priority }, dispatch] =
     useReducer(reducer, initialState);
+
+  const navigate = useSafeNavigate();
 
   useEffect(function () {
     async function fetchTodos() {
@@ -155,8 +172,8 @@ function TodoProvider({ children }: TodoProviderProps) {
             }
           }`,
           variables: {
-            title: newTodo.task,
-            body: newTodo.description,
+            title: newTodo.title,
+            body: newTodo.body,
             priority: newTodo.priority,
             dueDate: newTodo.dueDate,
           },
@@ -173,9 +190,124 @@ function TodoProvider({ children }: TodoProviderProps) {
     }
   }
 
+  async function fetchTodo(id: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query GetNote($id: String!) {
+            getTodo(id: $id) {
+              id
+              title
+              body
+              priority
+              dueDate
+              isDeleted
+              deletedAt
+              user {
+                  id
+                  username
+                  email
+              }
+            }
+          }`,
+          variables: {
+            id,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      // console.log('fetch single note from context: ', data);
+      const todo = data.data.getTodo;
+      dispatch({ type: 'todo/loaded', payload: todo });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error fetching todo...',
+      });
+    }
+  }
+
+  function setCurrentTodo(todo: Todo | null) {
+    dispatch({ type: 'todo/loaded', payload: todo });
+    if (todo) {
+      navigate(`/todo/${todo.id}`);
+      // console.log('a new current todo has been set');
+    } else {
+      // console.log("here the current todo is null.");
+      navigate('/todos');
+    }
+  }
+
+  async function updateTodo(updatedTodo: Todo) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation updateTodo($title: String, $body: String, $isDeleted: Boolean, $deletedAt: String, $dueDate: String, $priority: String, $id: String!) {
+          updateTodo(title: $title, body: $body, isDeleted: $isDeleted, deletedAt: $deletedAt, dueDate: $dueDate, priority: $priority, id: $id) {
+            id
+            title
+            body
+            isDeleted
+            dueDate
+            priority
+            deletedAt
+            user {
+                id
+                email
+                username
+            }
+          }
+          }`,
+          variables: {
+            id: updatedTodo.id,
+            title: updatedTodo.title,
+            body: updatedTodo.body,
+            priority: updatedTodo.priority,
+            dueDate: updatedTodo.dueDate,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      const todo = data.data.updateTodo;
+      dispatch({ type: 'todo/updated', payload: todo });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error updating Todo...',
+      });
+    }
+  }
   return (
     <TodoContext.Provider
-      value={{ error, isLoading, todos, currentTodo, createTodo, priority }}
+      value={{
+        error,
+        isLoading,
+        todos,
+        currentTodo,
+        setCurrentTodo,
+        createTodo,
+        updateTodo,
+        priority,
+        fetchTodo,
+      }}
     >
       {children}
     </TodoContext.Provider>
