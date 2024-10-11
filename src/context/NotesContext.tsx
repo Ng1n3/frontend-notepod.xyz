@@ -212,21 +212,20 @@ function NotesProvider({ children }: NotesProvideProps) {
           'x-apollo-operation-name': 'DeleteNote',
         },
         body: JSON.stringify({
-          query: `mutation DeleteNote($id: String!) {
-            updateNote(id: $id, isDeleted: true, deletedAt: "${new Date().toISOString()}") {
+          query: `mutation SoftDeleteNote($id: String!) {
+          softDeleteNote(id: $id) {
               id
               title
               body
               isDeleted
-              updatedAt
               deletedAt
-              user {
-                id
-                username
-                email
+              updatedAt
+              user{
+                  email
+                  username
               }
-            }
-          }`,
+          }
+      }`,
           variables: { id },
         }),
       });
@@ -235,30 +234,8 @@ function NotesProvider({ children }: NotesProvideProps) {
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      console.log('data from notes Context: ', data);
-
-      // const updatedNote = { ...data.data.getNote, deletedAt: new Date().toISOString(), isDeleted: true };
-
-      // fetch deletedNotes
-      // const deletedRes = await fetch(`${BASE_URL}/deleted`);
-      // const deleteddata = await deletedRes.json();
-
-      //add updated note to deletednotes array
-      // const updatedDeletedNotes = {
-      //   ...deleteddata,
-      //   notes: [...(deleteddata.notes || []), updatedNote],
-      // };
-
-      // Update the deleted note to the deleted note array
-      // await fetch(`${BASE_URL}/deleted`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(updatedDeletedNotes),
-      // });
-
-      // dispatch({ type: 'note/deleted', payload: data.updateNote });
+      const deletedNote = data.data.softDeleteNote;
+      dispatch({ type: 'note/deleted', payload: deletedNote });
     } catch {
       dispatch({
         type: 'rejected',
