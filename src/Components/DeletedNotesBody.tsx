@@ -13,7 +13,7 @@ export default function DeletedNotesBody() {
   const { deletedNotes, isLoading, restoreDeletedNotes } = useDeleted();
   if (isLoading) return <Spinner />;
 
-  function handleClick(noteId: number) {
+  function handleClick(noteId: string) {
     restoreDeletedNotes(noteId);
   }
   // console.log(deletedNotes);

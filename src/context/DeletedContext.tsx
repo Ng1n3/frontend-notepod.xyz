@@ -18,7 +18,7 @@ enum Priority {
 }
 
 interface deletedTodos {
-  id: number;
+  id: string;
   title: string;
   body: string;
   dueDate: Date;
@@ -26,7 +26,7 @@ interface deletedTodos {
 }
 
 interface deletedNotes {
-  id: number;
+  id: string;
   title: string;
   body: string;
   deletedAt: Date;
@@ -59,7 +59,8 @@ interface DeletedProviderProps {
 }
 
 interface DeletedContextType extends DeletedState {
-  restoreDeletedNotes: (noteId: number) => Promise<void>;
+  restoreDeletedNotes: (noteId: string) => Promise<void>;
+  restoreDeletedTodo: (noteId: string) => Promise<void>;
 }
 
 type actionTypes =
@@ -161,22 +162,21 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     dispatch,
   ] = useReducer(reducer, initalState);
 
-  useEffect(function () {
-    async function fetchDeletedItems() {
-      dispatch({ type: 'loading' });
-      try {
-        const res = await fetch(BASE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: `query {
+  async function fetchDeletedItems() {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `query {
               getNotes(isDeleted: true) {
                 id
                 title
                 body
                 isDeleted
                 deletedAt
-              }
+                }
               getTodos(isDeleted: true) {
                 id
                 title
@@ -195,65 +195,115 @@ function DeletedProvider({ children }: DeletedProviderProps) {
                 deletedAt
               }
             }`,
-          }),
-        });
-        const data = await res.json();
-        // console.log('data from deletedContext: ', data);
-        // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
+        }),
+      });
+      const data = await res.json();
+      // console.log('data from deletedContext: ', data);
+      // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
 
-        if (data && data.data.getNotes) {
-          dispatch({
-            type: 'deletedNotes/loaded',
-            payload: data.data.getNotes,
-          });
-        }
-
-        if (data && data.data.getPasswordFields) {
-          dispatch({
-            type: 'deletedPasswords/loaded',
-            payload: data.data.getPasswordFields,
-          });
-        }
-
-        if (data && data.data.getTodos) {
-          dispatch({ type: 'deletedTodos/loaded', payload: data.data.getTodos });
-        }
-      } catch {
+      if (data && data.data.getNotes) {
         dispatch({
-          type: 'rejected',
-          payload: 'There was an error loading data...',
+          type: 'deletedNotes/loaded',
+          payload: data.data.getNotes,
         });
       }
+
+      if (data && data.data.getPasswordFields) {
+        dispatch({
+          type: 'deletedPasswords/loaded',
+          payload: data.data.getPasswordFields,
+        });
+      }
+
+      if (data && data.data.getTodos) {
+        dispatch({ type: 'deletedTodos/loaded', payload: data.data.getTodos });
+      }
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error loading data...',
+      });
     }
+  }
+
+  useEffect(function () {
     fetchDeletedItems();
   }, []);
 
-  async function restoreDeletedNotes(noteId: number) {
+  async function restoreDeletedNotes(noteId: string) {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}/deleted`);
-      const data = await res.json();
-      const note = data.notes.find((note) => {
-        return note.id === noteId;
-      });
-
-      await fetch(`${BASE_URL}/notes`, {
+      const res = await fetch(BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(note),
+        body: JSON.stringify({
+          query: `mutation RestoreNote($id: String!) {
+          restoreNote(id: $id isDeleted: false deletedAt: null) {
+            id
+            title
+            body
+            isDeleted
+            deletedAt
+            updatedAt
+            user {
+                email
+                username
+            }
+          }
+        }`,
+          variables: {
+            id: noteId,
+          },
+        }),
       });
+      const data = await res.json();
+      const restoredNote = data.data.restoreNote;
+      // console.log("restoredNote", data);
+      dispatch({ type: 'deletedNote/restore', payload: restoredNote });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error restoring data...',
+      });
+    }
+  }
 
-      const updatedDeletedNote = data.notes.filter(
-        (note) => note.id !== noteId
-      );
-      const newRes = await fetch(`${BASE_URL}/deleted`);
-      const newData = await newRes.json();
-      console.log('newData: ', newData);
-      console.log('newly Updated Deleted note: ', updatedDeletedNote);
-
-      // dispatch({ type: 'deletedNote/restore', payload: note });
+  async function restoreDeletedTodo(todoId: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation RestoreNote($id: String!) {
+          restoreTodo(id: $id isDeleted: false deletedAt: null) {
+          id
+          title
+          body
+          isDeleted
+          dueDate
+          priority
+          deletedAt
+          updatedAt
+          user {
+              email
+              username
+            }
+          }
+        }`,
+          variables: {
+            id: todoId,
+          },
+        }),
+      });
+      const data = await res.json();
+      const restoredTodo = data.data.restoreTodo;
+      // console.log("restoredTodo", data);
+      dispatch({ type: 'deletedTodo/restore', payload: restoredTodo });
     } catch {
       dispatch({
         type: 'rejected',
@@ -272,6 +322,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         error,
         restoreDeletedNotes,
         currentDeletedNote,
+        restoreDeletedTodo,
         currentDeletedPassword,
         currentDeletedTodo,
       }}

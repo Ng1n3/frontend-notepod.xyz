@@ -67,7 +67,7 @@ function PasswordInput() {
         setCurrentPassword(null);
         reset();
         clearCurrentPassword();
-        console.log('currentPassword from  passwordInput', currentPassword);
+        // console.log('currentPassword from  passwordInput', currentPassword);
       } else {
         await createPassword(newPassword);
         reset();

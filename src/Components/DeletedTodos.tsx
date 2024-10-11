@@ -1,19 +1,22 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from './DeletedPasswordBody.module.css';
 import useDeleted from '../context/useDeleted';
-import Spinner from './Spinner';
 import { formatDate } from '../util/formatDate';
 import { shortentext } from '../util/shortenText';
+import styles from './DeletedPasswordBody.module.css';
+import Spinner from './Spinner';
 
 const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
 
 export default function DeletedTodos() {
-  const {deletedTodos, isLoading} = useDeleted()
+  const { deletedTodos, isLoading, restoreDeletedTodo } = useDeleted();
 
   // console.log("deleted Todos: ", deletedTodos);
-  if(isLoading)return <Spinner/>
+  function handleClick(todoId: string) {
+    restoreDeletedTodo(todoId);
+  }
+  if (isLoading) return <Spinner />;
   return (
     <div>
       <h1 className={styles.deletedHeading}>Deleted Todos</h1>
@@ -37,6 +40,7 @@ export default function DeletedTodos() {
                   {formatDate(entry.dueDate)}
                   <span>
                     <FontAwesomeIcon
+                      onClick={() => handleClick(entry.id)}
                       icon={faTrashCanArrowUp}
                       className={styles.pics}
                     />
