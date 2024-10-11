@@ -5,12 +5,13 @@ import {
   useEffect,
   useReducer,
 } from 'react';
+import useSafeNavigate from '../hook/useSafeNavigate';
 import { BASE_URL } from '../util/Interfaces';
 
 // const BASE_URL = 'http://localhost:8000';
 
-interface Password {
-  // id: number;
+export interface Password {
+  id: string;
   fieldname: string;
   username?: string;
   email?: string;
@@ -30,6 +31,11 @@ interface PasswordProviderProps {
 
 interface PasswordContextType extends PasswordState {
   createPassword: (newPassword: Password) => Promise<void>;
+  fetchPassword: (id: string) => Promise<void>;
+  setCurrentPassword: (password: Password) => void;
+  clearCurrentPassword: () => void;
+  // navigateToPassword: (password: Password) => void;
+  updatePassword: (update: Password) => Promise<void>;
 }
 
 type PasswordAction =
@@ -37,6 +43,8 @@ type PasswordAction =
   | { type: 'passwords/loaded'; payload: Password[] }
   | { type: 'password/loaded'; payload: Password }
   | { type: 'password/created'; payload: Password }
+  | { type: 'password/cleared' }
+  | { type: 'password/updated'; payload: Password }
   | { type: 'rejected'; payload: string };
 
 const initialState: PasswordState = {
@@ -55,7 +63,12 @@ function reducer(state: PasswordState, action: PasswordAction) {
       return { ...state, isLoading: false, passwords: action.payload };
 
     case 'password/loaded':
-      return { ...state, isLoading: false, currentPassword: action.payload };
+      // console.log('from reducer', action.payload);
+      return {
+        ...state,
+        isLoading: false,
+        currentPassword: action.payload,
+      };
 
     case 'password/created':
       return {
@@ -64,6 +77,19 @@ function reducer(state: PasswordState, action: PasswordAction) {
         passwords: [...state.passwords, action.payload],
         currentPassword: action.payload,
       };
+
+    case 'password/updated':
+      return {
+        ...state,
+        isLoading: false,
+        passwords: state.passwords.map((password) =>
+          password.id === action.payload.id ? action.payload : password
+        ),
+        currentPassword: action.payload,
+      };
+
+    case 'password/cleared':
+      return { ...state, isLoading: false, currentPassword: null };
 
     case 'rejected':
       return { ...state, isLoading: false, error: action.payload };
@@ -81,7 +107,10 @@ function PasswordProvider({ children }: PasswordProviderProps) {
   const [{ passwords, error, currentPassword, isLoading }, dispatch] =
     useReducer(reducer, initialState);
 
+  const navigate = useSafeNavigate();
+
   const fetchPasswords = useCallback(async function () {
+    // console.log('hi there.');
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -91,7 +120,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         },
         body: JSON.stringify({
           query: `query GetPasswords($isDeleted: Boolean) {
-              getPasswordField(isDeleted: $isDeleted) {
+              getPasswordFields(isDeleted: $isDeleted) {
                 id,
                 fieldname,
                 username,
@@ -111,10 +140,13 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         }),
       });
       const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors);
+      }
       // console.log("password context: ", data);
       dispatch({
         type: 'passwords/loaded',
-        payload: data.data.getPasswordField,
+        payload: data.data.getPasswordFields,
       });
     } catch {
       dispatch({
@@ -173,9 +205,127 @@ function PasswordProvider({ children }: PasswordProviderProps) {
       });
     }
   }
+
+  const fetchPassword = useCallback(async function (id: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query getPassowrd($id: String!) {
+                getPasswordField(id: $id) {
+                    id
+                    email
+                    username
+                    password
+                    fieldname
+                    isDeleted
+                    deletedAt
+                    user {
+                        email
+                        username
+                    }
+                }
+            } `,
+          variables: {
+            id,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      const password = data.data.getPasswordField;
+      // console.log('password from context', data);
+      dispatch({ type: 'password/loaded', payload: password });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was error fetching Password...',
+      });
+      throw Error;
+    }
+  }, []);
+
+  const setCurrentPassword = function (password: Password | null) {
+    if (password) {
+      dispatch({ type: 'password/loaded', payload: password });
+      navigate(`/password/${password.id}`);
+    } else {
+      dispatch({ type: 'password/loaded', payload: null });
+      navigate('/passwords');
+    }
+  };
+
+  const clearCurrentPassword = useCallback(async function () {
+    dispatch({ type: 'password/cleared' });
+  }, []);
+
+  async function updatePassword(updatedPassword: Password) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation UpdatePasswordField($id: String!, $fieldname: String, $email: String, $password: String, $username: String) {
+          updatePassword(id: $id, fieldname: $fieldname, email: $email, password: $password, username: $username) {
+               id
+               fieldname
+                email
+                username
+                password
+                deletedAt
+                isDeleted
+                user {
+                    email
+                    username
+                }
+              }
+            }`,
+          variables: {
+            id: updatedPassword.id,
+            fieldname: updatedPassword.fieldname,
+            email: updatedPassword.email,
+            username: updatedPassword.username,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      const password = data.data.updatePassword;
+      dispatch({ type: 'password/updated', payload: password });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error updating password..',
+      });
+    }
+  }
+
   return (
     <PasswordContext.Provider
-      value={{ passwords, error, currentPassword, isLoading, createPassword }}
+      value={{
+        passwords,
+        error,
+        currentPassword,
+        isLoading,
+        updatePassword,
+        setCurrentPassword,
+        createPassword,
+        clearCurrentPassword,
+        // navigateToPassword,
+        fetchPassword,
+      }}
     >
       {children}
     </PasswordContext.Provider>

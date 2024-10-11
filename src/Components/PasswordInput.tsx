@@ -1,43 +1,90 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FieldValues, useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { Password } from '../context/PasswordContext';
 import usePasswords from '../context/usePassword';
 import { signUpSchema, SignupSchema } from '../util/types';
 import Button from './Button';
 import styles from './PasswordInput.module.css';
+import Spinner from './Spinner';
 
-export default function PasswordInput() {
+function PasswordInput() {
+  const {
+    createPassword,
+    error,
+    currentPassword,
+    updatePassword,
+    isLoading,
+    setCurrentPassword,
+    clearCurrentPassword,
+  } = usePasswords();
+
+  
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<SignupSchema>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      fieldname: '',
+      username: '',
+      email: '',
+      password: '',
+    },
   });
 
-  const { createPassword, error } = usePasswords();
-
-  async function onSubmit(data: FieldValues) {
+  useEffect(() => {
+    if (currentPassword && Object.keys(currentPassword).length > 0) {
+      setValue('fieldname', currentPassword.fieldname || '');
+      setValue('username', currentPassword.username || '');
+      setValue('password', currentPassword.password || '');
+      setValue('email', currentPassword.email || '');
+    } else {
+      reset();
+    }
+  }, [currentPassword, setValue, reset]);
+  
+  if (isLoading) return <Spinner />;
+  
+  const onSubmit = async (data: SignupSchema) => {
     try {
-      const newPassword = {
+      const newPassword: Password = {
         fieldname: data.fieldname,
         email: data.email,
         username: data.username,
         password: data.password,
       };
-      // console.log("new Password: ", newPassword);
-      await createPassword(newPassword);
-      reset();
+
+      if (currentPassword) {
+        await updatePassword({
+          ...currentPassword,
+          ...newPassword,
+          id: currentPassword.id,
+        });
+        setCurrentPassword(null);
+        reset();
+        clearCurrentPassword();
+        console.log('currentPassword from  passwordInput', currentPassword);
+      } else {
+        await createPassword(newPassword);
+        reset();
+      }
     } catch {
       console.error(error);
     }
-  }
+  };
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className={styles.passwordBody}>
         <header className={styles.header}>
-          <h1>Create a Password</h1>
-          <Button disabled={isSubmitting}>Add Password</Button>
+          <h1>{!currentPassword ? 'Create Password' : 'Edit Password'}</h1>
+          <Button disabled={isSubmitting}>
+            {!currentPassword ? 'Add PasSword' : 'Update'}
+          </Button>
         </header>
         <div className={styles.inputContainer}>
           <div className={styles.input}>
@@ -91,3 +138,5 @@ export default function PasswordInput() {
     </form>
   );
 }
+
+export default React.memo(PasswordInput);

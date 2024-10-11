@@ -1,22 +1,27 @@
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { Password } from '../context/PasswordContext';
 import usePasswords from '../context/usePassword';
 import styles from './PasswordsList.module.css';
 import Spinner from './Spinner';
 
-export default function PasswordsList() {
-  const { passwords, isLoading, error } = usePasswords();
-
-  // console.log("Passwords from list: ", passwords);
+function PasswordsList() {
+  const { passwords, isLoading, error, setCurrentPassword } =
+    usePasswords();
+  const handleEditing = function (password: Password) {
+    setCurrentPassword(password);
+  };
 
   if (isLoading) return <Spinner />;
 
-  if (error) return <div>Error: ${error}</div>;
+  if (error) return <div>Error: {error}</div>;
 
   if (!passwords || passwords.length === 0) {
     return <div>No passwords found.</div>;
   }
+
   return (
     <div className={styles.container}>
       <table className={styles.table}>
@@ -55,7 +60,7 @@ export default function PasswordsList() {
                     <span>
                       <FontAwesomeIcon icon={faCopy} className={styles.pics} />
                     </span>{' '}
-                    <span>
+                    <span onClick={() => handleEditing(entry)}>
                       <FontAwesomeIcon icon={faPen} className={styles.pics} />
                     </span>{' '}
                     <span>
@@ -71,3 +76,5 @@ export default function PasswordsList() {
     </div>
   );
 }
+
+export default React.memo(PasswordsList);

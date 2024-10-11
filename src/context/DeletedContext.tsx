@@ -185,7 +185,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
                 deletedAt
                 dueDate
               }
-              getPasswordField(isDeleted: true) {
+              getPasswordFields(isDeleted: true) {
                 id
                 fieldname
                 username
@@ -208,10 +208,10 @@ function DeletedProvider({ children }: DeletedProviderProps) {
           });
         }
 
-        if (data && data.data.getPasswordField) {
+        if (data && data.data.getPasswordFields) {
           dispatch({
             type: 'deletedPasswords/loaded',
-            payload: data.data.getPasswordField,
+            payload: data.data.getPasswordFields,
           });
         }
 
