@@ -60,7 +60,8 @@ interface DeletedProviderProps {
 
 interface DeletedContextType extends DeletedState {
   restoreDeletedNotes: (noteId: string) => Promise<void>;
-  restoreDeletedTodo: (noteId: string) => Promise<void>;
+  restoreDeletedTodo: (todoId: string) => Promise<void>;
+  restoreDeletedPassword: (passwordId: string) => Promise<void>;
 }
 
 type actionTypes =
@@ -131,6 +132,7 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: false, currentDeletedTodo: action.payload };
 
     case 'deletedTodo/restore':
+      console.log('payload from deletedTodo', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -280,18 +282,16 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         },
         body: JSON.stringify({
           query: `mutation RestoreNote($id: String!) {
-          restoreTodo(id: $id isDeleted: false deletedAt: null) {
-          id
-          title
-          body
-          isDeleted
-          dueDate
-          priority
-          deletedAt
-          updatedAt
-          user {
-              email
-              username
+          restoreNote(id: $id isDeleted: false deletedAt: null) {
+            id
+            title
+            body
+            isDeleted
+            deletedAt
+            updatedAt
+            user {
+                email
+                username
             }
           }
         }`,
@@ -301,9 +301,52 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         }),
       });
       const data = await res.json();
-      const restoredTodo = data.data.restoreTodo;
-      // console.log("restoredTodo", data);
-      dispatch({ type: 'deletedTodo/restore', payload: restoredTodo });
+      const restoredNote = data.data.restoreNote;
+      // console.log("restoredNote", data);
+      dispatch({ type: 'deletedNote/restore', payload: restoredNote });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error restoring data...',
+      });
+    }
+  }
+
+  async function restoreDeletedPassword(passwordId: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation RestorePassword($id: String!) {
+            restorePassword(id: $id isDeleted: false deletedAt: null) {
+              id
+              fieldname
+              email
+              isDeleted
+              password
+              username
+              deletedAt
+              updatedAt
+              user {
+                email
+                username
+                }
+                }
+                }`,
+          variables: {
+            id: passwordId,
+          },
+        }),
+      });
+      const data = await res.json();
+      // console.log('hi i reached here!', data);
+      const restoredPassword = data.data.restorePassword;
+      // console.log('restoredPassword', data);
+      dispatch({ type: 'deletedPassword/restore', payload: restoredPassword });
     } catch {
       dispatch({
         type: 'rejected',
@@ -323,6 +366,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         restoreDeletedNotes,
         currentDeletedNote,
         restoreDeletedTodo,
+        restoreDeletedPassword,
         currentDeletedPassword,
         currentDeletedTodo,
       }}

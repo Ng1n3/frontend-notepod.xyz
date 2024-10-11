@@ -1,13 +1,15 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from './DeletedPasswordBody.module.css';
 import useDeleted from '../context/useDeleted';
+import styles from './DeletedPasswordBody.module.css';
 import Spinner from './Spinner';
 
-
 export default function DeletedPasswordBody() {
-  const {deletedPasswords, isLoading} = useDeleted()
-  if(isLoading) return <Spinner/>
+  const { deletedPasswords, isLoading, restoreDeletedPassword } = useDeleted();
+  if (isLoading) return <Spinner />;
+  function handleClick(passwordId: string) {
+    restoreDeletedPassword(passwordId);
+  }
   return (
     <div>
       <h1 className={styles.deletedHeading}>Deleted Passwords</h1>
@@ -31,6 +33,7 @@ export default function DeletedPasswordBody() {
                   {entry.password}
                   <span>
                     <FontAwesomeIcon
+                      onClick={() => handleClick(entry.id)}
                       icon={faTrashCanArrowUp}
                       className={styles.pics}
                     />
