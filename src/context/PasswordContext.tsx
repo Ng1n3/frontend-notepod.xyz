@@ -312,7 +312,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
   const setCurrentPassword = function (password: Password | null) {
     if (password) {
       dispatch({ type: 'password/loaded', payload: password });
-      navigate(`/password/${password.id}`);
+      navigate(`/passwords/${password.id}`);
     } else {
       dispatch({ type: 'password/loaded', payload: null });
       navigate('/passwords');

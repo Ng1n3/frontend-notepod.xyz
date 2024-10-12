@@ -339,7 +339,7 @@ function NotesProvider({ children }: NotesProvideProps) {
     if (note) {
       navigate(`/note/${note.id}`);
     } else {
-      navigate('/');
+      navigate('/notes');
     }
   }
 

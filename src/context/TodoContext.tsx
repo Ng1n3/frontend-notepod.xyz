@@ -295,7 +295,7 @@ function TodoProvider({ children }: TodoProviderProps) {
   function setCurrentTodo(todo: Todo | null) {
     dispatch({ type: 'todo/loaded', payload: todo });
     if (todo) {
-      navigate(`/todo/${todo.id}`);
+      navigate(`/todos/${todo.id}`);
       // console.log('a new current todo has been set');
     } else {
       // console.log("here the current todo is null.");

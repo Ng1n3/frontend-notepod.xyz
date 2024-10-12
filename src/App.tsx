@@ -16,12 +16,12 @@ function App() {
           <TodoProvider>
             <PasswordProvider>
               <Routes>
-                <Route path="/" element={<Notes />} />
-                <Route path="/note/:id" element={<Notes />} />
+                <Route path="/notes" element={<Notes />} />
+                <Route path="/notes/:id" element={<Notes />} />
                 <Route path="/todos" element={<Todos />} />
-                <Route path="/todo/:id" element={<Todos />} />
+                <Route path="/todos/:id" element={<Todos />} />
                 <Route path="/passwords" element={<Passwords />} />
-                <Route path="/password/:id" element={<Passwords />} />
+                <Route path="/passwords/:id" element={<Passwords />} />
                 <Route path="/deleted" element={<Deleted />} />
               </Routes>
             </PasswordProvider>
