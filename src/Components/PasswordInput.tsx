@@ -19,7 +19,6 @@ function PasswordInput() {
     clearCurrentPassword,
   } = usePasswords();
 
-  
   const {
     register,
     handleSubmit,
@@ -46,9 +45,9 @@ function PasswordInput() {
       reset();
     }
   }, [currentPassword, setValue, reset]);
-  
+
   if (isLoading) return <Spinner />;
-  
+
   const onSubmit = async (data: SignupSchema) => {
     try {
       const newPassword: Password = {
@@ -67,7 +66,6 @@ function PasswordInput() {
         setCurrentPassword(null);
         reset();
         clearCurrentPassword();
-        // console.log('currentPassword from  passwordInput', currentPassword);
       } else {
         await createPassword(newPassword);
         reset();
@@ -76,14 +74,16 @@ function PasswordInput() {
       console.error(error);
     }
   };
-  
+  const isEditing = currentPassword && Object.keys(currentPassword).length > 0;
+  // console.log('currentPassword from  passwordInput', currentPassword);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className={styles.passwordBody}>
         <header className={styles.header}>
-          <h1>{!currentPassword ? 'Create Password' : 'Edit Password'}</h1>
+          <h1>{isEditing ? 'Edit Password' : 'Add Password'}</h1>
           <Button disabled={isSubmitting}>
-            {!currentPassword ? 'Add PasSword' : 'Update'}
+            {isEditing ? 'Update' : 'Add Password'}
           </Button>
         </header>
         <div className={styles.inputContainer}>
