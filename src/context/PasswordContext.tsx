@@ -36,6 +36,7 @@ interface PasswordContextType extends PasswordState {
   clearCurrentPassword: () => void;
   // navigateToPassword: (password: Password) => void;
   updatePassword: (update: Password) => Promise<void>;
+  deletePassword: (passwordId: string) => Promise<void>;
 }
 
 type PasswordAction =
@@ -45,6 +46,7 @@ type PasswordAction =
   | { type: 'password/created'; payload: Password }
   | { type: 'password/cleared' }
   | { type: 'password/updated'; payload: Password }
+  | { type: 'password/deleted'; payload: Password }
   | { type: 'rejected'; payload: string };
 
 const initialState: PasswordState = {
@@ -86,6 +88,19 @@ function reducer(state: PasswordState, action: PasswordAction) {
           password.id === action.payload.id ? action.payload : password
         ),
         currentPassword: action.payload,
+      };
+
+    case 'password/deleted':
+      return {
+        ...state,
+        isLoading: false,
+        passwords: state.passwords.filter(
+          (password) => password.id !== action.payload.id
+        ),
+        currentPassword:
+          state.currentPassword?.id === action.payload.id
+            ? null
+            : state.currentPassword,
       };
 
     case 'password/cleared':
@@ -252,6 +267,48 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     }
   }, []);
 
+  async function deletePassword(passwordId: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation SoftDeletePassword($id: String!) {
+          softDeletePassword(id: $id) {
+              id
+              fieldname
+              username
+              email
+              password
+              isDeleted
+              deletedAt
+              updatedAt
+              user{
+                  email
+                  username
+              }
+          }
+      }`,
+          variables: { id: passwordId },
+        }),
+      });
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      const deletedPassword = data.data.softDeletePassword;
+      dispatch({ type: 'password/deleted', payload: deletedPassword });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error deleting this password',
+      });
+    }
+  }
+
   const setCurrentPassword = function (password: Password | null) {
     if (password) {
       dispatch({ type: 'password/loaded', payload: password });
@@ -322,6 +379,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         updatePassword,
         setCurrentPassword,
         createPassword,
+        deletePassword,
         clearCurrentPassword,
         // navigateToPassword,
         fetchPassword,

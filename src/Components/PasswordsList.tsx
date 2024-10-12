@@ -8,11 +8,15 @@ import styles from './PasswordsList.module.css';
 import Spinner from './Spinner';
 
 function PasswordsList() {
-  const { passwords, isLoading, error, setCurrentPassword } =
+  const { passwords, isLoading, error, setCurrentPassword, deletePassword } =
     usePasswords();
   const handleEditing = function (password: Password) {
     setCurrentPassword(password);
   };
+
+  function handleDeleting(id: string) {
+    deletePassword(id);
+  }
 
   if (isLoading) return <Spinner />;
 
@@ -64,7 +68,7 @@ function PasswordsList() {
                       <FontAwesomeIcon icon={faPen} className={styles.pics} />
                     </span>{' '}
                     <span>
-                      <FontAwesomeIcon icon={faTrash} className={styles.pics} />
+                      <FontAwesomeIcon icon={faTrash} className={styles.pics} onClick={() => handleDeleting(entry.id)}/>
                     </span>
                   </div>
                 </div>
