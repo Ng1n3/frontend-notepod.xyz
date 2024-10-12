@@ -6,7 +6,7 @@ import Spinner from './Spinner';
 
 export default function NoteListBody() {
   const { notes, isLoading, fetchNote } = useNotes();
-  const [modalOpenId, setModalOpenId] = useState<number | null>(null);
+  const [modalOpenId, setModalOpenId] = useState<string | null>(null);
 
   if (isLoading) return <Spinner />;
 

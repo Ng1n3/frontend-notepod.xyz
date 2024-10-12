@@ -117,6 +117,7 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: false, deletedNotes: action.payload };
 
     case 'deletedNote/restore':
+      console.log("deleted payload", action.payload);
       return {
         ...state,
         isLoading: false,
@@ -132,7 +133,6 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: false, currentDeletedTodo: action.payload };
 
     case 'deletedTodo/restore':
-      console.log('payload from deletedTodo', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -281,8 +281,8 @@ function DeletedProvider({ children }: DeletedProviderProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: `mutation RestoreNote($id: String!) {
-          restoreNote(id: $id isDeleted: false deletedAt: null) {
+          query: `mutation RestoreTodo($id: String!) {
+          restoreTodo(id: $id isDeleted: false deletedAt: null) {
             id
             title
             body
@@ -301,13 +301,13 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         }),
       });
       const data = await res.json();
-      const restoredNote = data.data.restoreNote;
-      // console.log("restoredNote", data);
-      dispatch({ type: 'deletedNote/restore', payload: restoredNote });
+      const restoredTodo = data.data.restoreTodo;
+      // console.log("restoredTodo", data);
+      dispatch({ type: 'deletedTodo/restore', payload: restoredTodo });
     } catch {
       dispatch({
         type: 'rejected',
-        payload: 'There was an error restoring data...',
+        payload: 'There was an error restoring todos...',
       });
     }
   }

@@ -1,17 +1,30 @@
 import useNotes from '../context/useNotes';
+import useTodos from '../context/useTodos';
 import Button from './Button';
 import Spinner from './Spinner';
 
 interface verifyDeleteProp {
-  noteId: number;
+  id: string;
   onClose: () => void;
+  itemType: string;
 }
 
-export default function VerifyDelete({noteId, onClose}:verifyDeleteProp) {
+export default function VerifyDelete({
+  id,
+  onClose,
+  itemType,
+}: verifyDeleteProp) {
   const { isLoading, deleteNote } = useNotes();
+  const { deleteTodo } = useTodos();
   if (isLoading) return <Spinner />;
   function handleDelete() {
-    deleteNote(noteId);
+    if (itemType === 'note') {
+      deleteNote(id);
+    }
+    if (itemType === 'todo') {
+      // console.log('hi i reached here');
+      deleteTodo(id);
+    }
     onClose();
   }
   return (

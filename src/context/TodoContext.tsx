@@ -36,6 +36,7 @@ interface TodoContextType extends TodoState {
   fetchTodo: (id: string) => Promise<void>;
   setCurrentTodo: (todo: Todo | null) => void;
   updateTodo: (update: Todo) => Promise<void>;
+  deleteTodo: (id: string) => Promise<void>;
 }
 
 type TodoActions =
@@ -44,6 +45,7 @@ type TodoActions =
   | { type: 'todo/loaded'; payload: Todo }
   | { type: 'todo/created'; payload: Todo }
   | { type: 'todo/updated'; payload: Todo }
+  | { type: 'todo/deleted'; payload: Todo }
   | { type: 'rejected'; payload: string };
 
 const initialState: TodoState = {
@@ -79,7 +81,18 @@ function reducer(state: TodoState, action: TodoActions) {
         todos: state.todos.map((todo) =>
           todo.id === action.payload.id ? action.payload : todo
         ),
-        currentTodo: action.payload
+        currentTodo: action.payload,
+      };
+
+    case 'todo/deleted':
+      return {
+        ...state,
+        isLoading: false,
+        todos: state.todos.filter((todo) => todo.id !== action.payload.id),
+        currentTodo:
+          state.currentTodo?.id === action.payload.id
+            ? null
+            : state.currentTodo,
       };
 
     case 'rejected':
@@ -186,6 +199,49 @@ function TodoProvider({ children }: TodoProviderProps) {
       dispatch({
         type: 'rejected',
         payload: 'There was an error creating a todo...',
+      });
+    }
+  }
+
+  async function deleteTodo(todoId: string) {
+    dispatch({ type: 'loading' });
+    // console.log("todoId", todoId);
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation SoftDeleteTodo($id: String!) {
+            softDeleteTodo(id: $id) {
+                id
+                title
+                body
+                dueDate
+                priority
+                isDeleted
+                deletedAt
+                updatedAt
+                user{
+                    email
+                    username
+                }
+            }
+        }`,
+        variables: { id: todoId },
+        }),
+      });
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      const deletedTodo = data.data.softDeleteTodo;
+      dispatch({ type: 'todo/deleted', payload: deletedTodo });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error deleting a todo...',
       });
     }
   }
@@ -304,6 +360,7 @@ function TodoProvider({ children }: TodoProviderProps) {
         currentTodo,
         setCurrentTodo,
         createTodo,
+        deleteTodo,
         updateTodo,
         priority,
         fetchTodo,

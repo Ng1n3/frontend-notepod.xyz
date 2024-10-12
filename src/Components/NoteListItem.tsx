@@ -1,10 +1,10 @@
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useNotes from '../context/useNotes';
 import { formatDate } from '../util/formatDate';
 import { shortentext } from '../util/shortenText';
 import style from './NoteListItem.module.css';
 import VerifyDelete from './VerifyDelete';
-import useNotes from '../context/useNotes';
 
 interface NoteListItem {
   id: string;
@@ -17,12 +17,11 @@ interface NoteListItemProp {
   note: NoteListItem;
   setShowModal: (show: boolean) => void;
   showModal: boolean;
-  fetchNote: (id:string) => Promise<void>;
+  fetchNote: (id: string) => Promise<void>;
 }
 
 const BODY_TEXT_NUM = 15;
 const HEADING_TEXT_NUM = 3;
-
 
 export default function NoteListItem({
   note,
@@ -30,13 +29,13 @@ export default function NoteListItem({
   setShowModal,
 }: NoteListItemProp) {
   const { id, title, body, updatedAt } = note;
-  const {setCurrentNote} = useNotes()
+  const { setCurrentNote } = useNotes();
 
-  function handleClick(e:React.MouseEvent) {
-    e.stopPropagation()
+  function handleClick(e: React.MouseEvent) {
+    e.stopPropagation();
     setShowModal(true);
   }
-  
+
   function handleNoteClick() {
     setCurrentNote(note);
   }
@@ -44,7 +43,11 @@ export default function NoteListItem({
   return (
     <div className={style.body} onClick={handleNoteClick}>
       {showModal ? (
-        <VerifyDelete noteId={id} onClose={() => setShowModal(false)}/>
+        <VerifyDelete
+          noteId={id}
+          onClose={() => setShowModal(false)}
+          itemType="note"
+        />
       ) : (
         <>
           <header className={style.header}>
