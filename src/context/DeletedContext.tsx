@@ -36,9 +36,9 @@ interface DeletedState {
   deletedTodos: deletedTodos[];
   deletedPasswords: deletedPasswords[];
   deletedNotes: deletedNotes[];
-  currentDeletedNote: Partial<deletedNotes>;
-  currentDeletedTodo: Partial<deletedTodos>;
-  currentDeletedPassword: Partial<deletedPasswords>;
+  currentDeletedNote: Partial<deletedNotes> | null;
+  currentDeletedTodo: Partial<deletedTodos> | null;
+  currentDeletedPassword: Partial<deletedPasswords> | null;
   isLoading: boolean;
   error: string;
 }
@@ -79,6 +79,7 @@ type actionTypes =
       type: 'deletedTodos/loaded';
       payload: { todos: deletedTodos[] };
     }
+  | {type: 'deletedTodo/loaded', payload: deletedTodos}
   | { type: 'deletedTodo/restore'; payload: { id: string } }
   | { type: 'rejected'; payload: string };
 
@@ -92,7 +93,7 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: true };
 
     case 'deletedPasswords/loaded':
-      return { ...state, isLoading: false, deletedPasswords: action.payload };
+      return { ...state, isLoading: false, deletedPasswords: action.payload.passwords };
 
     case 'deletedPassword/loaded':
       return {
@@ -114,7 +115,7 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: false, currentDeletedNote: action.payload };
 
     case 'deletedNotes/loaded':
-      return { ...state, isLoading: false, deletedNotes: action.payload };
+      return { ...state, isLoading: false, deletedNotes: action.payload.notes || action.payload };
 
     case 'deletedNote/restore':
       console.log("deleted payload", action.payload);
@@ -127,7 +128,7 @@ function reducer(state: DeletedState, action: actionTypes) {
       };
 
     case 'deletedTodos/loaded':
-      return { ...state, isLoading: false, deletedTodos: action.payload };
+      return { ...state, isLoading: false, deletedTodos: action.payload.todos || action.payload };
 
     case 'deletedTodo/loaded':
       return { ...state, isLoading: false, currentDeletedTodo: action.payload };
@@ -162,7 +163,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       error,
     },
     dispatch,
-  ] = useReducer(reducer, initalState);
+  ] = useReducer<(state: DeletedState, action: actionTypes) => DeletedState>(reducer, initalState);
 
   async function fetchDeletedItems() {
     dispatch({ type: 'loading' });
@@ -200,8 +201,6 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         }),
       });
       const data = await res.json();
-      // console.log('data from deletedContext: ', data);
-      // dispatch({ type: 'deletedNotes/loaded', payload: data.getNotes });
 
       if (data && data.data.getNotes) {
         dispatch({
@@ -343,9 +342,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         }),
       });
       const data = await res.json();
-      // console.log('hi i reached here!', data);
       const restoredPassword = data.data.restorePassword;
-      // console.log('restoredPassword', data);
       dispatch({ type: 'deletedPassword/restore', payload: restoredPassword });
     } catch {
       dispatch({

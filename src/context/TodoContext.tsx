@@ -28,7 +28,7 @@ export interface Todo {
 interface TodoState {
   todos: Todo[];
   isLoading: boolean;
-  currentTodo: Partial<Todo>;
+  currentTodo: Partial<Todo> | null;
   priority: Priority;
   error: string;
 }
@@ -124,7 +124,7 @@ export const TodoContext = createContext<TodoContextType | undefined>(
 
 function TodoProvider({ children }: TodoProviderProps) {
   const [{ todos, error, currentTodo, isLoading, priority }, dispatch] =
-    useReducer(reducer, initialState);
+    useReducer<(state: TodoState, action: TodoActions) => TodoState>(reducer, initialState);
 
   const navigate = useSafeNavigate();
 
@@ -311,7 +311,7 @@ function TodoProvider({ children }: TodoProviderProps) {
       dispatch({ type: 'todo/loaded', payload: todo });
       navigate(`/todos/${todo.id}`);
     } else {
-      dispatch({ type: 'todo/loaded', payload: null });
+      dispatch({ type: 'todo/cleared' });
       navigate('/todos');
     }
   }

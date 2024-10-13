@@ -21,7 +21,7 @@ export interface Password {
 interface PasswordState {
   passwords: Password[];
   isLoading: boolean;
-  currentPassword: Partial<Password>;
+  currentPassword: Partial<Password> | null;
   error: string;
 }
 
@@ -118,7 +118,7 @@ export const PasswordContext = createContext<PasswordContextType | undefined>(
 
 function PasswordProvider({ children }: PasswordProviderProps) {
   const [{ passwords, error, currentPassword, isLoading }, dispatch] =
-    useReducer(reducer, initialState);
+    useReducer<(state: PasswordState, action: PasswordAction) => PasswordState>(reducer, initialState);
 
   const navigate = useSafeNavigate();
 
@@ -308,7 +308,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
       dispatch({ type: 'password/loaded', payload: password });
       navigate(`/passwords/${password.id}`);
     } else {
-      dispatch({ type: 'password/loaded', payload: null });
+      dispatch({ type: 'password/cleared'});
       navigate('/passwords');
     }
   };

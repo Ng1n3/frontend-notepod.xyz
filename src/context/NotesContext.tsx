@@ -7,9 +7,7 @@ import {
   useReducer,
 } from 'react';
 import useSafeNavigate from '../hook/useSafeNavigate';
-
-// const BASE_URL = 'http://localhost:8000';
-const BASE_URL = 'http://localhost:4000/graphql';
+import { BASE_URL } from '../util/Interfaces';
 
 export interface Note {
   id?: string;
@@ -23,7 +21,7 @@ export interface Note {
 interface NoteState {
   notes: Note[];
   isLoading: boolean;
-  currentNote: Partial<Note>;
+  currentNote: Partial<Note> | null;
   error: string;
 }
 
@@ -114,10 +112,9 @@ export const NotesContext = createContext<NotesContextType | undefined>(
 );
 
 function NotesProvider({ children }: NotesProvideProps) {
-  const [{ notes, isLoading, error, currentNote }, dispatch] = useReducer(
-    reducer,
-    initalState
-  );
+  const [{ notes, isLoading, error, currentNote }, dispatch] = useReducer<
+    (state: NoteState, action: NotesAction) => NoteState
+  >(reducer, initalState);
   const navigate = useSafeNavigate();
 
   useEffect(function () {
@@ -127,7 +124,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   async function fetchNotes() {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}`, {
+      const res = await fetch(BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -156,7 +153,6 @@ function NotesProvider({ children }: NotesProvideProps) {
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      // console.log(data.data.getNotes);
       dispatch({ type: 'notes/loaded', payload: data.data.getNotes });
     } catch {
       dispatch({
@@ -169,7 +165,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   async function createNote(newNote: Note) {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}`, {
+      const res = await fetch(BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -211,7 +207,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   async function deleteNote(id: string) {
     dispatch({ type: 'loading' });
     try {
-      const res = await fetch(`${BASE_URL}`, {
+      const res = await fetch(BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -344,7 +340,7 @@ function NotesProvider({ children }: NotesProvideProps) {
       dispatch({ type: 'note/loaded', payload: note });
       navigate(`/notes/${note.id}`);
     } else {
-      dispatch({ type: 'note/loaded', payload: null });
+      dispatch({ type: 'note/cleared' });
       navigate('/notes');
     }
   }
