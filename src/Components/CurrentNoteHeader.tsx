@@ -70,7 +70,7 @@ export default function CurrentNoteHeader({
       {/* <h1>Title</h1> */}
       <EditorContent editor={editor} />
       <Button onClick={handleSubmit}>
-        {currentNote ? 'Update Note' : 'Add Note'}
+        {currentNote && currentNote.id ? 'Update Note' : 'Add Note'}
       </Button>
     </header>
   );

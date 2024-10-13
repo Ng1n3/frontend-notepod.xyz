@@ -52,7 +52,7 @@ type NotesAction =
 const initalState: NoteState = {
   notes: [],
   isLoading: false,
-  currentNote: {},
+  currentNote: null,
   error: '',
 };
 
@@ -278,7 +278,6 @@ function NotesProvider({ children }: NotesProvideProps) {
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      // console.log('fetch single note from context: ', data);
       const note = data.data.getNote;
       dispatch({ type: 'note/loaded', payload: note });
       navigate(`/notes/${note.id}`);

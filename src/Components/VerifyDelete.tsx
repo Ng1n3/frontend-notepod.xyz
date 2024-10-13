@@ -14,12 +14,14 @@ export default function VerifyDelete({
   onClose,
   itemType,
 }: verifyDeleteProp) {
-  const { isLoading, deleteNote } = useNotes();
+  const { isLoading, deleteNote, clearCurrentNote } = useNotes();
   const { deleteTodo } = useTodos();
   if (isLoading) return <Spinner />;
   function handleDelete() {
     if (itemType === 'note') {
       deleteNote(id);
+      clearCurrentNote();
+
     }
     if (itemType === 'todo') {
       // console.log('hi i reached here');

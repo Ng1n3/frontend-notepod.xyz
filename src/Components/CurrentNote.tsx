@@ -37,6 +37,7 @@ export default function CurrentNote() {
       clearCurrentNote();
     } else {
       await createNote({ title, body });
+      clearCurrentNote();
     }
 
     setTitle('');

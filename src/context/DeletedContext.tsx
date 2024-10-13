@@ -79,7 +79,7 @@ type actionTypes =
       type: 'deletedTodos/loaded';
       payload: { todos: deletedTodos[] };
     }
-  | {type: 'deletedTodo/loaded', payload: deletedTodos}
+  | { type: 'deletedTodo/loaded'; payload: deletedTodos }
   | { type: 'deletedTodo/restore'; payload: { id: string } }
   | { type: 'rejected'; payload: string };
 
@@ -93,7 +93,11 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: true };
 
     case 'deletedPasswords/loaded':
-      return { ...state, isLoading: false, deletedPasswords: action.payload.passwords };
+      return {
+        ...state,
+        isLoading: false,
+        deletedPasswords: action.payload.passwords,
+      };
 
     case 'deletedPassword/loaded':
       return {
@@ -115,10 +119,14 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: false, currentDeletedNote: action.payload };
 
     case 'deletedNotes/loaded':
-      return { ...state, isLoading: false, deletedNotes: action.payload.notes || action.payload };
+      console.log('deletedNotes state', action.payload);
+      return {
+        ...state,
+        isLoading: false,
+        deletedNotes: action.payload.notes || [],
+      };
 
     case 'deletedNote/restore':
-      console.log("deleted payload", action.payload);
       return {
         ...state,
         isLoading: false,
@@ -128,7 +136,11 @@ function reducer(state: DeletedState, action: actionTypes) {
       };
 
     case 'deletedTodos/loaded':
-      return { ...state, isLoading: false, deletedTodos: action.payload.todos || action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        deletedTodos: action.payload.todos || action.payload,
+      };
 
     case 'deletedTodo/loaded':
       return { ...state, isLoading: false, currentDeletedTodo: action.payload };
@@ -163,7 +175,10 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       error,
     },
     dispatch,
-  ] = useReducer<(state: DeletedState, action: actionTypes) => DeletedState>(reducer, initalState);
+  ] = useReducer<(state: DeletedState, action: actionTypes) => DeletedState>(
+    reducer,
+    initalState
+  );
 
   async function fetchDeletedItems() {
     dispatch({ type: 'loading' });
@@ -201,23 +216,27 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         }),
       });
       const data = await res.json();
+      console.log('data from deletedContext', data);
 
       if (data && data.data.getNotes) {
         dispatch({
           type: 'deletedNotes/loaded',
-          payload: data.data.getNotes,
+          payload: { notes: data.data.getNotes },
         });
       }
 
       if (data && data.data.getPasswordFields) {
         dispatch({
           type: 'deletedPasswords/loaded',
-          payload: data.data.getPasswordFields,
+          payload: { passwords: data.data.getPasswordFields },
         });
       }
 
       if (data && data.data.getTodos) {
-        dispatch({ type: 'deletedTodos/loaded', payload: data.data.getTodos });
+        dispatch({
+          type: 'deletedTodos/loaded',
+          payload: { todos: data.data.getTodos },
+        });
       }
     } catch {
       dispatch({
