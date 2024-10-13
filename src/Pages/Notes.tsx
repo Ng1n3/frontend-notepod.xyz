@@ -3,23 +3,25 @@ import { useParams } from 'react-router-dom';
 import Header from '../Components/Header';
 import NotesBody from '../Components/NotesBody';
 import useNotes from '../context/useNotes';
-import styles from './Notes.module.css';
 
 export default function Notes() {
   const { id } = useParams();
-  const { fetchNote, setCurrentNote } = useNotes();
-  useEffect(
-    function () {
+  const { fetchNote } = useNotes();
+  useEffect(() => {
+    async function fetchData() {
       if (id) {
-        fetchNote(id);
-      } else {
-        setCurrentNote(null);
+        try {
+          await fetchNote(id);
+        } catch (error) {
+          console.error('error fetching Notes', error);
+        }
       }
-    },
-    [id]
-  );
+    }
+    fetchData();
+  }, [id, fetchNote]);
+
   return (
-    <div className={styles.notes}>
+    <div>
       <Header />
       <NotesBody />
     </div>

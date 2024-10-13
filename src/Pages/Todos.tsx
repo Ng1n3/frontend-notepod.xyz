@@ -6,18 +6,20 @@ import useTodos from '../context/useTodos';
 
 export default function Todos() {
   const { id } = useParams();
-  const { fetchTodo, setCurrentTodo } = useTodos();
+  const { fetchTodo } = useTodos();
 
-  useEffect(
-    function () {
+  useEffect(() => {
+    async function fetchData() {
       if (id) {
-        fetchTodo(id);
-      } else {
-        setCurrentTodo(null)
+        try {
+          await fetchTodo(id);
+        } catch (error) {
+          console.error('error fetching Todos', error);
+        }
       }
-    },
-    [id]
-  );
+    }
+    fetchData();
+  }, [id, fetchTodo]);
 
   return (
     <>

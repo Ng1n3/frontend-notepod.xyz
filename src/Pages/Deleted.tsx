@@ -6,7 +6,6 @@ import DeletedPasswordBody from '../Components/DeletedPasswordBody';
 import DeletedTodos from '../Components/DeletedTodos';
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
-// import useDeleted from '../context/useDeleted';
 
 export default function Deleted() {
   const [option, setOption] = useState('password');

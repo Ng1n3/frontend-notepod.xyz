@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './CurrentTodoBody.module.css';
 import MenuBar from './TipTap/MenuBar';
+import { Editor } from '@tiptap/react';
 
 const extensions = [
   Placeholder.configure({
@@ -24,23 +25,37 @@ const extensions = [
   }),
 ];
 
-// const content = `<p></p>`;
+enum Priority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+interface CurrentTodoBodyProp {
+  body: string;
+  dueDate: Date;
+  setDueDate: React.Dispatch<React.SetStateAction<Date>>;
+  setBody: React.Dispatch<React.SetStateAction<string>>;
+  setPriority: (newPriority: keyof typeof Priority) => void;
+  priority: Priority;
+}
 
 export default function CurrentTodoBody({
-  setDescription,
-  description,
-  date,
-  setDate,
-  setOption,
-}) {
+  setBody,
+  body,
+  dueDate,
+  setDueDate,
+  setPriority,
+}: CurrentTodoBodyProp) {
   const onUpdate = useCallback(
-    ({ editor }) => {
+    ({ editor }: {editor: Editor}) => {
       const newDescription = editor.getText();
-      if (newDescription !== description) {
-        setDescription(newDescription);
+      if (newDescription !== body) {
+        setBody(newDescription);
       }
     },
-    [setDescription, description]
+    [setBody, body]
   );
 
   const editor = useEditor({
@@ -51,31 +66,35 @@ export default function CurrentTodoBody({
 
   useEffect(
     function () {
-      if (editor && description !== editor.getText()) {
+      if (editor && body !== editor.getText()) {
         editor.commands.setContent('');
-        editor.commands.insertContent(description);
+        editor.commands.insertContent(body);
       }
     },
-    [description, editor]
+    [body, editor]
   );
-  
+
   return (
     <div className={styles.currentTodoBodyContainer}>
       <MenuBar editor={editor} />
       <header>
         <div>
           <label htmlFor="priority">Priority</label>
-          <select onChange={(e) => setOption(e.target.value)}>
-            <option value="LOW">LOW</option>
-            <option value="MEDIUM">MEDIUM</option>
-            <option value="HIGH">HIGH</option>
-            <option value="CRITICAL">CRITICAL</option>
+          <select
+            onChange={(e) =>
+              setPriority(e.target.value as keyof typeof Priority)
+            }
+          >
+            <option value={Priority.LOW}>LOW</option>
+            <option value={Priority.MEDIUM}>MEDIUM</option>
+            <option value={Priority.HIGH}>HIGH</option>
+            <option value={Priority.CRITICAL}>CRITICAL</option>
           </select>
         </div>
         <DatePicker
           id="date"
-          onChange={(date) => setDate(date ?? new Date())}
-          selected={date}
+          onChange={(date) => setDueDate(date ?? new Date())}
+          selected={dueDate}
           dateFormat="dd/MM/yyyy"
         />
       </header>

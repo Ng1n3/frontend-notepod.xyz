@@ -2,6 +2,7 @@ import {
   createContext,
   Dispatch,
   ReactNode,
+  useCallback,
   useEffect,
   useReducer,
 } from 'react';
@@ -11,12 +12,12 @@ import useSafeNavigate from '../hook/useSafeNavigate';
 const BASE_URL = 'http://localhost:4000/graphql';
 
 interface Note {
-  id: string;
+  id?: string;
   title: string;
   body: string;
-  updatedAt: Date;
-  userId: string;
-  deletedAt: Date;
+  updatedAt?: Date;
+  // userId: string;
+  // deletedAt: Date;
 }
 
 interface NoteState {
@@ -37,6 +38,7 @@ interface NotesContextType extends NoteState {
   fetchNote: (id: string) => Promise<void>;
   updateNote: (updatedNote: Note) => Promise<void>;
   setCurrentNote: (note: Note | null) => void;
+  clearCurrentNote: () => void;
 }
 
 type NotesAction =
@@ -45,6 +47,7 @@ type NotesAction =
   | { type: 'note/loaded'; payload: Note }
   | { type: 'note/created'; payload: Note }
   | { type: 'note/deleted'; payload: Note }
+  | { type: 'note/cleared' }
   | { type: 'note/updated'; payload: Note }
   | { type: 'rejected'; payload: string };
 
@@ -94,6 +97,9 @@ function reducer(state: NoteState, action: NotesAction) {
         ),
         currentNote: action.payload,
       };
+
+    case 'note/cleared':
+      return { ...state, isLoading: false, currentNote: null };
 
     case 'rejected':
       return { ...state, isLoading: false, error: action.payload };
@@ -323,7 +329,6 @@ function NotesProvider({ children }: NotesProvideProps) {
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      // console.log('updated Note: ', data);
       dispatch({ type: 'note/updated', payload: data.data.updateNote });
       navigate('/notes');
     } catch {
@@ -335,13 +340,18 @@ function NotesProvider({ children }: NotesProvideProps) {
   }
 
   function setCurrentNote(note: Note | null) {
-    dispatch({ type: 'note/loaded', payload: note });
     if (note) {
+      dispatch({ type: 'note/loaded', payload: note });
       navigate(`/notes/${note.id}`);
     } else {
+      dispatch({ type: 'note/loaded', payload: null });
       navigate('/notes');
     }
   }
+
+  const clearCurrentNote = useCallback(() => {
+    dispatch({ type: 'note/cleared' });
+  }, []);
 
   return (
     <NotesContext.Provider
@@ -352,6 +362,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         createNote,
         currentNote,
         deleteNote,
+        clearCurrentNote,
         fetchNote,
         updateNote,
         setCurrentNote,

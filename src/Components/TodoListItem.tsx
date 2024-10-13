@@ -42,7 +42,7 @@ export default function TodoListItem({
   const { setCurrentTodo } = useTodos();
   function handleTodoClick() {
     // console.log("Hi there youclicked me!");
-    setCurrentTodo({ task: title, description: body, priority, id, dueDate });
+    setCurrentTodo({ title,  body, priority, id, dueDate });
   }
 
   function handleDelete(e: React.MouseEvent) {

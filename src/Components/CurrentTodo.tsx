@@ -1,107 +1,98 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useTodos from '../context/useTodos';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import styles from './CurrentTodo.module.css';
 import CurrentTodoBody from './CurrentTodoBody';
 import CurrentTodoHeader from './CurrentTodoHeader';
 
+enum Priority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
 export default function CurrentTodo() {
   const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const { createTodo, currentTodo, updateTodo } = useTodos();
-  const [date, setDate] = useState<Date>(new Date());
-  const [option, setOption] = useState<string>('LOW');
+  const [body, setBody] = useState<string>('');
+  const { createTodo, currentTodo, updateTodo, clearCurrentTodo } = useTodos();
+  const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [priority, setPriority] = useState<Priority>(Priority.LOW);
 
   const navigate = useSafeNavigate();
-  // useEffect(
-  //   function () {
-  //     if (id) {
-  //       fetchTodo(id);
-  //     }
-  //   },
-  //   [id, fetchTodo]
-  // );
 
-  
   useEffect(
     function () {
       if (currentTodo) {
-        // console.log("current todo from currentTodo", currentTodo);
-        setTitle(currentTodo.title);
-        setDescription(currentTodo.body);
-        setDate(currentTodo.dueDate);
-        setOption(currentTodo.priority);
+        setTitle(currentTodo.title || '');
+        setBody(currentTodo.body || '');
+        setDueDate(currentTodo.dueDate || new Date());
+        setPriority(currentTodo.priority || Priority.LOW);
       } else {
         setTitle('');
-        setDescription('');
-        setDate(new Date())
-        setOption('LOW')
+        setBody('');
+        setDueDate(new Date());
+        setPriority(Priority.LOW);
       }
     },
     [currentTodo]
   );
 
   const handleSubmit = useCallback(
-    async function (e: React.FormEvent) {
-      e.preventDefault();
+    async function () {
       if (!title) return;
 
-      // enum Priority {
-      //   LOW,
-      //   MEDIUM,
-      //   HIGH,
-      //   CRITICAL,
-      // }
-
-      // interface newTodoProp {
-      //   // id: string;
-      //   task: string;
-      //   description: string;
-      //   dueDate: Date;
-      //   priority: Priority;
-      // }
-
-      // const newTodo: newTodoProp = {
-      //   // id,
-      //   task,
-      //   description,
-      //   dueDate: date,
-      //   priority: option as Priority,
-      // };
-      if (currentTodo) {
-        // console.log("here there is a current todo", currentTodo);
+      if (currentTodo && currentTodo.id) {
         await updateTodo({
-          ...currentTodo,
-          title,
-          description,
           id: currentTodo.id,
+          title,
+          body,
+          dueDate,
+          priority,
         });
+        clearCurrentTodo();
       } else {
-        await createTodo({ title, description, dueDate, priority });
+        await createTodo({ title, body: body, dueDate, priority });
       }
       setTitle('');
-      setDescription('');
+      setBody('');
       if (currentTodo?.title === title) return;
       navigate('/');
     },
-    [currentTodo, createTodo, description, navigate, title, updateTodo]
+    [
+      currentTodo,
+      createTodo,
+      body,
+      navigate,
+      title,
+      updateTodo,
+      dueDate,
+      priority,
+      clearCurrentTodo,
+    ]
   );
-  // console.log([title, date, option, description]);
   return (
     <section className={styles.todo}>
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <CurrentTodoHeader
           title={title}
           setTitle={setTitle}
           handleSubmit={handleSubmit}
         />
         <CurrentTodoBody
-          description={description}
-          date={date}
-          setDate={setDate}
-          setDescription={setDescription}
-          setOption={setOption}
-          option={option}
+          body={body}
+          dueDate={dueDate}
+          setDueDate={setDueDate}
+          setBody={setBody}
+          setPriority={(newPriority: keyof typeof Priority) =>
+            setPriority(Priority[newPriority])
+          }
+          priority={priority}
         />
       </form>
     </section>

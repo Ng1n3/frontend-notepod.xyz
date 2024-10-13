@@ -39,6 +39,7 @@ const extensions = [
 const content = `<h1></h1>`;
 
 interface currentNoteHeaderProps {
+  title: string;
   setTitle: (title: string) => void;
   handleSubmit: () => void;
 }

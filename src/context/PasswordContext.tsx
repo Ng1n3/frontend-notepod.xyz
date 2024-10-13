@@ -34,7 +34,6 @@ interface PasswordContextType extends PasswordState {
   fetchPassword: (id: string) => Promise<void>;
   setCurrentPassword: (password: Password) => void;
   clearCurrentPassword: () => void;
-  // navigateToPassword: (password: Password) => void;
   updatePassword: (update: Password) => Promise<void>;
   deletePassword: (passwordId: string) => Promise<void>;
 }
@@ -65,7 +64,6 @@ function reducer(state: PasswordState, action: PasswordAction) {
       return { ...state, isLoading: false, passwords: action.payload };
 
     case 'password/loaded':
-      // console.log('from reducer', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -125,7 +123,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
   const navigate = useSafeNavigate();
 
   const fetchPasswords = useCallback(async function () {
-    // console.log('hi there.');
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -158,7 +155,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
       if (data.errors) {
         throw new Error(data.errors);
       }
-      // console.log("password context: ", data);
       dispatch({
         type: 'passwords/loaded',
         payload: data.data.getPasswordFields,
@@ -208,7 +204,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         }),
       });
       const data = await res.json();
-      // console.log("newPassword from context: ", data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
@@ -256,7 +251,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         throw new Error(data.errors[0].message);
       }
       const password = data.data.getPasswordField;
-      // console.log('password from context', data);
       dispatch({ type: 'password/loaded', payload: password });
     } catch {
       dispatch({
@@ -381,7 +375,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         createPassword,
         deletePassword,
         clearCurrentPassword,
-        // navigateToPassword,
         fetchPassword,
       }}
     >

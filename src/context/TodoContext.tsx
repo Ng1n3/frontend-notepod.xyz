@@ -1,18 +1,24 @@
-import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useReducer,
+} from 'react';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import { BASE_URL } from '../util/Interfaces';
 
 // const BASE_URL = 'http://localhost:8000';
 
 enum Priority {
-  LOW,
-  MEDIUM,
-  HIGH,
-  CRITICAL,
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
 }
 
-interface Todo {
-  id: string;
+export interface Todo {
+  id?: string;
   title: string;
   body: string;
   dueDate: Date;
@@ -36,6 +42,7 @@ interface TodoContextType extends TodoState {
   fetchTodo: (id: string) => Promise<void>;
   setCurrentTodo: (todo: Todo | null) => void;
   updateTodo: (update: Todo) => Promise<void>;
+  clearCurrentTodo: () => void;
   deleteTodo: (id: string) => Promise<void>;
 }
 
@@ -44,6 +51,7 @@ type TodoActions =
   | { type: 'todos/loaded'; payload: Todo[] }
   | { type: 'todo/loaded'; payload: Todo }
   | { type: 'todo/created'; payload: Todo }
+  | { type: 'todo/cleared' }
   | { type: 'todo/updated'; payload: Todo }
   | { type: 'todo/deleted'; payload: Todo }
   | { type: 'rejected'; payload: string };
@@ -93,6 +101,13 @@ function reducer(state: TodoState, action: TodoActions) {
           state.currentTodo?.id === action.payload.id
             ? null
             : state.currentTodo,
+      };
+
+    case 'todo/cleared':
+      return {
+        ...state,
+        isLoading: false,
+        currentTodo: null,
       };
 
     case 'rejected':
@@ -193,7 +208,6 @@ function TodoProvider({ children }: TodoProviderProps) {
         }),
       });
       const data = await res.json();
-      console.log('newly created todo: ', data);
       dispatch({ type: 'todo/created', payload: data.data.createTodo });
     } catch {
       dispatch({
@@ -229,7 +243,7 @@ function TodoProvider({ children }: TodoProviderProps) {
                 }
             }
         }`,
-        variables: { id: todoId },
+          variables: { id: todoId },
         }),
       });
       const data = await res.json();
@@ -293,12 +307,11 @@ function TodoProvider({ children }: TodoProviderProps) {
   }
 
   function setCurrentTodo(todo: Todo | null) {
-    dispatch({ type: 'todo/loaded', payload: todo });
     if (todo) {
+      dispatch({ type: 'todo/loaded', payload: todo });
       navigate(`/todos/${todo.id}`);
-      // console.log('a new current todo has been set');
     } else {
-      // console.log("here the current todo is null.");
+      dispatch({ type: 'todo/loaded', payload: null });
       navigate('/todos');
     }
   }
@@ -351,10 +364,16 @@ function TodoProvider({ children }: TodoProviderProps) {
       });
     }
   }
+
+  const clearCurrentTodo = useCallback(async function () {
+    dispatch({ type: 'todo/cleared' });
+  }, []);
+
   return (
     <TodoContext.Provider
       value={{
         error,
+        clearCurrentTodo,
         isLoading,
         todos,
         currentTodo,

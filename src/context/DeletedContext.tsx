@@ -4,7 +4,7 @@ import { BASE_URL } from '../util/Interfaces';
 // const BASE_URL = 'http://localhost:4000/graphql';
 
 interface deletedPasswords {
-  id: number;
+  id: string;
   fieldname: string;
   username?: string;
   email?: string;

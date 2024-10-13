@@ -1,15 +1,12 @@
 import { EditorContent, useEditor } from '@tiptap/react';
-
-// import TextStyle from '@tiptap/extension-text-style';
-// import { listItem } from '@tiptap/pm/schema-list';
 import Placeholder from '@tiptap/extension-placeholder';
 import StarterKit from '@tiptap/starter-kit';
 import { useCallback, useEffect } from 'react';
 import LastSaved from './LastSaved';
 import MenuBar from './TipTap/MenuBar';
+import { Editor } from '@tiptap/react';
 
 const extensions = [
-  // TextStyle.configure({ types: [listItem.name] }),
   Placeholder.configure({
     placeholder: 'Start writing here ...',
     emptyEditorClass: 'is-editor-empty',
@@ -36,7 +33,7 @@ export default function CurrentNoteBody({
   setBody,
 }: CurrentNoteBodyProps) {
   const onUpdate = useCallback(
-    ({ editor }) => {
+    ({ editor }: {editor: Editor}) => {
       const newBody = editor.getText();
       if (newBody !== body) {
         setBody(newBody);
@@ -68,13 +65,4 @@ export default function CurrentNoteBody({
       <LastSaved />
     </>
   );
-}
-
-{
-  /* <EditorProvider
-  slotBefore={<MenuBar />}
-  extensions={extensions}
-  content={content}
-></EditorProvider>
-<LastSaved /> */
 }

@@ -2,7 +2,7 @@ import Heading from '@tiptap/extension-heading';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useTodos from '../context/useTodos';
 import Button from './Button';
 import styles from './CurrentTodoHeader.module.css';
@@ -39,7 +39,8 @@ const extensions = [
 const content = '<h1></h1>';
 
 interface currentTodoHeaderProps {
-  setTitle: (title: string) => void;
+  title: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>
   handleSubmit: () => void;
 }
 
@@ -48,7 +49,6 @@ export default function CurrentTodoHeader({
   handleSubmit,
 }: currentTodoHeaderProps) {
   const { currentTodo } = useTodos();
-  // console.log("current todo from the currenttodoheader", currentTodo);
   const editor = useEditor({
     content,
     extensions,
