@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ErrorPage from './Components/ErrorPage';
 import Deleted from './Pages/Deleted';
 import Notes from './Pages/Notes';
 import Passwords from './Pages/Passwords';
@@ -16,13 +17,21 @@ function App() {
           <TodoProvider>
             <PasswordProvider>
               <Routes>
-                <Route path="/notes" element={<Notes />} />
-                <Route path="/notes/:id" element={<Notes />} />
-                <Route path="/todos" element={<Todos />} />
-                <Route path="/todos/:id" element={<Todos />} />
-                <Route path="/passwords" element={<Passwords />} />
-                <Route path="/passwords/:id" element={<Passwords />} />
+                <Route
+                  path="/"
+                  errorElement={<ErrorPage />}
+                >
+                  <Route path="notes" element={<Notes />} />
+                  <Route path=":id" element={<Notes />} />
+                </Route>
+                <Route path="todos" element={<Todos />}>
+                  <Route path=":id" element={<Todos />} />
+                </Route>
+                <Route path="passwords" element={<Passwords />}>
+                  <Route path=":id" element={<Passwords />} />
+                </Route>
                 <Route path="/deleted" element={<Deleted />} />
+                <Route path="*" element={<ErrorPage />} />
               </Routes>
             </PasswordProvider>
           </TodoProvider>
