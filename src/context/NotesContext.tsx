@@ -246,7 +246,7 @@ function NotesProvider({ children }: NotesProvideProps) {
     }
   }
 
-  async function fetchNote(id: string) {
+  const  fetchNote = useCallback(async (id: string) => {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -287,7 +287,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         payload: 'There was an error fetching note...',
       });
     }
-  }
+  }, [dispatch, navigate])
 
   async function updateNote(updatedNote: Note) {
     dispatch({ type: 'loading' });

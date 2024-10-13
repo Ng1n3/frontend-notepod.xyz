@@ -119,7 +119,6 @@ function reducer(state: DeletedState, action: actionTypes) {
       return { ...state, isLoading: false, currentDeletedNote: action.payload };
 
     case 'deletedNotes/loaded':
-      console.log('deletedNotes state', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -216,7 +215,6 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         }),
       });
       const data = await res.json();
-      console.log('data from deletedContext', data);
 
       if (data && data.data.getNotes) {
         dispatch({
