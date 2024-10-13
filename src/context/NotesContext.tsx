@@ -14,7 +14,7 @@ interface Note {
   id: string;
   title: string;
   body: string;
-  lastUpdated: Date;
+  updatedAt: Date;
   userId: string;
   deletedAt: Date;
 }

@@ -1,12 +1,19 @@
+import useNotes from '../context/useNotes';
+import { formatDate } from '../util/formatDate';
 import styles from './LastSaved.module.css';
 
 export default function LastSaved() {
+  const { currentNote } = useNotes();
   return (
-      <p className={styles.paragraph}>
-        <strong>Last saved:</strong>{' '}
-        <span>
-          <em>Thursday, 25th, August, 2024</em>
-        </span>{' '}
-      </p>
+    <p className={styles.paragraph}>
+      {currentNote && (
+        <>
+          <strong>Last updated: </strong>
+          <span>
+            <em>{formatDate(currentNote.updatedAt)}</em>
+          </span>
+        </>
+      )}
+    </p>
   );
 }
