@@ -1,5 +1,7 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ErrorPage from './Components/ErrorPage';
+import React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import NotFound from './Pages/NotFound';
 import Deleted from './Pages/Deleted';
 import Notes from './Pages/Notes';
 import Passwords from './Pages/Passwords';
@@ -9,35 +11,47 @@ import { NotesProvider } from './context/NotesContext';
 import { PasswordProvider } from './context/PasswordContext';
 import { TodoProvider } from './context/TodoContext';
 
+const ErrorFallBack: React.FC<{ error: Error }> = ({ error }) => {
+  return (
+    <div>
+      <h1>Oops! Something went Wrong.</h1>
+      <pre style={{ color: 'red' }}>{error.message}</pre>
+    </div>
+  );
+};
+
 function App() {
   return (
-    <BrowserRouter>
-      <DeletedProvider>
-        <NotesProvider>
-          <TodoProvider>
-            <PasswordProvider>
-              <Routes>
-                <Route
-                  path="/"
-                  errorElement={<ErrorPage />}
-                >
-                  <Route path="notes" element={<Notes />} />
-                  <Route path=":id" element={<Notes />} />
-                </Route>
-                <Route path="todos" element={<Todos />}>
-                  <Route path=":id" element={<Todos />} />
-                </Route>
-                <Route path="passwords" element={<Passwords />}>
-                  <Route path=":id" element={<Passwords />} />
-                </Route>
-                <Route path="/deleted" element={<Deleted />} />
-                <Route path="*" element={<ErrorPage />} />
-              </Routes>
-            </PasswordProvider>
-          </TodoProvider>
-        </NotesProvider>
-      </DeletedProvider>
-    </BrowserRouter>
+    <ErrorBoundary FallbackComponent={ErrorFallBack}>
+      <BrowserRouter>
+        <DeletedProvider>
+          <NotesProvider>
+            <TodoProvider>
+              <PasswordProvider>
+                <Routes>
+                  <Route path="/" element={<Navigate replace to="/notes" />} />
+                  <Route path="notes">
+                    <Route index element={<Notes />} />
+                    <Route path=":id" element={<Notes />} />
+                  </Route>
+                  <Route path="todos">
+                    <Route index element={<Todos />} />
+                    <Route path=":id" element={<Todos />} />
+                  </Route>
+                  <Route path="passwords">
+                    <Route index element={<Passwords />} />
+                    <Route path=":id" element={<Passwords />} />
+                  </Route>
+                  <Route path="/deleted" element={<Deleted />} />
+                  <Route path="404" element={<NotFound />} />
+                  <Route path="*" element={<Navigate replace to="/404" />} />
+                </Routes>
+              </PasswordProvider>
+            </TodoProvider>
+          </NotesProvider>
+        </DeletedProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
