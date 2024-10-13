@@ -75,7 +75,6 @@ function PasswordInput() {
     }
   };
   const isEditing = currentPassword && Object.keys(currentPassword).length > 0;
-  // console.log('currentPassword from  passwordInput', currentPassword);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

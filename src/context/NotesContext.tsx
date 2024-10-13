@@ -11,7 +11,7 @@ import useSafeNavigate from '../hook/useSafeNavigate';
 // const BASE_URL = 'http://localhost:8000';
 const BASE_URL = 'http://localhost:4000/graphql';
 
-interface Note {
+export interface Note {
   id?: string;
   title: string;
   body: string;

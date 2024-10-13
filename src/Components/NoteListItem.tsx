@@ -7,10 +7,10 @@ import style from './NoteListItem.module.css';
 import VerifyDelete from './VerifyDelete';
 
 interface NoteListItem {
-  id: string;
+  id: string | undefined;
   title: string;
   body: string;
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 interface NoteListItemProp {
@@ -44,7 +44,7 @@ export default function NoteListItem({
     <div className={style.body} onClick={handleNoteClick}>
       {showModal ? (
         <VerifyDelete
-          noteId={id}
+          id={id!}
           onClose={() => setShowModal(false)}
           itemType="note"
         />
@@ -62,7 +62,6 @@ export default function NoteListItem({
             />
           </header>
           <p>{shortentext(body, BODY_TEXT_NUM)}</p>
-          {/* <p>{body}</p> */}
           {updatedAt && <p>Last Updated: {formatDate(updatedAt)}</p>}
         </>
       )}

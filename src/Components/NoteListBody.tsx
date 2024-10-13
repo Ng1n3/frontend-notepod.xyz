@@ -16,11 +16,11 @@ export default function NoteListBody() {
         {notes &&
           notes.map((note) => (
             <NoteListItem
-              key={note.id}
-              note={note}
+              key={note.id ?? 'unkown-id'}
+              note={{ ...note, id: note.id ?? 'unkown-id' }}
               showModal={modalOpenId === note.id}
               setShowModal={(show: boolean) =>
-                setModalOpenId(show ? note.id : null)
+                setModalOpenId(show ? note.id ?? null : null)
               }
               fetchNote={fetchNote}
             />

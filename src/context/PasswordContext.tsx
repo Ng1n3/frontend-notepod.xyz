@@ -11,7 +11,7 @@ import { BASE_URL } from '../util/Interfaces';
 // const BASE_URL = 'http://localhost:8000';
 
 export interface Password {
-  id: string;
+  id?: string;
   fieldname: string;
   username?: string;
   email?: string;
@@ -32,7 +32,7 @@ interface PasswordProviderProps {
 interface PasswordContextType extends PasswordState {
   createPassword: (newPassword: Password) => Promise<void>;
   fetchPassword: (id: string) => Promise<void>;
-  setCurrentPassword: (password: Password) => void;
+  setCurrentPassword: (password: Password | null) => void;
   clearCurrentPassword: () => void;
   updatePassword: (update: Password) => Promise<void>;
   deletePassword: (passwordId: string) => Promise<void>;

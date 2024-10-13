@@ -8,7 +8,6 @@ import TodoListItem from './TodoListItem';
 export default function TodoListBody() {
   const { todos, isLoading } = useTodos();
   const [modalOpenId, setModalOpenId] = useState<string | null>(null);
-  // console.log('todos from todolist body: ', todos);
 
   if (isLoading) return <Spinner />;
   return (
@@ -18,11 +17,11 @@ export default function TodoListBody() {
         {todos && todos.length > 0
           ? todos.map((todo) => (
               <TodoListItem
-                key={todo.id}
-                todo={todo}
+                key={todo.id ?? 'unkown-id'}
+                todo={{...todo, id: todo.id ?? 'unkown-id'}}
                 showModal={modalOpenId === todo.id}
                 setShowModal={(show: boolean) =>
-                  setModalOpenId(show ? todo.id : null)
+                  setModalOpenId(show ? todo.id ??  null : null)
                 }
               />
             ))

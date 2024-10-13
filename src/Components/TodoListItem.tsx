@@ -8,10 +8,10 @@ import styles from './NoteListItem.module.css';
 import VerifyDelete from './VerifyDelete';
 
 enum Priority {
-  LOW,
-  MEDIUM,
-  HIGH,
-  CRITICAL,
+  LOW ='LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
 }
 
 interface TodoListItem {
@@ -38,10 +38,8 @@ export default function TodoListItem({
   setShowModal,
 }: TodoListItemProp) {
   const { id, title, body, dueDate, priority } = todo;
-  // console.log("todo from todo list item", todo);
   const { setCurrentTodo } = useTodos();
   function handleTodoClick() {
-    // console.log("Hi there youclicked me!");
     setCurrentTodo({ title,  body, priority, id, dueDate });
   }
 

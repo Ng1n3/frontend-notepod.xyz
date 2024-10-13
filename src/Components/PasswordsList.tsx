@@ -59,7 +59,7 @@ function PasswordsList() {
                   {entry.username}{' '}
                   <span
                     onClick={() =>
-                      handleCopy(entry.username, entry.id, 'username')
+                      handleCopy(entry.username!, entry.id!, 'username')
                     }
                   >
                     <FontAwesomeIcon
@@ -77,7 +77,7 @@ function PasswordsList() {
                 <div className={styles.copy}>
                   {entry.email}{' '}
                   <span
-                    onClick={() => handleCopy(entry.email, entry.id, 'email')}
+                    onClick={() => handleCopy(entry.email!, entry.id!, 'email')}
                   >
                     <FontAwesomeIcon
                       icon={
@@ -94,7 +94,7 @@ function PasswordsList() {
                   <div className={styles.copy2}>
                     <span
                       onClick={() =>
-                        handleCopy(entry.password, entry.id, 'password')
+                        handleCopy(entry.password, entry.id!, 'password')
                       }
                     >
                       <FontAwesomeIcon
@@ -113,7 +113,7 @@ function PasswordsList() {
                       <FontAwesomeIcon
                         icon={faTrash}
                         className={styles.pics}
-                        onClick={() => handleDeleting(entry.id)}
+                        onClick={() => handleDeleting(entry.id!)}
                       />
                     </span>
                   </div>
