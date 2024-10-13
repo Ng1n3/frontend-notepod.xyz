@@ -26,6 +26,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
+      '@tiptap/extension-heading':
+        specifier: ^2.8.0
+        version: 2.8.0(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))
       '@tiptap/extension-placeholder':
         specifier: ^2.7.1
         version: 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))(@tiptap/pm@2.7.1)
@@ -614,8 +617,8 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
-  '@tiptap/extension-heading@2.7.1':
-    resolution: {integrity: sha512-waVLZBKJADGYeqs4B09LEoe8wZtltut1pe68cHaGn4SuTXSbAhV/S5F3xBi4kLVJ9rN8qcNAqwPj9ZgOzeZqvQ==}
+  '@tiptap/extension-heading@2.8.0':
+    resolution: {integrity: sha512-4inWgrTPiqlivPmEHFOM5ck2UsmOsbKKPtqga6bALvWPmCv24S6/EBwFp8Jz4YABabXDnkviihmGu0LpP9D69w==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
@@ -2616,7 +2619,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.7.1(@tiptap/pm@2.7.1)
 
-  '@tiptap/extension-heading@2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))':
+  '@tiptap/extension-heading@2.8.0(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))':
     dependencies:
       '@tiptap/core': 2.7.1(@tiptap/pm@2.7.1)
 
@@ -2708,7 +2711,7 @@ snapshots:
       '@tiptap/extension-dropcursor': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))(@tiptap/pm@2.7.1)
       '@tiptap/extension-gapcursor': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))(@tiptap/pm@2.7.1)
       '@tiptap/extension-hard-break': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))
-      '@tiptap/extension-heading': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))
+      '@tiptap/extension-heading': 2.8.0(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))
       '@tiptap/extension-history': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))(@tiptap/pm@2.7.1)
       '@tiptap/extension-horizontal-rule': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))(@tiptap/pm@2.7.1)
       '@tiptap/extension-italic': 2.7.1(@tiptap/core@2.7.1(@tiptap/pm@2.7.1))

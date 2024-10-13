@@ -1,3 +1,4 @@
+import Heading from '@tiptap/extension-heading';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -6,11 +7,28 @@ import useTodos from '../context/useTodos';
 import Button from './Button';
 import styles from './CurrentTodoHeader.module.css';
 
+const customHeading = Heading.extend({
+  addKeyboardShortcuts() {
+    return {
+      Backspace: ({ editor }) => {
+        if (
+          editor.state.selection.$anchor.pos === 1 &&
+          editor.state.doc.textContent === ''
+        ) {
+          return true;
+        }
+        return false;
+      },
+    };
+  },
+});
+
 const extensions = [
   StarterKit.configure({
-    heading: {
-      levels: [1],
-    },
+    heading: false,
+  }),
+  customHeading.configure({
+    levels: [1],
   }),
   Placeholder.configure({
     placeholder: 'Untitled',
@@ -18,9 +36,17 @@ const extensions = [
   }),
 ];
 
-const content = '<h1></h1>'
+const content = '<h1></h1>';
 
-export default function CurrentTodoHeader({ setTitle, handleSubmit }) {
+interface currentTodoHeaderProps {
+  setTitle: (title: string) => void;
+  handleSubmit: () => void;
+}
+
+export default function CurrentTodoHeader({
+  setTitle,
+  handleSubmit,
+}: currentTodoHeaderProps) {
   const { currentTodo } = useTodos();
   // console.log("current todo from the currenttodoheader", currentTodo);
   const editor = useEditor({
@@ -31,24 +57,14 @@ export default function CurrentTodoHeader({ setTitle, handleSubmit }) {
     },
   });
 
-  useEffect(
-    function () {
-      if (editor && currentTodo) {
-        editor.commands.setContent(``);
-        editor.commands.setHeading({ level: 1 });
-        editor.commands.insertContent(currentTodo.title || '');
-      } else {
-        // console.log(editor);
-        editor?.commands.clearContent();
-      }
-  },
-    [currentTodo, editor]
-  );
+  useEffect(() => {
+    if (editor && currentTodo) {
+      editor.commands.setContent(`<h1>${currentTodo.title || ''}</h1>`);
+    } else {
+      editor?.commands.setContent('<h1></h1>');
+    }
+  }, [currentTodo, editor]);
 
-  // useEffect(() => {
-  //   if(editor && task !== editor.getText())
-  //     editor.commands.setContent(`<h1>${task}</h1>`)
-  // }, [editor, task])
   return (
     <div className={styles.title}>
       {/* <h1>Title</h1> */}

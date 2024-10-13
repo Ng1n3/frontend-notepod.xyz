@@ -279,7 +279,7 @@ function NotesProvider({ children }: NotesProvideProps) {
       // console.log('fetch single note from context: ', data);
       const note = data.data.getNote;
       dispatch({ type: 'note/loaded', payload: note });
-      navigate(`/note/${note.id}`);
+      navigate(`/notes/${note.id}`);
     } catch {
       dispatch({
         type: 'rejected',
@@ -325,7 +325,7 @@ function NotesProvider({ children }: NotesProvideProps) {
       }
       // console.log('updated Note: ', data);
       dispatch({ type: 'note/updated', payload: data.data.updateNote });
-      navigate('/');
+      navigate('/notes');
     } catch {
       dispatch({
         type: 'rejected',
@@ -337,7 +337,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   function setCurrentNote(note: Note | null) {
     dispatch({ type: 'note/loaded', payload: note });
     if (note) {
-      navigate(`/note/${note.id}`);
+      navigate(`/notes/${note.id}`);
     } else {
       navigate('/notes');
     }

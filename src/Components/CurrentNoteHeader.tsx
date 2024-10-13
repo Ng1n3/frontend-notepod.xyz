@@ -1,3 +1,4 @@
+import Heading from '@tiptap/extension-heading';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -6,11 +7,29 @@ import useNotes from '../context/useNotes';
 import Button from './Button';
 import styles from './CurrentNoteHeader.module.css';
 
+//creating a custom header to fix backspace bug.
+const CustomHeading = Heading.extend({
+  addKeyboardShortcuts() {
+    return {
+      Backspace: ({ editor }) => {
+        if (
+          editor.state.selection.$anchor.pos === 1 &&
+          editor.state.doc.textContent === ''
+        ) {
+          return true;
+        }
+        return false;
+      },
+    };
+  },
+});
+
 const extensions = [
   StarterKit.configure({
-    heading: {
-      levels: [1],
-    },
+    heading: false,
+  }),
+  CustomHeading.configure({
+    levels: [1],
   }),
   Placeholder.configure({
     placeholder: 'Untitled',
@@ -19,7 +38,15 @@ const extensions = [
 ];
 const content = `<h1></h1>`;
 
-export default function CurrentNoteHeader({ setTitle, handleSubmit }) {
+interface currentNoteHeaderProps {
+  setTitle: (title: string) => void;
+  handleSubmit: () => void;
+}
+
+export default function CurrentNoteHeader({
+  setTitle,
+  handleSubmit,
+}: currentNoteHeaderProps) {
   const { currentNote } = useNotes();
   const editor = useEditor({
     content,
@@ -29,19 +56,13 @@ export default function CurrentNoteHeader({ setTitle, handleSubmit }) {
     },
   });
 
-  useEffect(
-    function () {
-      if (editor && currentNote) {
-        editor.commands.setContent('');
-        editor.commands.setHeading({ level: 1 });
-        editor.commands.insertContent(currentNote.title || '');
-      }
-      else {
-        editor?.commands.clearContent();
-      }
-    },
-    [currentNote, editor]
-  );
+  useEffect(() => {
+    if (editor && currentNote) {
+      editor.commands.setContent(`<h1>${currentNote.title || ''}</h1>`);
+    } else {
+      editor?.commands.setContent('<h1></h1>');
+    }
+  }, [currentNote, editor]);
 
   return (
     <header className={styles.title}>
