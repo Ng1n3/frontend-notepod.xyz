@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import useAuth from '../context/useAuth';
 import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
+import styles from './Signup.module.css'
 
 interface SigninCredentials {
   email: string;
@@ -37,15 +38,15 @@ export default function Signup() {
     }
   };
   return (
-    <div>
-      <header>Signin to you Notepod account</header>
+    <div className={styles.body}>
       <form onSubmit={handleSubmit(onSubmit)}>
+      <header>Sign in to you Notepod account</header>
         <div>
-          <div>
+          <div className={styles.input}>
             <input {...register('email')} type="text" placeholder="Email" />
             {errors.email && <p>{`${errors.email?.message}`}</p>}
           </div>
-          <div>
+          <div className={styles.input}>
             <input
               {...register('username')}
               type="text"
@@ -53,7 +54,7 @@ export default function Signup() {
             />
             {errors.username && <p>{`${errors.username?.message}`}</p>}
           </div>
-          <div>
+          <div className={styles.input}>
             <input
               {...register('password')}
               type="password"
@@ -62,6 +63,12 @@ export default function Signup() {
             {errors.password && <p>{`${errors.password?.message}`}</p>}
           </div>
           <Button disabled={isSubmitting}>Sign in</Button>
+        </div>
+        <div className={styles.forgotPassword}>
+          Forgot NotePod <span>Password?</span>
+        </div>
+        <div className={styles.signup}>
+          New to NotePod? <span>Sign up</span>
         </div>
       </form>
     </div>

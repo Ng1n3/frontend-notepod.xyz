@@ -1,0 +1,69 @@
+.body {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.body header {
+ font-size: 1.85rem;
+ font-weight: 700;
+ color: var(--color-white-2);
+ text-align: center;
+ margin-bottom: 2.5rem;
+}
+
+.body .input {
+  margin-bottom: 1.7rem;
+}
+
+.body p {
+  font-size: 1.2rem;
+  color: var(--color-red-1);
+}
+
+.body input {
+  padding: .9rem;
+  border-radius: 5px;
+  border: 1px solid var(--color-white-2)
+}
+
+.body input:focus {
+  border: 2px solid var(--color-white-1)
+}
+
+.body button {
+  margin-top: 1rem;
+  width: 30rem;
+  padding: 1.2rem;
+  border: 1.5px solid var(--color-white-2)
+}
+
+.body .forgotPassword {
+  margin-top: 2.5rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--color-white-2)
+}
+
+.body .forgotPassword span {
+  font-weight: 700;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--color-white-1);
+}
+
+.body .signup {
+  text-align: center;
+  margin-top: 5rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--color-white-2)
+}
+
+.body .signup span {
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: var(--color-white-1);
+}
