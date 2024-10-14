@@ -3,7 +3,8 @@ import CurrentNote from './CurrentNote';
 import Footer from './Footer';
 import List from './List';
 import styles from './NoteBody.module.css';
-import Signup from './Signup';
+import Signin from './Signin';
+// import Signup from './Signup';
 
 export default function NotesBody() {
   const { currentNote } = useNotes();
@@ -12,7 +13,7 @@ export default function NotesBody() {
     <>
       <div className={styles.body}>
         <CurrentNote />
-        {currentNote ? <List /> : <Signup />}
+        {currentNote ? <List /> : <Signin />}
       </div>
       <Footer />
     </>

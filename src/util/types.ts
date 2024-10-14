@@ -14,5 +14,11 @@ export const createSignupSchema = z.object({
   username: z.string().min(4, 'username must be at least 4 characters')
 });
 
+export const createSigninSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(5, 'Password must be at least 4 characters'),
+});
+
 export type CreatePasswordSchema = z.infer<typeof createPasswordSchema>;
 export type CreateSignupSchema = z.infer<typeof createSignupSchema>;
+export type CreateSigninSchema = z.infer<typeof createSigninSchema>

@@ -5,10 +5,11 @@ import Header from '../Components/Header';
 import PasswordInput from '../Components/PasswordInput';
 import PasswordsList from '../Components/PasswordsList';
 import usePasswords from '../context/usePassword';
+import NotAllowed from '../Components/NotAllowed';
 
 export default function Passwords() {
   const { id } = useParams();
-  const { fetchPassword } = usePasswords();
+  const { fetchPassword, currentPassword } = usePasswords();
 
   useEffect(() => {
     async function fetchData() {
@@ -26,9 +27,15 @@ export default function Passwords() {
   return (
     <div>
       <Header />
-      {/* <CreatePasswords/> */}
-      <PasswordInput />
-      <PasswordsList />
+
+      {currentPassword ? (
+        <>
+          <PasswordInput />
+          <PasswordsList />
+        </>
+      ) : (
+        <NotAllowed/>
+      )}
       <Footer />
     </div>
   );

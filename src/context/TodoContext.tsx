@@ -59,7 +59,7 @@ type TodoActions =
 const initialState: TodoState = {
   todos: [],
   isLoading: false,
-  currentTodo: {},
+  currentTodo: null,
   priority: Priority.LOW,
   error: '',
 };

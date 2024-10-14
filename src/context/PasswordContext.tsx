@@ -51,7 +51,7 @@ type PasswordAction =
 const initialState: PasswordState = {
   passwords: [],
   isLoading: false,
-  currentPassword: {},
+  currentPassword: null,
   error: '',
 };
 
@@ -118,7 +118,10 @@ export const PasswordContext = createContext<PasswordContextType | undefined>(
 
 function PasswordProvider({ children }: PasswordProviderProps) {
   const [{ passwords, error, currentPassword, isLoading }, dispatch] =
-    useReducer<(state: PasswordState, action: PasswordAction) => PasswordState>(reducer, initialState);
+    useReducer<(state: PasswordState, action: PasswordAction) => PasswordState>(
+      reducer,
+      initialState
+    );
 
   const navigate = useSafeNavigate();
 
@@ -308,7 +311,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
       dispatch({ type: 'password/loaded', payload: password });
       navigate(`/passwords/${password.id}`);
     } else {
-      dispatch({ type: 'password/cleared'});
+      dispatch({ type: 'password/cleared' });
       navigate('/passwords');
     }
   };

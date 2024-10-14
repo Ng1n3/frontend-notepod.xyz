@@ -48,9 +48,9 @@ const initalState: DeletedState = {
   deletedTodos: [],
   deletedPasswords: [],
   isLoading: false,
-  currentDeletedTodo: {},
-  currentDeletedNote: {},
-  currentDeletedPassword: {},
+  currentDeletedTodo: null,
+  currentDeletedNote: null,
+  currentDeletedPassword: null,
   error: '',
 };
 
