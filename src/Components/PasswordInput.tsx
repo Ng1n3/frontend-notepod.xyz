@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Password } from '../context/PasswordContext';
 import usePasswords from '../context/usePassword';
-import { signUpSchema, SignupSchema } from '../util/types';
+import { createPasswordSchema, CreatePasswordSchema} from '../util/types';
 import Button from './Button';
 import styles from './PasswordInput.module.css';
 import Spinner from './Spinner';
@@ -25,8 +25,8 @@ function PasswordInput() {
     setValue,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<SignupSchema>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<CreatePasswordSchema>({
+    resolver: zodResolver(createPasswordSchema),
     defaultValues: {
       fieldname: '',
       username: '',
@@ -48,7 +48,7 @@ function PasswordInput() {
 
   if (isLoading) return <Spinner />;
 
-  const onSubmit = async (data: SignupSchema) => {
+  const onSubmit = async (data: CreatePasswordSchema) => {
     try {
       const newPassword: Password = {
         fieldname: data.fieldname,
