@@ -11,7 +11,7 @@ export default function TodoListBody() {
 
   if (isLoading) return <Spinner />;
   return (
-    <div>
+    <div className={styles.body}>
       <ListHeader />
       <div className={styles.listBody}>
         {todos && todos.length > 0

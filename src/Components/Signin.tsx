@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../context/useAuth';
 import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
-import styles from './Signup.module.css';
 import Signup from './Signup';
-import { useState } from 'react';
+import styles from './Signup.module.css';
 
 interface SigninCredentials {
   email: string;
@@ -26,7 +26,7 @@ export default function Signin() {
       password: '',
     },
   });
-  const { createAuth } = useAuth();
+  const { loginAuth } = useAuth();
 
   const onSubmit = async (data: CreateSignupSchema) => {
     const signinCredentials: SigninCredentials = {
@@ -34,7 +34,7 @@ export default function Signin() {
       password: data.password,
     };
     try {
-      await createAuth(signinCredentials);
+      await loginAuth(signinCredentials);
     } catch (error) {
       console.error(error);
     }

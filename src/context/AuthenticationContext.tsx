@@ -4,7 +4,7 @@ import { BASE_URL } from '../util/Interfaces';
 interface Auth {
   id?: string;
   email: string;
-  username: string;
+  username?: string;
   password: string;
 }
 
@@ -21,6 +21,7 @@ interface AuthProviderProps {
 
 interface AuthContextType extends AuthState {
   createAuth: (newUser: Auth) => Promise<void>;
+  loginAuth: (newUser: Auth) => Promise<void>;
 }
 
 type AuthAction =
@@ -117,9 +118,47 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function loginAuth(user: Auth) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation LoginUser(email: String!, password: String!) {
+            loginUser(email: $email, password: $password) {
+              id
+              email
+              username
+            }
+          }`,
+          variables: {
+            email: user.email,
+            password: user.password,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (data.errors) throw new Error(data.errors[0].message);
+      const loggedUser = data.data.loginUser;
+      dispatch({ type: 'auth/created', payload: loggedUser });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'There was an error loggin Auth.',
+      });
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ createAuth, auths, isLoading, error, currentAuth }}
+      value={{ createAuth, auths, isLoading, error, currentAuth, loginAuth }}
     >
       {children}
     </AuthContext.Provider>
