@@ -12,7 +12,7 @@ export default function TodoBody() {
     <>
       <div className={styles.body}>
         <CurrentTodo />
-        {currentTodo ? <TodoListBody /> : <Signin />}
+        {currentTodo ? <TodoListBody /> : <Signin destination="todos" />}
       </div>
       <Footer />
     </>

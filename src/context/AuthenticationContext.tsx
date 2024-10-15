@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useReducer } from 'react';
+import { createContext, ReactNode, useEffect, useReducer } from 'react';
 import { BASE_URL } from '../util/Interfaces';
 
 interface Auth {
@@ -22,6 +22,7 @@ interface AuthProviderProps {
 interface AuthContextType extends AuthState {
   createAuth: (newUser: Auth) => Promise<void>;
   loginAuth: (newUser: Auth) => Promise<void>;
+  checkAuthStatus: () => Promise<void>;
 }
 
 type AuthAction =
@@ -127,7 +128,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: `mutation LoginUser(email: String!, password: String!) {
+          query: `mutation LoginUser($email: String!, $password: String!) {
             loginUser(email: $email, password: $password) {
               id
               email
@@ -142,6 +143,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
+      // console.log("data from create auth", user);
       if (data.errors) throw new Error(data.errors[0].message);
       const loggedUser = data.data.loginUser;
       dispatch({ type: 'auth/created', payload: loggedUser });
@@ -156,9 +158,54 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function checkAuthStatus() {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query CurrentUser {
+            currentUser {
+              id
+              email
+              username
+            }
+          }`,
+        }),
+      });
+      const data = await res.json();
+      if (data.errors) throw new Error(data.errors[0].messasge);
+      const currentUser = data.data.currentUser;
+      dispatch({ type: 'auth/loaded', payload: currentUser });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'There was an error checking AuthStatus',
+      });
+    }
+  }
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ createAuth, auths, isLoading, error, currentAuth, loginAuth }}
+      value={{
+        createAuth,
+        auths,
+        isLoading,
+        error,
+        currentAuth,
+        loginAuth,
+        checkAuthStatus,
+      }}
     >
       {children}
     </AuthContext.Provider>

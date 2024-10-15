@@ -1,19 +1,18 @@
-import useNotes from '../context/useNotes';
+import useAuth from '../context/useAuth';
 import CurrentNote from './CurrentNote';
 import Footer from './Footer';
 import List from './List';
 import styles from './NoteBody.module.css';
 import Signin from './Signin';
-// import Signup from './Signup';
 
 export default function NotesBody() {
-  const { currentNote } = useNotes();
+  const {currentAuth} = useAuth()
 
   return (
     <>
       <div className={styles.body}>
         <CurrentNote />
-        {currentNote ? <List /> : <Signin />}
+        {currentAuth ? <List /> : <Signin destination='notes'/>}
       </div>
       <Footer />
     </>

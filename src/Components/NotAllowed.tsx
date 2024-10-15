@@ -13,7 +13,7 @@ export default function NotAllowed() {
     <div className={styles.body}>
       <FontAwesomeIcon icon={faBan} className={styles.ban}/>
       <h1>You must be signed in to access this page.</h1>
-      <p><span onClick={handleSignUp}>Sign up</span> here</p>
+      {/* <p><span onClick={handleSignUp}>Sign up</span> here</p> */}
       <p>
         Do you have an account? <span onClick={handleSignUp}>sign in</span> here instead
       </p>

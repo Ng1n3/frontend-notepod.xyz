@@ -2,7 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../context/useAuth';
-import { createSignupSchema, CreateSignupSchema } from '../util/types';
+import useSafeNavigate from '../hook/useSafeNavigate';
+import { createSigninSchema, CreateSigninSchema } from '../util/types';
 import Button from './Button';
 import Signup from './Signup';
 import styles from './Signup.module.css';
@@ -12,15 +13,20 @@ interface SigninCredentials {
   password: string;
 }
 
-export default function Signin() {
+export interface destinationProps {
+  destination: 'notes' | 'todos';
+}
+
+export default function Signin({ destination }: destinationProps) {
   const [showSignin, setShowSignin] = useState(false);
+  const navigate = useSafeNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateSignupSchema>({
-    resolver: zodResolver(createSignupSchema),
+  } = useForm<CreateSigninSchema>({
+    resolver: zodResolver(createSigninSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -28,20 +34,22 @@ export default function Signin() {
   });
   const { loginAuth } = useAuth();
 
-  const onSubmit = async (data: CreateSignupSchema) => {
+  const onSubmit = async (data: CreateSigninSchema) => {
+    console.log("hi i got here!");
     const signinCredentials: SigninCredentials = {
       email: data.email,
       password: data.password,
     };
     try {
       await loginAuth(signinCredentials);
+      navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);
     }
   };
 
   if (showSignin) {
-    return <Signup />;
+    return <Signup destination={destination} />;
   }
 
   return (

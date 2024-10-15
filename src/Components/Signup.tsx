@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import useAuth from '../context/useAuth';
 import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
-import Signin from './Signin';
+import Signin, { destinationProps } from './Signin';
 import styles from './Signup.module.css';
 
 interface SignUpCredentials {
@@ -13,7 +13,7 @@ interface SignUpCredentials {
   password: string;
 }
 
-export default function Signup() {
+export default function Signup({ destination }: destinationProps) {
   const [showSignin, setShowSignin] = useState(false);
   const {
     register,
@@ -43,7 +43,7 @@ export default function Signup() {
   };
 
   if (showSignin) {
-    return <Signin />;
+    return <Signin destination={destination} />;
   }
 
   return (
