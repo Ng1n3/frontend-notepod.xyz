@@ -41,12 +41,12 @@ const content = `<h1></h1>`;
 interface currentNoteHeaderProps {
   title: string;
   setTitle: (title: string) => void;
-  handleSubmit: () => void;
+  onSave: () => void;
 }
 
 export default function CurrentNoteHeader({
   setTitle,
-  handleSubmit,
+  onSave,
 }: currentNoteHeaderProps) {
   const { currentNote } = useNotes();
   const editor = useEditor({
@@ -69,7 +69,7 @@ export default function CurrentNoteHeader({
     <header className={styles.title}>
       {/* <h1>Title</h1> */}
       <EditorContent editor={editor} />
-      <Button onClick={handleSubmit}>
+      <Button onClick={onSave}>
         {currentNote && currentNote.id ? 'Update Note' : 'Add Note'}
       </Button>
     </header>

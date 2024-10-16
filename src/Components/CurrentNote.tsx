@@ -47,6 +47,7 @@ export default function CurrentNote() {
       clearCurrentNote();
     } else {
       await createNote({ title, body, userId: currentAuth?.id });
+      console.log('note created, new note here');
       clearCurrentNote();
     }
 
@@ -68,16 +69,11 @@ export default function CurrentNote() {
 
   return (
     <section className={styles.note}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
+      <form>
         <CurrentNoteHeader
           title={title}
           setTitle={setTitle}
-          handleSubmit={handleSubmit}
+          onSave={handleSubmit}
         />
         <CurrentNoteBody body={body} setBody={setBody} />
       </form>
