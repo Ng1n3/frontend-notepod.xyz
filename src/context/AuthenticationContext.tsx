@@ -23,12 +23,13 @@ interface AuthContextType extends AuthState {
   createAuth: (newUser: Auth) => Promise<void>;
   loginAuth: (newUser: Auth) => Promise<void>;
   checkAuthStatus: () => Promise<void>;
+  signout: () => Promise<void>;
 }
 
 type AuthAction =
   | { type: 'loading' }
   | { type: 'auths/loaded'; payload: Auth[] }
-  | { type: 'auth/loaded'; payload: Auth }
+  | { type: 'auth/loaded'; payload: Auth | null }
   | { type: 'auth/created'; payload: Auth }
   | { type: 'rejected'; payload: string };
 
@@ -88,6 +89,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `mutation CreateUser(username:String!, email: String!, password: String!) {
             createUser(username:$username, email: $email, password: $password) {
@@ -127,6 +129,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `mutation LoginUser($email: String!, $password: String!) {
             loginUser(email: $email, password: $password) {
@@ -147,6 +150,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       if (data.errors) throw new Error(data.errors[0].message);
       const loggedUser = data.data.loginUser;
       dispatch({ type: 'auth/created', payload: loggedUser });
+
+      sessionStorage.setItem('UserAuth', JSON.stringify(loggedUser));
     } catch (error) {
       dispatch({
         type: 'rejected',
@@ -166,6 +171,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `query CurrentUser {
             currentUser {
@@ -180,6 +186,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       if (data.errors) throw new Error(data.errors[0].messasge);
       const currentUser = data.data.currentUser;
       dispatch({ type: 'auth/loaded', payload: currentUser });
+      sessionStorage.setItem('UserAuth', JSON.stringify(currentUser));
     } catch (error) {
       dispatch({
         type: 'rejected',
@@ -188,6 +195,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
             ? error.message
             : 'There was an error checking AuthStatus',
       });
+      sessionStorage.removeItem('UserAuth');
+      dispatch({ type: 'auth/loaded', payload: null });
     }
   }
 
@@ -195,12 +204,52 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     checkAuthStatus();
   }, []);
 
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem('UserAuth');
+    if (storedUser) {
+      console.log('stored user', storedUser);
+      dispatch({ type: 'auth/loaded', payload: JSON.parse(storedUser) });
+      checkAuthStatus();
+    } else {
+      checkAuthStatus();
+    }
+  }, []);
+
+  async function signout() {
+    dispatch({ type: 'loading' });
+    try {
+      await fetch(BASE_URL, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation Signout {
+            signout
+          }`,
+        }),
+      });
+      sessionStorage.removeItem('UserAuth');
+      dispatch({ type: 'auth/loaded', payload: null });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'There was an error signing you out',
+      });
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
         createAuth,
         auths,
         isLoading,
+        signout,
         error,
         currentAuth,
         loginAuth,

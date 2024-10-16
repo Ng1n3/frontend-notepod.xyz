@@ -14,7 +14,7 @@ export interface Note {
   title: string;
   body: string;
   updatedAt?: Date;
-  // userId: string;
+  userId: string;
   // deletedAt: Date;
 }
 
@@ -130,6 +130,7 @@ function NotesProvider({ children }: NotesProvideProps) {
           'Content-Type': 'application/json',
           'x-apollo-operation-name': 'GetNotes',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: ` query GetNotes($isDeleted: Boolean) {
           getNotes(isDeleted: $isDeleted) {
@@ -170,6 +171,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `mutation CreateNote($title: String!, $body: String!) {
           createNote(title: $title, body: $body) {
@@ -192,6 +194,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         }),
       });
       const data = await res.json();
+      console.log("data from create note", data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
@@ -213,6 +216,7 @@ function NotesProvider({ children }: NotesProvideProps) {
           'Content-Type': 'application/json',
           'x-apollo-operation-name': 'DeleteNote',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `mutation SoftDeleteNote($id: String!) {
           softDeleteNote(id: $id) {
@@ -254,6 +258,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `query GetNote($id: String!) {
           getNote(id: $id) {
@@ -297,6 +302,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `mutation UpdateNote($title:String!, $body: String!, $id: String!) {
             updateNote(id:$id, body:$body, title:$title) {
