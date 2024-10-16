@@ -207,7 +207,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const storedUser = sessionStorage.getItem('UserAuth');
     if (storedUser) {
-      console.log('stored user', storedUser);
       dispatch({ type: 'auth/loaded', payload: JSON.parse(storedUser) });
       checkAuthStatus();
     } else {
@@ -225,8 +224,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: `mutation Signout {
-            signout
+          query: `mutation LogoutUser {
+            logoutUser
           }`,
         }),
       });

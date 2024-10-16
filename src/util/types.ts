@@ -11,7 +11,7 @@ export const createPasswordSchema = z.object({
 export const createSignupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(5, 'Password must be at least 4 characters'),
-  username: z.string().min(4, 'username must be at least 4 characters')
+  username: z.string().min(4, 'username must be at least 4 characters'),
 });
 
 export const createSigninSchema = z.object({
@@ -19,6 +19,17 @@ export const createSigninSchema = z.object({
   password: z.string().min(5, 'Password must be at least 4 characters'),
 });
 
+export const createNoteSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Title must have at least 1 character')
+    .max(256, 'Title can only have maximum of 256 characters'),
+  body: z.string().optional(),
+  isDeleted: z.boolean().default(false),
+  deletedAt: z.date().optional().nullable(),
+});
+
 export type CreatePasswordSchema = z.infer<typeof createPasswordSchema>;
 export type CreateSignupSchema = z.infer<typeof createSignupSchema>;
-export type CreateSigninSchema = z.infer<typeof createSigninSchema>
+export type CreateSigninSchema = z.infer<typeof createSigninSchema>;
+export type CreateNoteSchema = z.infer<typeof createNoteSchema>;

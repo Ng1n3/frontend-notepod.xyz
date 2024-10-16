@@ -1,6 +1,7 @@
-import  { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useNotes from '../context/useNotes';
 import useSafeNavigate from '../hook/useSafeNavigate';
+import { createNoteSchema } from '../util/types';
 import styles from './CurrentNote.module.css';
 import CurrentNoteBody from './CurrentNoteBody';
 import CurrentNoteHeader from './CurrentNoteHeader';
@@ -26,6 +27,12 @@ export default function CurrentNote() {
 
   const handleSubmit = useCallback(async () => {
     if (!title) return;
+
+    const validation = createNoteSchema.safeParse({ title, body });
+    if (!validation.success) {
+      console.error(validation.error);
+      return;
+    }
 
     if (currentNote && currentNote.id) {
       await updateNote({

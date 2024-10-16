@@ -35,7 +35,6 @@ export default function Signin({ destination }: destinationProps) {
   const { loginAuth } = useAuth();
 
   const onSubmit = async (data: CreateSigninSchema) => {
-    console.log("hi i got here!");
     const signinCredentials: SigninCredentials = {
       email: data.email,
       password: data.password,
