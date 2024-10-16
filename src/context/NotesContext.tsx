@@ -194,7 +194,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         }),
       });
       const data = await res.json();
-      console.log("data from create note", data);
+      console.log('data from create note', data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
@@ -250,17 +250,18 @@ function NotesProvider({ children }: NotesProvideProps) {
     }
   }
 
-  const  fetchNote = useCallback(async (id: string) => {
-    dispatch({ type: 'loading' });
-    try {
-      const res = await fetch(BASE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          query: `query GetNote($id: String!) {
+  const fetchNote = useCallback(
+    async (id: string) => {
+      dispatch({ type: 'loading' });
+      try {
+        const res = await fetch(BASE_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            query: `query GetNote($id: String!) {
           getNote(id: $id) {
             id,
             title,
@@ -273,26 +274,28 @@ function NotesProvider({ children }: NotesProvideProps) {
             deletedAt
             }  
         }`,
-          variables: {
-            id: id,
-          },
-        }),
-      });
+            variables: {
+              id: id,
+            },
+          }),
+        });
 
-      const data = await res.json();
-      if (data.errors) {
-        throw new Error(data.errors[0].message);
+        const data = await res.json();
+        if (data.errors) {
+          throw new Error(data.errors[0].message);
+        }
+        const note = data.data.getNote;
+        dispatch({ type: 'note/loaded', payload: note });
+        navigate(`/notes/${note.id}`);
+      } catch {
+        dispatch({
+          type: 'rejected',
+          payload: 'There was an error fetching note...',
+        });
       }
-      const note = data.data.getNote;
-      dispatch({ type: 'note/loaded', payload: note });
-      navigate(`/notes/${note.id}`);
-    } catch {
-      dispatch({
-        type: 'rejected',
-        payload: 'There was an error fetching note...',
-      });
-    }
-  }, [dispatch, navigate])
+    },
+    [dispatch, navigate]
+  );
 
   async function updateNote(updatedNote: Note) {
     dispatch({ type: 'loading' });

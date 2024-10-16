@@ -1,5 +1,6 @@
 import useNotes from '../context/useNotes';
 import useTodos from '../context/useTodos';
+import useSafeNavigate from '../hook/useSafeNavigate';
 import Button from './Button';
 import Spinner from './Spinner';
 
@@ -14,6 +15,7 @@ export default function VerifyDelete({
   onClose,
   itemType,
 }: verifyDeleteProp) {
+  const navigate = useSafeNavigate();
   const { isLoading, deleteNote, clearCurrentNote } = useNotes();
   const { deleteTodo } = useTodos();
   if (isLoading) return <Spinner />;
@@ -21,7 +23,7 @@ export default function VerifyDelete({
     if (itemType === 'note') {
       deleteNote(id);
       clearCurrentNote();
-
+      navigate('/notes');
     }
     if (itemType === 'todo') {
       // console.log('hi i reached here');

@@ -11,6 +11,7 @@ interface NoteListItem {
   title: string;
   body: string;
   updatedAt?: Date;
+  userId: string;
 }
 
 interface NoteListItemProp {
@@ -41,7 +42,7 @@ export default function NoteListItem({
   }
 
   return (
-    <div className={style.body} onClick={handleNoteClick}>
+    <div className={style.body}>
       {showModal ? (
         <VerifyDelete
           id={id!}
@@ -49,7 +50,7 @@ export default function NoteListItem({
           itemType="note"
         />
       ) : (
-        <>
+        <div onClick={handleNoteClick}>
           <header className={style.header}>
             <h2>{shortentext(title, HEADING_TEXT_NUM)}</h2>
             {/* <h2>{title}</h2> */}
@@ -63,7 +64,7 @@ export default function NoteListItem({
           </header>
           <p>{shortentext(body, BODY_TEXT_NUM)}</p>
           {updatedAt && <p>Last Updated: {formatDate(updatedAt)}</p>}
-        </>
+        </div>
       )}
     </div>
   );

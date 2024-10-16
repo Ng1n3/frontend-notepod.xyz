@@ -1,10 +1,9 @@
-import { EditorContent, useEditor } from '@tiptap/react';
 import Placeholder from '@tiptap/extension-placeholder';
+import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useCallback, useEffect } from 'react';
 import LastSaved from './LastSaved';
 import MenuBar from './TipTap/MenuBar';
-import { Editor } from '@tiptap/react';
 
 const extensions = [
   Placeholder.configure({
@@ -33,7 +32,7 @@ export default function CurrentNoteBody({
   setBody,
 }: CurrentNoteBodyProps) {
   const onUpdate = useCallback(
-    ({ editor }: {editor: Editor}) => {
+    ({ editor }: { editor: Editor }) => {
       const newBody = editor.getText();
       if (newBody !== body) {
         setBody(newBody);
@@ -44,14 +43,14 @@ export default function CurrentNoteBody({
 
   const editor = useEditor({
     extensions,
-    content: '',
+    content: body || '',
     onUpdate,
   });
 
   useEffect(
     function () {
       if (editor && body !== editor.getText()) {
-        editor.commands.setContent('');
+        editor.commands.setContent(body || '');
         editor.commands.insertContent(body);
       }
     },

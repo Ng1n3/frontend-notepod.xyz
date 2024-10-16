@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import useAuth from '../context/useAuth';
 import useNotes from '../context/useNotes';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import { createNoteSchema } from '../util/types';
@@ -10,6 +11,7 @@ export default function CurrentNote() {
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const { createNote, currentNote, updateNote, clearCurrentNote } = useNotes();
+  const { currentAuth } = useAuth();
 
   const navigate = useSafeNavigate();
   useEffect(
@@ -40,10 +42,11 @@ export default function CurrentNote() {
         body,
         id: currentNote.id,
         updatedAt: new Date(),
+        userId: currentAuth?.id,
       });
       clearCurrentNote();
     } else {
-      await createNote({ title, body });
+      await createNote({ title, body, userId: currentAuth?.id });
       clearCurrentNote();
     }
 
@@ -60,6 +63,7 @@ export default function CurrentNote() {
     createNote,
     navigate,
     clearCurrentNote,
+    currentAuth,
   ]);
 
   return (
