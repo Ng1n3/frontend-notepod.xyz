@@ -45,6 +45,7 @@ interface currentNoteHeaderProps {
 }
 
 export default function CurrentNoteHeader({
+  title,
   setTitle,
   onSave,
 }: currentNoteHeaderProps) {
@@ -58,12 +59,20 @@ export default function CurrentNoteHeader({
   });
 
   useEffect(() => {
-    if (editor && currentNote) {
-      editor.commands.setContent(`<h1>${currentNote.title || ''}</h1>`);
-    } else {
-      editor?.commands.setContent('<h1></h1>');
+    if (editor) {
+      if (currentNote) {
+        editor.commands.setContent(`<h1>${currentNote.title || ''}</h1>`);
+      } else {
+        editor?.commands.setContent('<h1></h1>');
+      }
     }
   }, [currentNote, editor]);
+
+  useEffect(() => {
+    if (editor && title !== editor.getText()) {
+      editor.commands.setContent(`<h1>${title || ''}</h1>`);
+    } 
+  }, [title, editor]);
 
   return (
     <header className={styles.title}>

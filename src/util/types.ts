@@ -29,7 +29,17 @@ export const createNoteSchema = z.object({
   deletedAt: z.date().optional().nullable(),
 });
 
+export const updateNoteSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Title must have at least 1 character')
+    .max(256, 'Title can only have maximum of 256 characters')
+    .optional(),
+  body: z.string().optional(),
+});
+
 export type CreatePasswordSchema = z.infer<typeof createPasswordSchema>;
 export type CreateSignupSchema = z.infer<typeof createSignupSchema>;
 export type CreateSigninSchema = z.infer<typeof createSigninSchema>;
 export type CreateNoteSchema = z.infer<typeof createNoteSchema>;
+export type UpdateNoteSchema = z.infer<typeof updateNoteSchema>;

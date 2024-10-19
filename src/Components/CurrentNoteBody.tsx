@@ -51,7 +51,7 @@ export default function CurrentNoteBody({
     function () {
       if (editor && body !== editor.getText()) {
         editor.commands.setContent(body || '');
-        editor.commands.insertContent(body);
+        // editor.commands.insertContent(body);
       }
     },
     [body, editor]

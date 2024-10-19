@@ -194,11 +194,14 @@ function NotesProvider({ children }: NotesProvideProps) {
         }),
       });
       const data = await res.json();
-      console.log('data from create note', data);
+      // console.log('data from create note', data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
       dispatch({ type: 'note/created', payload: data.data.createNote });
+      clearCurrentNote();
+      // navigate('/notes')
+      // setCurrentNote(null)
     } catch {
       dispatch({
         type: 'rejected',
@@ -298,6 +301,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   );
 
   async function updateNote(updatedNote: Note) {
+    console.log("Hi, what's live?");
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -330,11 +334,14 @@ function NotesProvider({ children }: NotesProvideProps) {
       });
 
       const data = await res.json();
+      console.log('updated data', data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
       dispatch({ type: 'note/updated', payload: data.data.updateNote });
+      clearCurrentNote();
       navigate('/notes');
+      dispatch({ type: 'note/cleared' });
     } catch {
       dispatch({
         type: 'rejected',

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useAuth from '../context/useAuth';
 import useNotes from '../context/useNotes';
-import useSafeNavigate from '../hook/useSafeNavigate';
-import { createNoteSchema } from '../util/types';
+import { createNoteSchema, updateNoteSchema } from '../util/types';
 import styles from './CurrentNote.module.css';
 import CurrentNoteBody from './CurrentNoteBody';
 import CurrentNoteHeader from './CurrentNoteHeader';
@@ -10,10 +9,9 @@ import CurrentNoteHeader from './CurrentNoteHeader';
 export default function CurrentNote() {
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
-  const { createNote, currentNote, updateNote, clearCurrentNote } = useNotes();
+  const { createNote, currentNote, updateNote } = useNotes();
   const { currentAuth } = useAuth();
 
-  const navigate = useSafeNavigate();
   useEffect(
     function () {
       if (currentNote) {
@@ -27,45 +25,39 @@ export default function CurrentNote() {
     [currentNote]
   );
 
-  const handleSubmit = useCallback(async () => {
-    if (!title) return;
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (!title || !currentAuth) return;
 
-    const validation = createNoteSchema.safeParse({ title, body });
-    if (!validation.success) {
-      console.error(validation.error);
-      return;
-    }
+      if (currentNote && currentNote.id) {
+        const validation = updateNoteSchema.safeParse({ title, body });
+        if (!validation.success) {
+          console.error(validation.error);
+          return;
+        }
 
-    if (currentNote && currentNote.id) {
-      await updateNote({
-        title,
-        body,
-        id: currentNote.id,
-        updatedAt: new Date(),
-        userId: currentAuth?.id,
-      });
-      clearCurrentNote();
-    } else {
-      await createNote({ title, body, userId: currentAuth?.id });
-      console.log('note created, new note here');
-      clearCurrentNote();
-    }
-
-    setTitle('');
-    setBody('');
-
-    if (currentNote?.title === title) return;
-    navigate('/');
-  }, [
-    title,
-    body,
-    currentNote,
-    updateNote,
-    createNote,
-    navigate,
-    clearCurrentNote,
-    currentAuth,
-  ]);
+        await updateNote({
+          title,
+          body,
+          id: currentNote.id,
+          updatedAt: new Date(),
+          userId: currentAuth.id,
+        });
+        console.log('I have cleard it all');
+      } else {
+        const validation = createNoteSchema.safeParse({ title, body });
+        if (!validation.success) {
+          console.error(validation.error);
+          return;
+        }
+        await createNote({ title, body, userId: currentAuth?.id });
+      }
+      setTitle('');
+      setBody('');
+    },
+    [title, body, currentNote, updateNote, createNote, currentAuth]
+  );
 
   return (
     <section className={styles.note}>
