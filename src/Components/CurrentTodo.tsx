@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import useTodos from '../context/useTodos';
-import useSafeNavigate from '../hook/useSafeNavigate';
 import styles from './CurrentTodo.module.css';
 import CurrentTodoBody from './CurrentTodoBody';
 import CurrentTodoHeader from './CurrentTodoHeader';
@@ -19,7 +18,6 @@ export default function CurrentTodo() {
   const [dueDate, setDueDate] = useState<Date>(new Date());
   const [priority, setPriority] = useState<Priority>(Priority.LOW);
 
-  const navigate = useSafeNavigate();
 
   useEffect(
     function () {
@@ -39,7 +37,8 @@ export default function CurrentTodo() {
   );
 
   const handleSubmit = useCallback(
-    async function () {
+    async function (event) {
+      event.preventDefault();
       if (!title) return;
 
       if (currentTodo && currentTodo.id) {
@@ -57,13 +56,12 @@ export default function CurrentTodo() {
       setTitle('');
       setBody('');
       if (currentTodo?.title === title) return;
-      navigate('/');
+      // navigate('/');
     },
     [
       currentTodo,
       createTodo,
       body,
-      navigate,
       title,
       updateTodo,
       dueDate,
@@ -73,12 +71,7 @@ export default function CurrentTodo() {
   );
   return (
     <section className={styles.todo}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
+      <form>
         <CurrentTodoHeader
           title={title}
           setTitle={setTitle}

@@ -44,7 +44,6 @@ export default function CurrentNote() {
           updatedAt: new Date(),
           userId: currentAuth.id,
         });
-        console.log('I have cleard it all');
       } else {
         const validation = createNoteSchema.safeParse({ title, body });
         if (!validation.success) {

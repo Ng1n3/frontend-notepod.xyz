@@ -32,6 +32,7 @@ interface NotesProvideProps {
 interface NotesContextType extends NoteState {
   createNote: (newNote: Note) => Promise<void>;
   deleteNote: (id: string) => Promise<void>;
+  fetchNotes:  () => Promise<void>;
   dispatch: Dispatch<NotesAction>;
   fetchNote: (id: string) => Promise<void>;
   updateNote: (updatedNote: Note) => Promise<void>;
@@ -377,6 +378,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         fetchNote,
         updateNote,
         setCurrentNote,
+        fetchNotes,
         dispatch,
       }}
     >
