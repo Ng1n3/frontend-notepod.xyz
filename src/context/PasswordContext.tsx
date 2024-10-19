@@ -130,6 +130,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -158,7 +159,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
       if (data.errors) {
         throw new Error(data.errors);
       }
-      console.log("hi i reached here");
       dispatch({
         type: 'passwords/loaded',
         payload: data.data.getPasswordFields,
@@ -180,6 +180,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -225,6 +226,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -270,6 +272,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -326,6 +329,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

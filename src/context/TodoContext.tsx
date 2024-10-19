@@ -133,17 +133,20 @@ function TodoProvider({ children }: TodoProviderProps) {
   const navigate = useSafeNavigate();
 
   useEffect(function () {
-    async function fetchTodos() {
-      dispatch({ type: 'loading' });
-      try {
-        const res = await fetch(BASE_URL, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: `query GetTodos($isDeleted: Boolean) {
+    fetchTodos();
+  }, []);
+
+  async function fetchTodos() {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query GetTodos($isDeleted: Boolean) {
                 getTodos(isDeleted: $isDeleted) {
                   id,
                   title,
@@ -159,26 +162,23 @@ function TodoProvider({ children }: TodoProviderProps) {
                   deletedAt
                   }
                 }`,
-            variables: {
-              isDeleted: false,
-            },
-          }),
-        });
-        const data = await res.json();
-        // console.log('data from todoContext: ', data.data.getTodos);
-        if (data.errors) {
-          throw new Error(data.errors[0].message);
-        }
-        dispatch({ type: 'todos/loaded', payload: data.data.getTodos });
-      } catch {
-        dispatch({
-          type: 'rejected',
-          payload: 'There was an error loading data...',
-        });
+          variables: {
+            isDeleted: false,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
       }
+      dispatch({ type: 'todos/loaded', payload: data.data.getTodos });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error loading data...',
+      });
     }
-    fetchTodos();
-  }, []);
+  }
 
   async function createTodo(newTodo: Todo) {
     dispatch({ type: 'loading' });

@@ -15,8 +15,6 @@ function PasswordsList() {
     setCurrentPassword(password);
   };
 
-  console.log("Passwords from context", passwords);
-
   function handleDeleting(id: string) {
     deletePassword(id);
   }
