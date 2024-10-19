@@ -158,6 +158,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
       if (data.errors) {
         throw new Error(data.errors);
       }
+      console.log("hi i reached here");
       dispatch({
         type: 'passwords/loaded',
         payload: data.data.getPasswordFields,

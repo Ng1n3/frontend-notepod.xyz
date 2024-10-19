@@ -23,6 +23,7 @@ export interface Todo {
   body: string;
   dueDate: Date;
   priority: Priority;
+  userId?: string;
 }
 
 interface TodoState {
@@ -124,7 +125,10 @@ export const TodoContext = createContext<TodoContextType | undefined>(
 
 function TodoProvider({ children }: TodoProviderProps) {
   const [{ todos, error, currentTodo, isLoading, priority }, dispatch] =
-    useReducer<(state: TodoState, action: TodoActions) => TodoState>(reducer, initialState);
+    useReducer<(state: TodoState, action: TodoActions) => TodoState>(
+      reducer,
+      initialState
+    );
 
   const navigate = useSafeNavigate();
 
@@ -134,6 +138,7 @@ function TodoProvider({ children }: TodoProviderProps) {
       try {
         const res = await fetch(BASE_URL, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -180,6 +185,7 @@ function TodoProvider({ children }: TodoProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -208,6 +214,7 @@ function TodoProvider({ children }: TodoProviderProps) {
         }),
       });
       const data = await res.json();
+      // console.log("created new Todo", data);
       dispatch({ type: 'todo/created', payload: data.data.createTodo });
     } catch {
       dispatch({
@@ -223,6 +230,7 @@ function TodoProvider({ children }: TodoProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -265,6 +273,7 @@ function TodoProvider({ children }: TodoProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -321,6 +330,7 @@ function TodoProvider({ children }: TodoProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

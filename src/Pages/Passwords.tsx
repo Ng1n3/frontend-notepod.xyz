@@ -6,10 +6,12 @@ import PasswordInput from '../Components/PasswordInput';
 import PasswordsList from '../Components/PasswordsList';
 import usePasswords from '../context/usePassword';
 import NotAllowed from '../Components/NotAllowed';
+import useAuth from '../context/useAuth';
 
 export default function Passwords() {
   const { id } = useParams();
-  const { fetchPassword, currentPassword } = usePasswords();
+  const { fetchPassword } = usePasswords();
+  const {currentAuth} = useAuth()
 
   useEffect(() => {
     async function fetchData() {
@@ -28,7 +30,7 @@ export default function Passwords() {
     <div>
       <Header />
 
-      {currentPassword ? (
+      {currentAuth ? (
         <>
           <PasswordInput />
           <PasswordsList />

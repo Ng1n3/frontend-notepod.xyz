@@ -7,20 +7,23 @@ import DeletedTodos from '../Components/DeletedTodos';
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
 import NotAllowed from '../Components/NotAllowed';
-import useDeleted from '../context/useDeleted';
+// import useDeleted from '../context/useDeleted';
+import useAuth from '../context/useAuth';
 
 export default function Deleted() {
   const [option, setOption] = useState('password');
-  const { currentDeletedNote, currentDeletedPassword, currentDeletedTodo } =
-    useDeleted();
+  // const { currentDeletedNote, currentDeletedPassword, currentDeletedTodo } =
+  //   useDeleted();
+  const {currentAuth} = useAuth()
+  console.log(currentAuth);
 
-  const hasDeletedItems =
-    currentDeletedNote || currentDeletedPassword || currentDeletedTodo;
+  // const hasDeletedItems =
+  //   currentDeletedNote || currentDeletedPassword || currentDeletedTodo;
 
   return (
     <div>
       <Header />
-      {hasDeletedItems ? (
+      {currentAuth ? (
         <>
           <DeletedHeader option={option} setOption={setOption} />
           {option === 'password' && <DeletedPasswordBody />}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import useAuth from '../context/useAuth';
 import useTodos from '../context/useTodos';
 import styles from './CurrentTodo.module.css';
 import CurrentTodoBody from './CurrentTodoBody';
@@ -17,7 +18,7 @@ export default function CurrentTodo() {
   const { createTodo, currentTodo, updateTodo, clearCurrentTodo } = useTodos();
   const [dueDate, setDueDate] = useState<Date>(new Date());
   const [priority, setPriority] = useState<Priority>(Priority.LOW);
-
+  const { currentAuth } = useAuth();
 
   useEffect(
     function () {
@@ -41,6 +42,8 @@ export default function CurrentTodo() {
       event.preventDefault();
       if (!title) return;
 
+      // console.log("currentAuthID", currentAuth.id);
+
       if (currentTodo && currentTodo.id) {
         await updateTodo({
           id: currentTodo.id,
@@ -48,21 +51,28 @@ export default function CurrentTodo() {
           body,
           dueDate,
           priority,
+          userId: currentAuth!.id,
         });
         clearCurrentTodo();
       } else {
-        await createTodo({ title, body: body, dueDate, priority });
+        await createTodo({
+          title,
+          body: body,
+          dueDate,
+          priority,
+          userId: currentAuth!.id,
+        });
       }
       setTitle('');
       setBody('');
       if (currentTodo?.title === title) return;
-      // navigate('/');
     },
     [
       currentTodo,
       createTodo,
       body,
       title,
+      currentAuth,
       updateTodo,
       dueDate,
       priority,

@@ -8,6 +8,7 @@ import TodoListBody from './TodoListBody';
 export default function TodoBody() {
 
   const {currentAuth} = useAuth()
+  // console.log("CurrentAuth", currentAuth);
 
   return (
     <>
