@@ -8,7 +8,7 @@ import styles from './NoteListItem.module.css';
 import VerifyDelete from './VerifyDelete';
 
 enum Priority {
-  LOW ='LOW',
+  LOW = 'LOW',
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH',
   CRITICAL = 'CRITICAL',
@@ -40,7 +40,7 @@ export default function TodoListItem({
   const { id, title, body, dueDate, priority } = todo;
   const { setCurrentTodo } = useTodos();
   function handleTodoClick() {
-    setCurrentTodo({ title,  body, priority, id, dueDate });
+    setCurrentTodo({ title, body, priority, id, dueDate });
   }
 
   function handleDelete(e: React.MouseEvent) {
@@ -48,11 +48,15 @@ export default function TodoListItem({
     setShowModal(true);
   }
   return (
-    <div className={styles.body} onClick={handleTodoClick}>
+    <div className={styles.body}>
       {showModal ? (
-        <VerifyDelete id={id} onClose={() => setShowModal(false)} itemType='todo'/>
+        <VerifyDelete
+          id={id}
+          onClose={() => setShowModal(false)}
+          itemType="todo"
+        />
       ) : (
-        <>
+        <div onClick={handleTodoClick}>
           <header className={styles.header}>
             <h2>{shortentext(title, TODO_HEADER_NUM)}</h2>
             <FontAwesomeIcon
@@ -69,7 +73,7 @@ export default function TodoListItem({
             <h3>Due date: {formatDate(dueDate)}</h3>
             <h3>Priority: {priority}</h3>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

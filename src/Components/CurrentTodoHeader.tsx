@@ -40,11 +40,12 @@ const content = '<h1></h1>';
 
 interface currentTodoHeaderProps {
   title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
   handleSubmit: () => void;
 }
 
 export default function CurrentTodoHeader({
+  title,
   setTitle,
   handleSubmit,
 }: currentTodoHeaderProps) {
@@ -64,6 +65,12 @@ export default function CurrentTodoHeader({
       editor?.commands.setContent('<h1></h1>');
     }
   }, [currentTodo, editor]);
+
+  useEffect(() => {
+    if (editor && title !== editor.getText()) {
+      editor.commands.setContent(`<h1>${title || ''}</h1>`);
+    }
+  }, [title, editor]);
 
   return (
     <div className={styles.title}>

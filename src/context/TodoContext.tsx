@@ -216,6 +216,7 @@ function TodoProvider({ children }: TodoProviderProps) {
       const data = await res.json();
       // console.log("created new Todo", data);
       dispatch({ type: 'todo/created', payload: data.data.createTodo });
+      clearCurrentTodo();
     } catch {
       dispatch({
         type: 'rejected',
