@@ -184,6 +184,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: `query {
@@ -253,6 +254,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -293,6 +295,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -333,6 +336,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
