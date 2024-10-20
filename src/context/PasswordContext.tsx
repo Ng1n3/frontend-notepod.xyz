@@ -16,6 +16,7 @@ export interface Password {
   username?: string;
   email?: string;
   password: string;
+  userId?: string;
 }
 
 interface PasswordState {
@@ -209,6 +210,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
         }),
       });
       const data = await res.json();
+      // console.log("created password", data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
@@ -354,6 +356,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
             fieldname: updatedPassword.fieldname,
             email: updatedPassword.email,
             username: updatedPassword.username,
+            password: updatedPassword.password,
           },
         }),
       });

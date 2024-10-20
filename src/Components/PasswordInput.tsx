@@ -2,8 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Password } from '../context/PasswordContext';
+import useAuth from '../context/useAuth';
 import usePasswords from '../context/usePassword';
-import { createPasswordSchema, CreatePasswordSchema} from '../util/types';
+import { createPasswordSchema, CreatePasswordSchema } from '../util/types';
 import Button from './Button';
 import styles from './PasswordInput.module.css';
 import Spinner from './Spinner';
@@ -18,6 +19,7 @@ function PasswordInput() {
     setCurrentPassword,
     clearCurrentPassword,
   } = usePasswords();
+  const { currentAuth } = useAuth();
 
   const {
     register,
@@ -55,20 +57,26 @@ function PasswordInput() {
         email: data.email,
         username: data.username,
         password: data.password,
+        userId: currentAuth!.id
       };
+
+      // console.log("the new password", newPassword);
 
       if (currentPassword) {
         await updatePassword({
           ...currentPassword,
           ...newPassword,
           id: currentPassword.id,
+
         });
         setCurrentPassword(null);
         reset();
         clearCurrentPassword();
       } else {
         await createPassword(newPassword);
+        setCurrentPassword(null)
         reset();
+        clearCurrentPassword();
       }
     } catch {
       console.error(error);
