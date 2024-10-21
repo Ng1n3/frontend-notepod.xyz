@@ -5,10 +5,7 @@ import ListTodo from './ListTodo';
 import Signin from './Signin';
 import styles from './TodoBody.module.css';
 
-
-
 export default function TodoBody() {
-
   const {currentAuth} = useAuth()
 
   return (

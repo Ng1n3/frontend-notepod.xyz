@@ -18,7 +18,6 @@ interface NoteListItemProp {
   note: NoteListItem;
   setShowModal: (show: boolean) => void;
   showModal: boolean;
-  fetchNote: (id: string) => Promise<void>;
 }
 
 const BODY_TEXT_NUM = 15;

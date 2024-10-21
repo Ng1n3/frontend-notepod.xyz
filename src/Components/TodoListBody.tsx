@@ -6,11 +6,11 @@ import styles from './NoteListBody.module.css';
 import Spinner from './Spinner';
 import TodoListItem from './TodoListItem';
 
-interface TodoListBodyProps {
+export interface ListBodyProps {
   searchTerm: string;
 }
 
-export default function TodoListBody({ searchTerm }: TodoListBodyProps) {
+export default function TodoListBody({ searchTerm }: ListBodyProps) {
   const { todos, isLoading } = useTodos();
   const [modalOpenId, setModalOpenId] = useState<string | null>(null);
   const [filteredTodos, setFilteredTodos] = useState(todos || []);
@@ -58,17 +58,4 @@ export default function TodoListBody({ searchTerm }: TodoListBodyProps) {
       </div>
     </div>
   );
-}
-
-{
-  /* {todos.length === 0 ? (
-  <div className={styles.result}>
-    <FontAwesomeIcon icon={faBoxOpen} className={styles.icon} />
-    <p className={styles.p}>
-      {searchTerm
-        ? 'No results found'
-        : 'Sorry, you currently have no todos'}
-    </p>
-  </div>
-) : ( */
 }
