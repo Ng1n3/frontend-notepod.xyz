@@ -2,7 +2,7 @@ import { createContext, ReactNode, useEffect, useReducer } from 'react';
 import { BASE_URL } from '../util/Interfaces';
 
 interface Auth {
-  id: string;
+  id?: string;
   email: string;
   username?: string;
   password: string;

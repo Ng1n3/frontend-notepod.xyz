@@ -7,11 +7,11 @@ import useNotes from '../context/useNotes';
 export default function Notes() {
   const { id } = useParams();
   const { fetchNote } = useNotes();
-  const fetchNoteRef = useRef(fetchNote)
+  const fetchNoteRef = useRef(fetchNote);
 
   useEffect(() => {
-    fetchNoteRef.current = fetchNote
-  }, [fetchNote])
+    fetchNoteRef.current = fetchNote;
+  }, [fetchNote]);
 
   useEffect(() => {
     async function fetchData() {

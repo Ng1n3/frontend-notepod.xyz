@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Slide, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import useAuth from '../context/useAuth';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import { createSigninSchema, CreateSigninSchema } from '../util/types';
@@ -41,9 +43,25 @@ export default function Signin({ destination }: destinationProps) {
     };
     try {
       await loginAuth(signinCredentials);
+      toast.success(`Hey, Welcome back! ✅`, {
+        position: 'top-right',
+        autoClose: 5000,
+        closeOnClick: true,
+        theme: 'light',
+        transition: Slide,
+        hideProgressBar: false,
+      });
       navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);
+      toast.error('Failed to signin. Please check your credentials.', {
+        position: 'top-left',
+        autoClose: 5000,
+        closeOnClick: true,
+        theme: 'light',
+        transition: Slide,
+        hideProgressBar: false,
+      });
     }
   };
 

@@ -6,6 +6,9 @@
   --color-white-1: #fff;
   --color-white-2: #cfcccc;
   --color-btn-1: #5b4949;
+  --toastify-toast-background: var(--color-bg-1);
+  --toastify-color-light: var(--color-bg-1);
+  --toastify-text-color-light: var(--color-white-1);
 }
 
 * {

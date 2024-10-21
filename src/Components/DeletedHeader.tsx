@@ -1,7 +1,16 @@
+import React from 'react';
 import styles from './DeletedHeader.module.css';
 
-export default function DeletedHeader({ option, setOption }) {
-  function handleSelectChange(e) {
+interface DeletedHeaderProp {
+  option: string;
+  setOption: (target: string) => void;
+}
+
+export default function DeletedHeader({
+  option,
+  setOption,
+}: DeletedHeaderProp) {
+  function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setOption(e.target.value);
   }
 

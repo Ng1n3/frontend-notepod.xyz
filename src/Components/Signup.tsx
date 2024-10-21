@@ -6,6 +6,8 @@ import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
 import Signin, { destinationProps } from './Signin';
 import styles from './Signup.module.css';
+import useSafeNavigate from '../hook/useSafeNavigate';
+import { Slide, toast } from 'react-toastify';
 
 interface SignUpCredentials {
   email: string;
@@ -28,17 +30,35 @@ export default function Signup({ destination }: destinationProps) {
     },
   });
   const { createAuth } = useAuth();
+  const navigate = useSafeNavigate()
 
   const onSubmit = async (data: CreateSignupSchema) => {
-    const signinCredentials: SignUpCredentials = {
+    const signupCredentials: SignUpCredentials = {
       email: data.email,
       password: data.password,
       username: data.username,
     };
     try {
-      await createAuth(signinCredentials);
+      await createAuth(signupCredentials);
+      toast.success(`Hey, Welcome! ✅`, {
+        position: 'top-right',
+        autoClose: 5000,
+        closeOnClick: true,
+        theme: 'light',
+        transition: Slide,
+        hideProgressBar: false,
+      });
+      navigate(destination === 'notes' ? '/notes': '/todos')
     } catch (error) {
       console.error(error);
+      toast.error('Failed to signup. Please check your credentials.', {
+        position: 'top-left',
+        autoClose: 5000,
+        closeOnClick: true,
+        theme: 'light',
+        transition: Slide,
+        hideProgressBar: false,
+      });
     }
   };
 

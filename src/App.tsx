@@ -1,6 +1,7 @@
-import React, {  } from 'react';
+import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Slide, ToastContainer } from 'react-toastify';
 import Deleted from './Pages/Deleted';
 import NotFound from './Pages/NotFound';
 import Notes from './Pages/Notes';
@@ -65,6 +66,13 @@ function App() {
               <TodoProvider>
                 <PasswordProvider>
                   <AuthenticatedApp />
+                  <ToastContainer
+                    theme="light"
+                    position="top-left"
+                    autoClose={5000}
+                    closeOnClick
+                    transition={Slide}
+                  />
                 </PasswordProvider>
               </TodoProvider>
             </NotesProvider>
