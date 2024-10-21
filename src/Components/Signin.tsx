@@ -54,7 +54,20 @@ export default function Signin({ destination }: destinationProps) {
       navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);
-      toast.error('Failed to signin. Please check your credentials.', {
+      let errorMessage = 'Incorrect Credentials please try again';
+      if (error instanceof Error) {
+        switch (error.message) {
+          case 'INVALID_CREDENTIALS':
+            errorMessage = 'Invalid email or password. Please try again';
+            break;
+          case 'NOT_AUTHORIZED':
+            errorMessage = 'You are already logged in.';
+            break;
+          default:
+            errorMessage = error.message;
+        }
+      }
+      toast.error(errorMessage, {
         position: 'top-left',
         autoClose: 5000,
         closeOnClick: true,

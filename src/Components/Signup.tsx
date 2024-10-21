@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Slide, toast } from 'react-toastify';
 import useAuth from '../context/useAuth';
+import useSafeNavigate from '../hook/useSafeNavigate';
 import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
 import Signin, { destinationProps } from './Signin';
 import styles from './Signup.module.css';
-import useSafeNavigate from '../hook/useSafeNavigate';
-import { Slide, toast } from 'react-toastify';
 
 interface SignUpCredentials {
   email: string;
@@ -30,7 +30,7 @@ export default function Signup({ destination }: destinationProps) {
     },
   });
   const { createAuth } = useAuth();
-  const navigate = useSafeNavigate()
+  const navigate = useSafeNavigate();
 
   const onSubmit = async (data: CreateSignupSchema) => {
     const signupCredentials: SignUpCredentials = {
@@ -48,10 +48,39 @@ export default function Signup({ destination }: destinationProps) {
         transition: Slide,
         hideProgressBar: false,
       });
-      navigate(destination === 'notes' ? '/notes': '/todos')
+      navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);
-      toast.error('Failed to signup. Please check your credentials.', {
+      let errorMessage = 'An Error Occured during signup';
+      if (error instanceof Error) {
+        switch (error.message) {
+          case 'EMAIL_EXISTS':
+            errorMessage =
+              'This email is already in use. Please use a different email or signin with this email';
+            break;
+          case 'USERNAME_EXISTS':
+            errorMessage =
+              'This username is already in use. Please use a different username or signin.';
+            break;
+
+          case 'INVALID_USERNAME':
+            errorMessage = 'Please enter a valid username.';
+            break;
+          case 'ALREADY_AUTHENTICATED':
+            errorMessage = 'You are already logged in.';
+            break;
+          case 'INVALID_INPUT':
+            errorMessage = 'Please check your input and try again.';
+            break;
+          case 'UNKNOWN_ERROR':
+            errorMessage = 'An unknown error occurred. Please try again later.';
+            break;
+          default:
+            errorMessage = error.message;
+            break;
+        }
+      }
+      toast.error(errorMessage, {
         position: 'top-left',
         autoClose: 5000,
         closeOnClick: true,

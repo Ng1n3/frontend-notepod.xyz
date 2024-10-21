@@ -91,15 +91,15 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         },
         credentials: 'include',
         body: JSON.stringify({
-          query: `mutation CreateUser(username:String!, email: String!, password: String!) {
-            createUser(username:$username, email: $email, password: $password) {
+          query: `mutation CreateUser($username: String!, $email: String!, $password: String!) {
+            createUser(username: $username, email: $email, password: $password) {
               id
               username
               email
             }
           }`,
           variables: {
-            usernamne: newAuth.username,
+            username: newAuth.username,
             email: newAuth.email,
             password: newAuth.password,
           },
@@ -107,10 +107,15 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
+      console.log("data from creath auth", data);
       if (data.errors) throw new Error(data.errors[0].message);
       const createdAuth = data.data.createUser;
       dispatch({ type: 'auth/created', payload: createdAuth });
     } catch (error) {
+      console.error(error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
       dispatch({
         type: 'rejected',
         payload:
@@ -118,6 +123,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
             ? error.message
             : 'There was an error creating new Auth',
       });
+      throw new Error('An unexpected error occured during user creation');
     }
   }
 
@@ -150,8 +156,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       if (data.errors) throw new Error(data.errors[0].message);
       const loggedUser = data.data.loginUser;
       dispatch({ type: 'auth/created', payload: loggedUser });
-
-      // sessionStorage.setItem('UserAuth', JSON.stringify(loggedUser));
     } catch (error) {
       dispatch({
         type: 'rejected',
@@ -160,6 +164,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
             ? error.message
             : 'There was an error loggin Auth.',
       });
+      throw Error;
     }
   }
 
