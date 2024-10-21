@@ -1,4 +1,3 @@
-import Button from './Button';
 import styles from './DeletedHeader.module.css';
 
 export default function DeletedHeader({ option, setOption }) {
@@ -17,10 +16,10 @@ export default function DeletedHeader({ option, setOption }) {
         <option value="todo">Todos</option>
         <option value="password">Passwords</option>
       </select>
-      <div className={styles.searchBar}>
+      {/* <div className={styles.searchBar}>
         <input type="text" placeholder={`Search for your ${option}..`} />
         <Button>Search</Button>
-      </div>
+      </div> */}
     </div>
   );
 }
