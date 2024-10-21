@@ -10,6 +10,23 @@
   overflow:auto;
 }
 
+.icon {
+  font-size: 9rem;
+  color: var(--color-red-1)
+}
+
+.result {
+  margin-top: 5rem;
+  text-align:  center;
+}
+
+.p {
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-white-2)
+}
+
 .listBody::-webkit-scrollbar {
   width: 8px;
   height: 8px;

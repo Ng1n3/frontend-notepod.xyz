@@ -12,7 +12,7 @@ export default function NotesBody() {
     <>
       <div className={styles.body}>
         <CurrentNote />
-        {currentAuth ? <List /> : <Signin destination='notes'/>}
+        {currentAuth ? <List type='note'/> : <Signin destination='notes'/>}
       </div>
       <Footer />
     </>

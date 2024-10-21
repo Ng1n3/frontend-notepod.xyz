@@ -285,7 +285,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     } catch {
       dispatch({
         type: 'rejected',
-        payload: 'There was an error restoring data...',
+        payload: 'There was an error restoring the note...',
       });
     }
   }

@@ -43,6 +43,7 @@ interface TodoContextType extends TodoState {
   fetchTodo: (id: string) => Promise<void>;
   setCurrentTodo: (todo: Todo | null) => void;
   updateTodo: (update: Todo) => Promise<void>;
+  searchTodo: (searchTerm: string) => Promise<void>;
   clearCurrentTodo: () => void;
   deleteTodo: (id: string) => Promise<void>;
 }
@@ -380,6 +381,51 @@ function TodoProvider({ children }: TodoProviderProps) {
     dispatch({ type: 'todo/cleared' });
   }, []);
 
+  async function searchTodo(searchTerm: string) {
+    dispatch({ type: 'loading' });
+    try {
+      const res = await fetch(BASE_URL, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query SearchTodo($searchTerm: String!) {
+                    searchTodo(searchTerm: $searchTerm) {
+                      id
+                      title
+                      body
+                      updatedAt
+                      isDeleted
+                      deletedAt
+                      user {
+                          id
+                          username
+                          email
+                      }
+                    }
+                  }`,
+          variables: {
+            searchTerm,
+          },
+        }),
+      });
+      const data = await res.json();
+      console.log('data from searchTodo', data);
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+      const searchedItems = data.data.searchNote;
+      dispatch({ type: 'todos/loaded', payload: searchedItems });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: `There was an error searching for ${searchTerm}...`,
+      });
+    }
+  }
+
   return (
     <TodoContext.Provider
       value={{
@@ -389,6 +435,7 @@ function TodoProvider({ children }: TodoProviderProps) {
         todos,
         currentTodo,
         setCurrentTodo,
+        searchTodo,
         createTodo,
         deleteTodo,
         updateTodo,
