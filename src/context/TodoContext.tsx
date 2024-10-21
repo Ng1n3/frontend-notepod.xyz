@@ -46,6 +46,7 @@ interface TodoContextType extends TodoState {
   searchTodo: (searchTerm: string) => Promise<void>;
   clearCurrentTodo: () => void;
   deleteTodo: (id: string) => Promise<void>;
+  fetchTodos: () => Promise<void>;
 }
 
 type TodoActions =
@@ -133,11 +134,7 @@ function TodoProvider({ children }: TodoProviderProps) {
 
   const navigate = useSafeNavigate();
 
-  useEffect(function () {
-    fetchTodos();
-  }, []);
-
-  async function fetchTodos() {
+  const fetchTodos = useCallback(async function () {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -179,7 +176,14 @@ function TodoProvider({ children }: TodoProviderProps) {
         payload: 'There was an error loading data...',
       });
     }
-  }
+  }, []);
+
+  useEffect(
+    function () {
+      fetchTodos();
+    },
+    [fetchTodos]
+  );
 
   async function createTodo(newTodo: Todo) {
     dispatch({ type: 'loading' });
@@ -431,6 +435,7 @@ function TodoProvider({ children }: TodoProviderProps) {
       value={{
         error,
         clearCurrentTodo,
+        fetchTodos,
         isLoading,
         todos,
         currentTodo,
