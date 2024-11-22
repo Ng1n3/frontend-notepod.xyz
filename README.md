@@ -1,6 +1,9 @@
 # Notepod.xyz 📝
 Notepod.xyz is a modern, user-friendly app designed to help you manage your life. Easily save todos, notes, and passwords, and stay organized with our intuitive interface. Accidentally deleted something? Don’t worry! Your deleted items are stored safely in a "Deleted" tab for a few days before permanent removal.
 
+![Alt: homepage](./public/home.png)
+![Alt: todo page](./public/todo.png)
+
 ## 🚀 Features
 - #### 📓 Organize Your Notes 
   - Save and edit your notes effortlessly.
