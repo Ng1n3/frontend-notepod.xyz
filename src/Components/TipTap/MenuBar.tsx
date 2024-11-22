@@ -1,5 +1,7 @@
 // import { useCurrentEditor } from '@tiptap/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './MenuBar.module.css';
+import { faBold, faItalic,  faListOl,  faListUl, faParagraph, faStrikethrough } from '@fortawesome/free-solid-svg-icons';
 
 export default function MenuBar({editor}) {
   // const { editor } = useCurrentEditor();
@@ -14,27 +16,27 @@ export default function MenuBar({editor}) {
           disabled={!editor.can().chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? 'is-active' : ''}
         >
-          Bold
+          <FontAwesomeIcon icon={faBold}/>
         </button>
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editor.can().chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? 'is-active' : ''}
         >
-          Italic
+          <FontAwesomeIcon icon={faItalic}/>
         </button>
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editor.can().chain().focus().toggleStrike().run()}
           className={editor.isActive('strike') ? 'is-active' : ''}
         >
-          Strike
+          <FontAwesomeIcon icon={faStrikethrough}/>
         </button>
         <button
           onClick={() => editor.chain().focus().setParagraph().run()}
           className={editor.isActive('paragraph') ? 'is-active' : ''}
         >
-          paragraph
+          <FontAwesomeIcon icon={faParagraph}/>
         </button>
         <button
           onClick={() =>
@@ -73,13 +75,13 @@ export default function MenuBar({editor}) {
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editor.isActive('orderedList') ? 'is-active' : ''}
         >
-          Ordered List
+          <FontAwesomeIcon icon={faListUl}/>
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive('bulletList') ? 'is-active' : ''}
         >
-          Bullet List
+          <FontAwesomeIcon icon={faListOl} />
         </button>
       </div>
     </div>
