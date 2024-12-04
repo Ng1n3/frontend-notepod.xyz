@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test:watch": "vitest",
+    "coverage": "vitest --coverage",
     "preview": "vite preview",
     "server": "json-server --watch data/todo.json --port 8000 --delay 500"
   },
@@ -23,6 +25,7 @@
     "@tiptap/pm": "^2.7.1",
     "@tiptap/react": "^2.7.1",
     "@tiptap/starter-kit": "^2.7.1",
+    "@types/jest": "^29.5.14",
     "json-server": "0.17.0",
     "react": "^18.3.1",
     "react-datepicker": "^7.3.0",
@@ -35,16 +38,23 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
-    "@types/react": "^18.3.3",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/ui": "^2.1.8",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "jsdom": "^25.0.1",
+    "msw": "^2.6.6",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^2.1.8"
   }
 }

@@ -2,7 +2,7 @@
 Notepod.xyz is a modern, user-friendly app designed to help you manage your life. Easily save todos, notes, and passwords, and stay organized with our intuitive interface. Accidentally deleted something? Don’t worry! Your deleted items are stored safely in a "Deleted" tab for a few days before permanent removal.
 
 ![Alt: homepage](./public/home.png)
-![Alt: todo page](./public/todo.png)
+<!-- ![Alt: todo page](./public/todo.png) -->
 
 ## 🚀 Features
 - #### 📓 Organize Your Notes 
@@ -29,7 +29,7 @@ Notepod.xyz is a modern, user-friendly app designed to help you manage your life
   - Vite
   - Vanilla CSS for styling
   - context API for state management
-  - Graphql for fetching and modifying data between my backend and frontend 
+  - Graphql for fetching and modifying data between the api and client app 
 
 ## 📝 Prerequisite
 Before you begin please checkout the backend [README.md](https://github.com/Ng1n3/notepod-backend)

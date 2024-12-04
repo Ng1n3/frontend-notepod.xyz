@@ -25,14 +25,6 @@ const ErrorFallBack: React.FC<{ error: Error }> = ({ error }) => {
 };
 
 const AuthenticatedApp: React.FC = () => {
-  // const { currentAuth } = useAuth();
-  // const { fetchNotes } = useNotes();
-
-  // useEffect(() => {
-  //   if (currentAuth) {
-  //     fetchNotes();
-  //   }
-  // }, [currentAuth, fetchNotes]);
 
   return (
     <Routes>
