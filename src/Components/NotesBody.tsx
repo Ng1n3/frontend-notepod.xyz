@@ -6,13 +6,13 @@ import styles from './NoteBody.module.css';
 import Signin from './Signin';
 
 export default function NotesBody() {
-  const {currentAuth} = useAuth()
+  const { currentAuth } = useAuth();
 
   return (
     <>
       <div className={styles.body}>
         <CurrentNote />
-        {currentAuth ? <List type='note'/> : <Signin destination='notes'/>}
+        {currentAuth ? <List type="note" /> : <Signin destination="notes" />}
       </div>
       <Footer />
     </>
