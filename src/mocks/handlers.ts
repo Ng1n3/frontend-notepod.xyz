@@ -71,4 +71,28 @@ export const handlers = [
       });
     }
   }),
+
+  graphql.mutation('CreateNote', ({ variables }) => {
+    const { id, title, body } = variables;
+
+    const newNote = {
+      id,
+      title,
+      body,
+      isDeleted: false,
+      deletedAt: null,
+      user: {
+        id: 'afadf333',
+        email: 'new@yahoo.com',
+        username: 'new1',
+      },
+    };
+
+    allNotes.set(id, newNote);
+    return HttpResponse.json({
+      data: {
+        createNote: newNote,
+      },
+    });
+  }),
 ];

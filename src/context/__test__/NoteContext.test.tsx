@@ -1,9 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
+import { nanoid } from 'nanoid';
 import { MemoryRouter } from 'react-router-dom';
 import { describe } from 'vitest';
 import { NotesProvider } from '../NotesContext';
 import useNotes from '../useNotes';
+import { act } from 'react';
 
 const TestNoteContext = () => {
   const { notes, isLoading } = useNotes();
@@ -62,7 +64,6 @@ describe('Get a single note using note context', () => {
   it('should fetch a single note using the note id', async () => {
     const testNoteId = 'BIdqeEi8Gx';
 
-
     render(
       <MemoryRouter>
         <NotesProvider>
@@ -86,10 +87,85 @@ describe('Get a single note using note context', () => {
       { timeout: 5000 }
     );
   });
-
 });
+
+interface Newnote {
+  id: string;
+  title: string;
+  body: string;
+  userId: string;
+}
+
+const TestCreateNoteContext = ({ id, title, body, userId }: Newnote) => {
+  const { isLoading, createNote, notes, currentNote } = useNotes();
+
+  return (
+    <>
+      <button
+        data-testid="create-note"
+        onClick={() => createNote({ id, title, body, userId })}
+      >
+        Create Note
+      </button>
+      {isLoading ? (
+        <div data-testid="loading-state">...Loading</div>
+      ) : (
+        <div data-testid="current-note">
+          <div data-testid="note-id">{id}</div>
+          <div data-testid="note-title">{currentNote?.title}</div>
+          <div data-testid="note-body">{currentNote?.body}</div>
+          <div data-testid="note-length">{notes.length}</div>
+        </div>
+      )}
+    </>
+  );
+};
+
 describe('Create a single note', () => {
   it('should create a note and add it to the list of current notes', async () => {
-    
-  })
-})
+    const noteid = nanoid();
+
+    const newNote = {
+      id: noteid,
+      title: 'This is my fourth note',
+      body: "Here's me making fun of my self",
+      userId: 'afadf333',
+    };
+
+    render(
+      <MemoryRouter>
+        <NotesProvider>
+          <TestCreateNoteContext
+            id={noteid}
+            title={newNote.title}
+            body={newNote.body}
+            userId={newNote.id}
+          />
+        </NotesProvider>
+      </MemoryRouter>
+    );
+
+    // Wrap the user interaction with `act`
+    await act(async () => {
+      const createButton = screen.getByTestId('create-note');
+      user.click(createButton);
+    });
+
+    await waitFor(
+      () => {
+        const noteLength = screen.getByTestId('note-length');
+        const loadingState = screen.getByTestId('loading-state');
+        const noteId = screen.getByTestId('note-id');
+        const noteTitle = screen.getByTestId('note-title');
+        const noteBody = screen.getByTestId('note-body');
+
+        expect(noteId.textContent).toBe(noteId);
+        expect(noteTitle.textContent).toBe('This is my fourth note');
+        expect(noteBody.textContent).toBe("Here's me making fun of my self");
+        expect(noteLength.textContent).toBe('4');
+        expect(loadingState.textContent).toBe('loaded');
+      },
+      // { timeout: 10000 }
+    );
+  });
+});
