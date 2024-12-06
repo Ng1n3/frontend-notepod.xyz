@@ -35,7 +35,7 @@ const allNotes = new Map([
     {
       id: 'BIdqeEi8Gx',
       title: 'New third note',
-      body: 'This is a new note from me',
+      body: 'This is a third new note from me',
       isDeleted: false,
       deletedAt: null,
       user: {
@@ -50,9 +50,25 @@ export const handlers = [
   graphql.query('GetNotes', () => {
     return HttpResponse.json({
       data: {
-        getNotes: Array.from(allNotes.values())
-      }
-    })
-   
+        getNotes: Array.from(allNotes.values()),
+      },
+    });
+  }),
+
+  graphql.query('GetNote', ({ variables }) => {
+    const { id } = variables;
+    const note = allNotes.get(id);
+
+    if (note) {
+      return HttpResponse.json({
+        data: {
+          getNote: note,
+        },
+      });
+    } else {
+      return HttpResponse.json({
+        errors: [{ message: 'Note not found' }],
+      });
+    }
   }),
 ];

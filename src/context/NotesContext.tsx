@@ -152,7 +152,6 @@ function NotesProvider({ children }: NotesProvideProps) {
         }),
       });
       const data = await res.json();
-      console.log("data from notecontext", data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
