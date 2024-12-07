@@ -2,16 +2,16 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
+import NotAllowed from '../Components/NotAllowed';
 import PasswordInput from '../Components/PasswordInput';
 import PasswordsList from '../Components/PasswordsList';
-import usePasswords from '../context/usePassword';
-import NotAllowed from '../Components/NotAllowed';
-import useAuth from '../context/useAuth';
+import useAuth from '../hook/useAuth';
+import usePasswords from '../hook/usePassword';
 
 export default function Passwords() {
   const { id } = useParams();
   const { fetchPassword } = usePasswords();
-  const {currentAuth} = useAuth()
+  const { currentAuth } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
@@ -36,7 +36,7 @@ export default function Passwords() {
           <PasswordsList />
         </>
       ) : (
-        <NotAllowed/>
+        <NotAllowed />
       )}
       <Footer />
     </div>

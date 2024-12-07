@@ -1,7 +1,7 @@
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import useTodos from '../context/useTodos';
+import useTodos from '../hook/useTodos';
 import styles from './NoteListBody.module.css';
 import Spinner from './Spinner';
 import TodoListItem from './TodoListItem';

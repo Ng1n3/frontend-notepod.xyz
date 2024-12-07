@@ -1,6 +1,6 @@
-import useNotes from '../context/useNotes';
-import useTodos from '../context/useTodos';
+import useNotes from '../hook/useNotes';
 import useSafeNavigate from '../hook/useSafeNavigate';
+import useTodos from '../hook/useTodos';
 import Button from './Button';
 import Spinner from './Spinner';
 

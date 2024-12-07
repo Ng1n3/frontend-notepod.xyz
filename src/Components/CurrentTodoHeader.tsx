@@ -3,7 +3,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React, { useEffect } from 'react';
-import useTodos from '../context/useTodos';
+import useTodos from '../hook/useTodos';
 import Button from './Button';
 import styles from './CurrentTodoHeader.module.css';
 

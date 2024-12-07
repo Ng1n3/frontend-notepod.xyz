@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { nanoid } from 'nanoid';
+import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe } from 'vitest';
+import useNotes from '../../hook/useNotes';
 import { NotesProvider } from '../NotesContext';
-import useNotes from '../useNotes';
-import { act } from 'react';
 
 const TestNoteContext = () => {
   const { notes, isLoading } = useNotes();
@@ -107,16 +107,15 @@ const TestCreateNoteContext = ({ id, title, body, userId }: Newnote) => {
       >
         Create Note
       </button>
-      {isLoading ? (
-        <div data-testid="loading-state">...Loading</div>
-      ) : (
-        <div data-testid="current-note">
-          <div data-testid="note-id">{id}</div>
-          <div data-testid="note-title">{currentNote?.title}</div>
-          <div data-testid="note-body">{currentNote?.body}</div>
-          <div data-testid="note-length">{notes.length}</div>
+      <div data-testid="current-note">
+        <div data-testid="note-id">{id}</div>
+        <div data-testid="note-title">{currentNote?.title}</div>
+        <div data-testid="note-body">{currentNote?.body}</div>
+        <div data-testid="note-length">{notes.length}</div>
+        <div data-testid="loading-state">
+          {isLoading ? 'loading' : 'loaded'}
         </div>
-      )}
+      </div>
     </>
   );
 };
@@ -139,7 +138,7 @@ describe('Create a single note', () => {
             id={noteid}
             title={newNote.title}
             body={newNote.body}
-            userId={newNote.id}
+            userId={newNote.userId}
           />
         </NotesProvider>
       </MemoryRouter>
@@ -148,7 +147,7 @@ describe('Create a single note', () => {
     // Wrap the user interaction with `act`
     await act(async () => {
       const createButton = screen.getByTestId('create-note');
-      user.click(createButton);
+      await user.click(createButton);
     });
 
     await waitFor(
@@ -159,12 +158,12 @@ describe('Create a single note', () => {
         const noteTitle = screen.getByTestId('note-title');
         const noteBody = screen.getByTestId('note-body');
 
-        expect(noteId.textContent).toBe(noteId);
-        expect(noteTitle.textContent).toBe('This is my fourth note');
-        expect(noteBody.textContent).toBe("Here's me making fun of my self");
+        expect(noteId).toHaveTextContent(newNote.id);
+        expect(noteTitle).toHaveTextContent(newNote.title);
+        expect(noteBody.textContent).toBe(newNote.body);
         expect(noteLength.textContent).toBe('4');
         expect(loadingState.textContent).toBe('loaded');
-      },
+      }
       // { timeout: 10000 }
     );
   });

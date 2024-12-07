@@ -195,14 +195,11 @@ function NotesProvider({ children }: NotesProvideProps) {
         }),
       });
       const data = await res.json();
-      // console.log('data from create note', data);
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
       dispatch({ type: 'note/created', payload: data.data.createNote });
       clearCurrentNote();
-      // navigate('/notes')
-      // setCurrentNote(null)
     } catch {
       dispatch({
         type: 'rejected',

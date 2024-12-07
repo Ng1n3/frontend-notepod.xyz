@@ -1,4 +1,4 @@
-import useNotes from '../context/useNotes';
+import useNotes from '../hook/useNotes';
 import { formatDate } from '../util/formatDate';
 import styles from './LastSaved.module.css';
 

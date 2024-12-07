@@ -7,11 +7,11 @@ import DeletedTodos from '../Components/DeletedTodos';
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
 import NotAllowed from '../Components/NotAllowed';
-import useAuth from '../context/useAuth';
+import useAuth from '../hook/useAuth';
 
 export default function Deleted() {
   const [option, setOption] = useState('password');
-  const {currentAuth} = useAuth()
+  const { currentAuth } = useAuth();
 
   return (
     <div>

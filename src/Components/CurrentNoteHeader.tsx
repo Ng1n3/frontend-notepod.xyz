@@ -3,7 +3,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useEffect } from 'react';
-import useNotes from '../context/useNotes';
+import useNotes from '../hook/useNotes';
 import Button from './Button';
 import styles from './CurrentNoteHeader.module.css';
 
@@ -71,7 +71,7 @@ export default function CurrentNoteHeader({
   useEffect(() => {
     if (editor && title !== editor.getText()) {
       editor.commands.setContent(`<h1>${title || ''}</h1>`);
-    } 
+    }
   }, [title, editor]);
 
   return (

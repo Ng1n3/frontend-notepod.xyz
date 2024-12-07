@@ -1,4 +1,4 @@
-import useAuth from '../context/useAuth';
+import useAuth from '../hook/useAuth';
 import CurrentNote from './CurrentNote';
 import Footer from './Footer';
 import List from './List';

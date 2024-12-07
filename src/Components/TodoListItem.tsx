@@ -1,7 +1,7 @@
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import useTodos from '../context/useTodos';
+import useTodos from '../hook/useTodos';
 import { formatDate } from '../util/formatDate';
 import { shortentext } from '../util/shortenText';
 import styles from './NoteListItem.module.css';

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import useAuth from '../context/useAuth';
-import useTodos from '../context/useTodos';
+import useAuth from '../hook/useAuth';
+import useTodos from '../hook/useTodos';
 import styles from './CurrentTodo.module.css';
 import CurrentTodoBody from './CurrentTodoBody';
 import CurrentTodoHeader from './CurrentTodoHeader';

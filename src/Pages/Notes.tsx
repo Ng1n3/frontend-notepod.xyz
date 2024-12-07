@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../Components/Header';
 import NotesBody from '../Components/NotesBody';
-import useNotes from '../context/useNotes';
+import useNotes from '../hook/useNotes';
 
 export default function Notes() {
   const { id } = useParams();

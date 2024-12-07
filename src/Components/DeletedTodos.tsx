@@ -1,6 +1,6 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useDeleted from '../context/useDeleted';
+import useDeleted from '../hook/useDeleted';
 import { formatDate } from '../util/formatDate';
 import { shortentext } from '../util/shortenText';
 import styles from './DeletedPasswordBody.module.css';

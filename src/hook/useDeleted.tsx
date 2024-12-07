@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { DeletedContext } from './DeletedContext';
+import { DeletedContext } from '../context/DeletedContext';
 
 export default function useDeleted() {
   const context = useContext(DeletedContext);

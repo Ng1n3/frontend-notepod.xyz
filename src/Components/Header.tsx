@@ -1,4 +1,4 @@
-import useAuth from '../context/useAuth';
+import useAuth from '../hook/useAuth';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import Button from './Button';
 import styles from './Header.module.css';

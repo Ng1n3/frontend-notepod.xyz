@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Slide, toast } from 'react-toastify';
-import useAuth from '../context/useAuth';
+import useAuth from '../hook/useAuth';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
