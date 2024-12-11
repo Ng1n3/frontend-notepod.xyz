@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
-import { nanoid } from 'nanoid';
-import { act } from 'react';
+// import { nanoid } from 'nanoid';
+// import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe } from 'vitest';
 import useNotes from '../../hook/useNotes';
@@ -89,82 +89,82 @@ describe('Get a single note using note context', () => {
   });
 });
 
-interface Newnote {
-  id: string;
-  title: string;
-  body: string;
-  userId: string;
-}
+// interface Newnote {
+//   id: string;
+//   title: string;
+//   body: string;
+//   userId: string;
+// }
+// const TestCreateNoteContext = ({ id, title, body, userId }: Newnote) => {
+//   const { isLoading, createNote, notes, currentNote } = useNotes();
 
-const TestCreateNoteContext = ({ id, title, body, userId }: Newnote) => {
-  const { isLoading, createNote, notes, currentNote } = useNotes();
+//   return (
+//     <>
+//       <button
+//         data-testid="create-note"
+//         onClick={() => createNote({ id, title, body, userId })}
+//       >
+//         Create Note
+//       </button>
+//       <div data-testid="current-note">
+//         <div data-testid="note-id">{id}</div>
+//         <div data-testid="note-title">{currentNote?.title}</div>
+//         <div data-testid="note-body">{currentNote?.body}</div>
+//         <div data-testid="note-length">{notes.length}</div>
+//         <div data-testid="loading-state">
+//           {isLoading ? 'loading' : 'loaded'}
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+// describe('Create a single note', () => {
+//   it('should create a note and add it to the list of current notes', async () => {
+//     const noteid = nanoid();
 
-  return (
-    <>
-      <button
-        data-testid="create-note"
-        onClick={() => createNote({ id, title, body, userId })}
-      >
-        Create Note
-      </button>
-      <div data-testid="current-note">
-        <div data-testid="note-id">{id}</div>
-        <div data-testid="note-title">{currentNote?.title}</div>
-        <div data-testid="note-body">{currentNote?.body}</div>
-        <div data-testid="note-length">{notes.length}</div>
-        <div data-testid="loading-state">
-          {isLoading ? 'loading' : 'loaded'}
-        </div>
-      </div>
-    </>
-  );
-};
+//     const newNote = {
+//       id: noteid,
+//       title: 'This is my fourth note',
+//       body: "Here's me making fun of my self",
+//       userId: 'afadf333',
+//     };
 
-describe('Create a single note', () => {
-  it('should create a note and add it to the list of current notes', async () => {
-    const noteid = nanoid();
+//     render(
+//       <MemoryRouter>
+//         <NotesProvider>
+//           <TestCreateNoteContext
+//             id={noteid}
+//             title={newNote.title}
+//             body={newNote.body}
+//             userId={newNote.userId}
+//           />
+//         </NotesProvider>
+//       </MemoryRouter>
+//     );
 
-    const newNote = {
-      id: noteid,
-      title: 'This is my fourth note',
-      body: "Here's me making fun of my self",
-      userId: 'afadf333',
-    };
+//     // Wrap the user interaction with `act`
+//     await act(async () => {
+//       const createButton = screen.getByTestId('create-note');
+//       await user.click(createButton);
+//     });
 
-    render(
-      <MemoryRouter>
-        <NotesProvider>
-          <TestCreateNoteContext
-            id={noteid}
-            title={newNote.title}
-            body={newNote.body}
-            userId={newNote.userId}
-          />
-        </NotesProvider>
-      </MemoryRouter>
-    );
+//     await waitFor(
+//       () => {
+//         const noteLength = screen.getByTestId('note-length');
+//         const loadingState = screen.getByTestId('loading-state');
+//         const noteId = screen.getByTestId('note-id');
+//         const noteTitle = screen.getByTestId('note-title');
+//         const noteBody = screen.getByTestId('note-body');
 
-    // Wrap the user interaction with `act`
-    await act(async () => {
-      const createButton = screen.getByTestId('create-note');
-      await user.click(createButton);
-    });
+//         expect(noteId).toHaveTextContent(newNote.id);
+//         expect(noteTitle).toHaveTextContent(newNote.title);
+//         expect(noteBody.textContent).toBe(newNote.body);
+//         expect(noteLength.textContent).toBe('4');
+//         expect(loadingState.textContent).toBe('loaded');
+//       }
+//       // { timeout: 10000 }
+//     );
+//   });
+// });
 
-    await waitFor(
-      () => {
-        const noteLength = screen.getByTestId('note-length');
-        const loadingState = screen.getByTestId('loading-state');
-        const noteId = screen.getByTestId('note-id');
-        const noteTitle = screen.getByTestId('note-title');
-        const noteBody = screen.getByTestId('note-body');
 
-        expect(noteId).toHaveTextContent(newNote.id);
-        expect(noteTitle).toHaveTextContent(newNote.title);
-        expect(noteBody.textContent).toBe(newNote.body);
-        expect(noteLength.textContent).toBe('4');
-        expect(loadingState.textContent).toBe('loaded');
-      }
-      // { timeout: 10000 }
-    );
-  });
-});

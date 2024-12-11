@@ -284,7 +284,7 @@ function TodoProvider({ children }: TodoProviderProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: `query GetNote($id: String!) {
+          query: `query GetTodo($id: String!) {
             getTodo(id: $id) {
               id
               title
@@ -310,7 +310,6 @@ function TodoProvider({ children }: TodoProviderProps) {
       if (data.errors) {
         throw new Error(data.errors[0].message);
       }
-      // console.log('fetch single note from context: ', data);
       const todo = data.data.getTodo;
       dispatch({ type: 'todo/loaded', payload: todo });
     } catch {
