@@ -114,6 +114,73 @@ const allTodos = new Map([
   ],
 ]);
 
+const allPasswords = new Map([
+  [
+    'M7MbMwCXN0',
+    {
+      id: 'M7MbMwCXN0',
+      fieldname: 'Telegram',
+      username: 'telenova2',
+      email: 'telenova@gmail.com',
+      password: '123456',
+      isDeleted: false,
+      deletedAt: '',
+      user: {
+        email: 'telenova@gmail.com',
+        username: 'telenova2',
+      },
+    },
+  ],
+  [
+    'A2KjLqBX92',
+    {
+      id: 'A2KjLqBX92',
+      fieldname: 'Facebook',
+      username: 'fb_star99',
+      email: 'fb_star99@gmail.com',
+      password: 'password123',
+      isDeleted: false,
+      deletedAt: '',
+      user: {
+        email: 'fb_star99@gmail.com',
+        username: 'fb_star99',
+      },
+    },
+  ],
+  [
+    'Z9VpQrTY56',
+    {
+      id: 'Z9VpQrTY56',
+      fieldname: 'Twitter',
+      username: 'tweet_master',
+      email: 'tweet_master@gmail.com',
+      password: 'tw33tmaster',
+      isDeleted: true,
+      deletedAt: '2024-12-01',
+      user: {
+        email: 'tweet_master@gmail.com',
+        username: 'tweet_master',
+      },
+    },
+  ],
+  [
+    'L5HnJkCW03',
+    {
+      id: 'L5HnJkCW03',
+      fieldname: 'Instagram',
+      username: 'insta_queen',
+      email: 'instaqueen@gmail.com',
+      password: 'insta$ecure',
+      isDeleted: false,
+      deletedAt: '',
+      user: {
+        email: 'instaqueen@gmail.com',
+        username: 'insta_queen',
+      },
+    },
+  ],
+]);
+
 export const handlers = [
   graphql.query('GetNotes', () => {
     return HttpResponse.json({
@@ -160,6 +227,30 @@ export const handlers = [
     } else {
       return HttpResponse.json({
         errors: [{ message: 'Todo not found' }],
+      });
+    }
+  }),
+
+  graphql.query('GetPasswords', () => {
+    return HttpResponse.json({
+      data: {
+        getPasswordFields: Array.from(allPasswords.values()),
+      },
+    });
+  }),
+
+  graphql.query('getPassword', ({ variables }) => {
+    const { id } = variables;
+    const password = allPasswords.get(id);
+    if (password) {
+      return HttpResponse.json({
+        data: {
+          getPasswordField: password,
+        },
+      });
+    } else {
+      return HttpResponse.json({
+        errors: [{ message: 'Password not found' }],
       });
     }
   }),

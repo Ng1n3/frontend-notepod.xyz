@@ -36,7 +36,6 @@ describe('intial contex', () => {
 
 const TestSingleTodo = ({ todoId }: { todoId: string }) => {
   const { isLoading, currentTodo, fetchTodo } = useTodos();
-  console.log("current Todo: ", currentTodo);
   return (
     <>
       <button data-testid="fetch-todo" onClick={() => fetchTodo(todoId)}>

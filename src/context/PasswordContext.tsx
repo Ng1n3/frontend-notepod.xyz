@@ -233,7 +233,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: `query getPassowrd($id: String!) {
+          query: `query getPassword($id: String!) {
                 getPasswordField(id: $id) {
                     id
                     email
