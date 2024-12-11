@@ -181,21 +181,22 @@ function DeletedProvider({ children }: DeletedProviderProps) {
 
   async function fetchDeletedItems() {
     dispatch({ type: 'loading' });
+
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query: `query {
-              getNotes(isDeleted: true) {
+          query: `query GetDeletedItems($isDeleted: Boolean) {
+              getNotes(isDeleted: $isDeleted) {
                 id
                 title
                 body
                 isDeleted
                 deletedAt
                 }
-              getTodos(isDeleted: true) {
+              getTodos(isDeleted: $isDeleted) {
                 id
                 title
                 body
@@ -203,7 +204,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
                 deletedAt
                 dueDate
               }
-              getPasswordFields(isDeleted: true) {
+              getPasswordFields(isDeleted: $isDeleted) {
                 id
                 fieldname
                 username
@@ -213,10 +214,12 @@ function DeletedProvider({ children }: DeletedProviderProps) {
                 deletedAt
               }
             }`,
+          variables: {
+            isDeleted: true,
+          },
         }),
       });
       const data = await res.json();
-
       if (data && data.data.getNotes) {
         dispatch({
           type: 'deletedNotes/loaded',

@@ -31,7 +31,7 @@ describe('Note context initial State', () => {
       () => {
         const noteLength = screen.getByTestId('note-length');
         const loadingState = screen.getByTestId('loading-state');
-        expect(noteLength.textContent).toBe('3');
+        expect(noteLength.textContent).toBe('2');
         expect(loadingState.textContent).toBe('loaded');
       },
       { timeout: 5000 }

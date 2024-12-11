@@ -36,8 +36,23 @@ const allNotes = new Map([
       id: 'BIdqeEi8Gx',
       title: 'New third note',
       body: 'This is a third new note from me',
-      isDeleted: false,
-      deletedAt: null,
+      isDeleted: true,
+      deletedAt: '2024-12-16',
+      user: {
+        id: 'afadf333',
+        email: 'new@yahoo.com',
+        username: 'new1',
+      },
+    },
+  ],
+  [
+    '657bwclZg-',
+    {
+      id: '657bwclZg-',
+      title: 'New fourth note',
+      body: 'This is a fourth new note from me',
+      isDeleted: true,
+      deletedAt: '2024-12-15',
       user: {
         id: 'afadf333',
         email: 'new@yahoo.com',
@@ -56,6 +71,8 @@ const allTodos = new Map([
       body: 'Just a few things here and there.',
       updatedAt: '',
       priority: 'LOW',
+      isDeleted: false,
+      deletedAt: '',
       dueDate: '',
       user: {
         id: 'afadf333',
@@ -72,6 +89,8 @@ const allTodos = new Map([
       body: 'Buy milk, eggs, and bread from the store.',
       updatedAt: '',
       priority: 'MEDIUM',
+      isDeleted: false,
+      deletedAt: '',
       dueDate: '2024-12-15',
       user: {
         id: 'bfgh1234',
@@ -88,6 +107,8 @@ const allTodos = new Map([
       body: 'Prepare slides for the Q4 review meeting.',
       updatedAt: '2024-12-10',
       priority: 'HIGH',
+      isDeleted: true,
+      deletedAt: '2023-12-16',
       dueDate: '2024-12-12',
       user: {
         id: 'manager001',
@@ -104,6 +125,8 @@ const allTodos = new Map([
       body: 'Plan a 30-minute cardio and strength training session.',
       updatedAt: '',
       priority: 'LOW',
+      isDeleted: false,
+      deletedAt: '',
       dueDate: '2024-12-14',
       user: {
         id: 'fitnessFan',
@@ -182,10 +205,17 @@ const allPasswords = new Map([
 ]);
 
 export const handlers = [
-  graphql.query('GetNotes', () => {
+  graphql.query('GetNotes', ({ variables }) => {
+    console.log('Variables', variables);
+    const { isDeleted } = variables;
+    console.log('is deleted option', isDeleted);
+    const filteredNotes = Array.from(allNotes.values()).filter(
+      (note) => note.isDeleted === isDeleted
+    );
+
     return HttpResponse.json({
       data: {
-        getNotes: Array.from(allNotes.values()),
+        getNotes: filteredNotes,
       },
     });
   }),
@@ -207,10 +237,14 @@ export const handlers = [
     }
   }),
 
-  graphql.query('GetTodos', () => {
+  graphql.query('GetTodos', ({ variables }) => {
+    const { isDeleted } = variables;
+    const filteredTodos = Array.from(allTodos.values()).filter(
+      (todo) => todo.isDeleted === isDeleted
+    );
     return HttpResponse.json({
       data: {
-        getTodos: Array.from(allTodos.values()),
+        getTodos: filteredTodos,
       },
     });
   }),
@@ -231,10 +265,14 @@ export const handlers = [
     }
   }),
 
-  graphql.query('GetPasswords', () => {
+  graphql.query('GetPasswords', ({ variables }) => {
+    const { isDeleted } = variables;
+    const filteredPasswords = Array.from(allPasswords.values()).filter(
+      (password) => password.isDeleted === isDeleted
+    );
     return HttpResponse.json({
       data: {
-        getPasswordFields: Array.from(allPasswords.values()),
+        getPasswordFields: filteredPasswords,
       },
     });
   }),
@@ -253,6 +291,28 @@ export const handlers = [
         errors: [{ message: 'Password not found' }],
       });
     }
+  }),
+
+  graphql.query('GetDeletedItems', ({ variables }) => {
+    const { isDeleted } = variables;
+    const filteredNotes = Array.from(allNotes.values()).filter(
+      (note) => note.isDeleted === isDeleted
+    );
+
+    const filteredTodos = Array.from(allTodos.values()).filter(
+      (todo) => todo.isDeleted === isDeleted
+    );
+
+    const filteredPasswords = Array.from(allPasswords.values()).filter(password => password.isDeleted === isDeleted)
+
+
+    return HttpResponse.json({
+      data: {
+        getNotes: filteredNotes,
+        getTodos: filteredTodos,
+        getPasswordFields: filteredPasswords,
+      },
+    });
   }),
 
   graphql.mutation('CreateNote', ({ variables }) => {

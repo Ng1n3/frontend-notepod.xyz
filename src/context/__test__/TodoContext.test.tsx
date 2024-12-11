@@ -28,7 +28,7 @@ describe('intial contex', () => {
     await waitFor(() => {
       const todoLength = screen.getByTestId('todo-length');
       const loadingState = screen.getByTestId('loading-state');
-      expect(todoLength.textContent).toBe('4');
+      expect(todoLength.textContent).toBe('3');
       expect(loadingState.textContent).toBe('loaded');
     });
   });

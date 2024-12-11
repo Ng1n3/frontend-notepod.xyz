@@ -27,7 +27,7 @@ describe('Passwords initial state', () => {
       () => {
         const passwordsLength = screen.getByTestId('password-length');
         const loadingState = screen.getByTestId('loading-state');
-        expect(passwordsLength.textContent).toBe('4');
+        expect(passwordsLength.textContent).toBe('3');
         expect(loadingState.textContent).toBe('loaded');
       },
       { timeout: 5000 }
