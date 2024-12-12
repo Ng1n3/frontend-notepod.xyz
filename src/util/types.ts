@@ -10,7 +10,7 @@ export const createPasswordSchema = z.object({
 
 export const createSignupSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(5, 'Password must be at least 4 characters'),
+  password: z.string().min(5, 'Password must be at least 5 characters'),
   username: z.string().min(4, 'username must be at least 4 characters'),
 });
 
