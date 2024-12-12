@@ -107,7 +107,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
-      console.log("data from creath auth", data);
+      // console.log("data from creath auth", data);
       if (data.errors) throw new Error(data.errors[0].message);
       const createdAuth = data.data.createUser;
       dispatch({ type: 'auth/created', payload: createdAuth });

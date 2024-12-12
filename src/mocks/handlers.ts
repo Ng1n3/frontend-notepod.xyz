@@ -204,11 +204,20 @@ const allPasswords = new Map([
   ],
 ]);
 
+const initialUsers = new Map([
+  [
+    '',
+    {
+      id: '',
+      email: '',
+      username: '',
+    },
+  ],
+]);
+
 export const handlers = [
   graphql.query('GetNotes', ({ variables }) => {
-    console.log('Variables', variables);
     const { isDeleted } = variables;
-    console.log('is deleted option', isDeleted);
     const filteredNotes = Array.from(allNotes.values()).filter(
       (note) => note.isDeleted === isDeleted
     );
@@ -277,6 +286,14 @@ export const handlers = [
     });
   }),
 
+  graphql.query('CurrentUser', () => {
+    return HttpResponse.json({
+      data: {
+        currentUser: Array.from(initialUsers.values())
+      }
+    })
+  }),
+
   graphql.query('getPassword', ({ variables }) => {
     const { id } = variables;
     const password = allPasswords.get(id);
@@ -303,8 +320,9 @@ export const handlers = [
       (todo) => todo.isDeleted === isDeleted
     );
 
-    const filteredPasswords = Array.from(allPasswords.values()).filter(password => password.isDeleted === isDeleted)
-
+    const filteredPasswords = Array.from(allPasswords.values()).filter(
+      (password) => password.isDeleted === isDeleted
+    );
 
     return HttpResponse.json({
       data: {
@@ -338,4 +356,19 @@ export const handlers = [
       },
     });
   }),
+
+  graphql.mutation('CreateUser', ({variables}) => {
+    const {id, email, username, password} = variables
+
+    const newUser = {
+      id, email, username, password
+    }
+
+    initialUsers.set(id, newUser)
+    return HttpResponse.json({
+      data: {
+        createUser: newUser
+      }
+    })
+  })
 ];
