@@ -182,3 +182,73 @@ describe('Login with credentials', () => {
     });
   });
 });
+
+const TestAuthLogoutContext = ({ email, password }: Login) => {
+  const { isLoading, loginAuth, currentAuth, signout } = useAuth();
+
+  return (
+    <>
+      <button
+        data-testid="login-user"
+        onClick={() => loginAuth({ email, password })}
+      >
+        Login User
+      </button>
+      <button data-testid="logout-user" onClick={() => signout()}>
+        logout
+      </button>
+      <div data-testid="current-auth">
+        <div data-testid="auth-email">{currentAuth?.email}</div>
+        <div data-testid="auth-password">{currentAuth?.password}</div>
+        <div data-testid="loading-state">
+          {isLoading ? 'loading' : 'loaded'}
+        </div>
+      </div>
+    </>
+  );
+};
+
+describe('Signs out a user', () => {
+  it('signouts out the user from the app', async () => {
+    const userDetails = {
+      email: 'new1@gmail.com',
+      password: 'new121kk2',
+    };
+
+    render(
+      <MemoryRouter>
+        <AuthenticationProvider>
+          <TestAuthLogoutContext
+            email={userDetails.email}
+            password={userDetails.password}
+          />
+        </AuthenticationProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const loginButton = screen.getByTestId('login-user');
+      await userEvent.click(loginButton);
+    });
+    await waitFor(async () => {
+      const authEmail = screen.getByTestId('auth-email');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(authEmail).toHaveTextContent(userDetails.email);
+      expect(loadingState).toHaveTextContent('loaded');
+
+    });
+      await act(async () => {
+        const logoutButton = screen.getByTestId('logout-user');
+        await userEvent.click(logoutButton);
+      });
+
+      await waitFor(() => {
+        const authEmail = screen.getByTestId('auth-email');
+        const loadingState = screen.getByTestId('loading-state');
+  
+        expect(authEmail).toBeEmptyDOMElement();
+        expect(loadingState).toHaveTextContent('loaded');
+      })
+  });
+});

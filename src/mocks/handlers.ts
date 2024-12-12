@@ -405,4 +405,11 @@ export const handlers = [
       },
     });
   }),
+  graphql.mutation('LogoutUser', () => {
+    return HttpResponse.json({
+      data: {
+        logoutUser: true,
+      },
+    });
+  }),
 ];

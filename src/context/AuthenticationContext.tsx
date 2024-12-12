@@ -107,7 +107,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
-      // console.log("data from creath auth", data);
       if (data.errors) throw new Error(data.errors[0].message);
       const createdAuth = data.data.createUser;
       dispatch({ type: 'auth/created', payload: createdAuth });
@@ -152,7 +151,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
-      // console.log("data from create auth", user);
       if (data.errors) throw new Error(data.errors[0].message);
       const loggedUser = data.data.loginUser;
       dispatch({ type: 'auth/created', payload: loggedUser });
@@ -191,7 +189,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       if (data.errors) throw new Error(data.errors[0].messasge);
       const currentUser = data.data.currentUser;
       dispatch({ type: 'auth/loaded', payload: currentUser });
-      // sessionStorage.setItem('UserAuth', JSON.stringify(currentUser));
     } catch (error) {
       dispatch({
         type: 'rejected',
@@ -200,7 +197,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
             ? error.message
             : 'There was an error checking AuthStatus',
       });
-      // sessionStorage.removeItem('UserAuth');
       dispatch({ type: 'auth/loaded', payload: null });
     }
   }
@@ -208,16 +204,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     checkAuthStatus();
   }, []);
-
-  // useEffect(() => {
-  //   const storedUser = sessionStorage.getItem('UserAuth');
-  //   if (storedUser) {
-  //     dispatch({ type: 'auth/loaded', payload: JSON.parse(storedUser) });
-  //     checkAuthStatus();
-  //   } else {
-  //     checkAuthStatus();
-  //   }
-  // }, []);
 
   async function signout() {
     dispatch({ type: 'loading' });
@@ -234,7 +220,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           }`,
         }),
       });
-      // sessionStorage.removeItem('UserAuth');
       dispatch({ type: 'auth/loaded', payload: null });
     } catch (error) {
       dispatch({
