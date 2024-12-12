@@ -73,9 +73,9 @@ const TestAuthCreateContext = ({ id, email, username, password }: NewAuth) => {
         Create User
       </button>
       <div data-testid="current-auth">
-        {/* <div data-testid="auth-id">{currentAuth?.id}</div> */}
         <div data-testid="auth-email">{currentAuth?.email}</div>
         <div data-testid="auth-username">{currentAuth?.username}</div>
+        <div data-testid="auth-password">{currentAuth?.password}</div>
         <div data-testid="loading-state">
           {isLoading ? 'loading' : 'loaded'}
         </div>
@@ -115,8 +115,70 @@ describe('Create an Account', () => {
       const authEmail = screen.getByTestId('auth-email');
       expect(authEmail.textContent).toBe(newUser.email);
 
-      const authUsername = screen.getByTestId('auth-username')
-      expect(authUsername.textContent).toBe(newUser.username)
+      const authUsername = screen.getByTestId('auth-username');
+      expect(authUsername.textContent).toBe(newUser.username);
+
+      const authPassword = screen.getByTestId('auth-password');
+      expect(authPassword.textContent).toBe(newUser.password);
+    });
+  });
+});
+
+interface Login {
+  email: string;
+  password: string;
+}
+
+const TestAuthLoginContext = ({ email, password }: Login) => {
+  const { isLoading, loginAuth, currentAuth } = useAuth();
+
+  return (
+    <>
+      <button
+        data-testid="login-user"
+        onClick={() => loginAuth({ email, password })}
+      >
+        Login User
+      </button>
+      <div data-testid="current-auth">
+        <div data-testid="auth-email">{currentAuth?.email}</div>
+        <div data-testid="auth-password">{currentAuth?.password}</div>
+        <div data-testid="loading-state">
+          {isLoading ? 'loading' : 'loaded'}
+        </div>
+      </div>
+    </>
+  );
+};
+
+describe('Login with credentials', () => {
+  it('logins a user with correct credentials', async () => {
+    const userDetails = {
+      email: 'new1@gmail.com',
+      password: 'new121kk2',
+    };
+
+    render(
+      <MemoryRouter>
+        <AuthenticationProvider>
+          <TestAuthLoginContext
+            email={userDetails.email}
+            password={userDetails.password}
+          />
+        </AuthenticationProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const loginButton = screen.getByTestId('login-user');
+      await userEvent.click(loginButton);
+    });
+    await waitFor(() => {
+      const authEmail = screen.getByTestId('auth-email');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(authEmail).toHaveTextContent(userDetails.email);
+      expect(loadingState).toHaveTextContent('loaded');
     });
   });
 });

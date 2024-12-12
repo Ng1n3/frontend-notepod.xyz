@@ -215,6 +215,12 @@ const initialUsers = new Map([
   ],
 ]);
 
+const users = [
+  { id: 'EiyRGZTh2B', email: 'new1@gmail.com', password: 'new121kk2' },
+  { id: 'YJ8USol2Va', email: 'new2@gmail.com', password: 'new11234343' },
+  { id: '5k7fUFQcmR', email: 'new3@gmail.com', password: 'new33534343' },
+];
+
 export const handlers = [
   graphql.query('GetNotes', ({ variables }) => {
     const { isDeleted } = variables;
@@ -227,6 +233,31 @@ export const handlers = [
         getNotes: filteredNotes,
       },
     });
+  }),
+
+  graphql.mutation('LoginUser', ({ variables }) => {
+    const { email, password } = variables;
+
+    const verifiedUser = users.find(
+      (user) => user.email === email && user.password === password
+    );
+
+    if (verifiedUser) {
+      return HttpResponse.json({
+        data: {
+          loginUser: verifiedUser,
+        },
+      });
+    }
+
+    if (!verifiedUser) {
+      return HttpResponse.json(
+        {
+          errors: [{ message: 'Invalid credentials' }],
+        },
+        { status: 401 }
+      );
+    }
   }),
 
   graphql.query('GetNote', ({ variables }) => {
@@ -289,9 +320,9 @@ export const handlers = [
   graphql.query('CurrentUser', () => {
     return HttpResponse.json({
       data: {
-        currentUser: Array.from(initialUsers.values())
-      }
-    })
+        currentUser: Array.from(initialUsers.values()),
+      },
+    });
   }),
 
   graphql.query('getPassword', ({ variables }) => {
@@ -357,18 +388,21 @@ export const handlers = [
     });
   }),
 
-  graphql.mutation('CreateUser', ({variables}) => {
-    const {id, email, username, password} = variables
+  graphql.mutation('CreateUser', ({ variables }) => {
+    const { id, email, username, password } = variables;
 
     const newUser = {
-      id, email, username, password
-    }
+      id,
+      email,
+      username,
+      password,
+    };
 
-    initialUsers.set(id, newUser)
+    initialUsers.set(id, newUser);
     return HttpResponse.json({
       data: {
-        createUser: newUser
-      }
-    })
-  })
+        createUser: newUser,
+      },
+    });
+  }),
 ];
