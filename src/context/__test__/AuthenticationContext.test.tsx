@@ -62,7 +62,7 @@ interface NewAuth {
 }
 
 const TestAuthCreateContext = ({ id, email, username, password }: NewAuth) => {
-  const { isLoading, createAuth, currentAuth } = useAuth();
+  const { isLoading, createAuth, currentAuth, error } = useAuth();
 
   return (
     <>
@@ -76,6 +76,7 @@ const TestAuthCreateContext = ({ id, email, username, password }: NewAuth) => {
         <div data-testid="auth-email">{currentAuth?.email}</div>
         <div data-testid="auth-username">{currentAuth?.username}</div>
         <div data-testid="auth-password">{currentAuth?.password}</div>
+        <div data-testid="auth-error">{error}</div>
         <div data-testid="loading-state">
           {isLoading ? 'loading' : 'loaded'}
         </div>
@@ -86,9 +87,8 @@ const TestAuthCreateContext = ({ id, email, username, password }: NewAuth) => {
 
 describe('Create an Account', () => {
   it('should create a new user', async () => {
-    const authId = nanoid(10);
     const newUser = {
-      id: authId,
+      id: nanoid(10),
       email: 'tom@gmail.com',
       username: 'tom_22',
       password: 'tom_22_tom',
@@ -122,6 +122,37 @@ describe('Create an Account', () => {
       expect(authPassword.textContent).toBe(newUser.password);
     });
   });
+
+  it('Handle create auth with duplicate email', async () => {
+    const newUser2 = {
+      id: nanoid(10),
+      email: 'tom@gmail.com',
+      username: 'tom_22',
+      password: 'tom_22_tom',
+    };
+    render(
+      <MemoryRouter>
+        <AuthenticationProvider>
+          <TestAuthCreateContext
+            username={newUser2.username}
+            id={newUser2.id}
+            email={newUser2.email}
+            password={newUser2.password}
+          />
+        </AuthenticationProvider>
+      </MemoryRouter>
+    );
+    await act(async () => {
+      const createButton = screen.getByTestId('create-user');
+      await userEvent.click(createButton);
+    });
+
+    // Check for error state
+    await waitFor(() => {
+      const errorElement = screen.getByTestId('auth-error');
+      expect(errorElement.textContent).toBe('Email already exists');
+    });
+  });
 });
 
 interface Login {
@@ -130,7 +161,7 @@ interface Login {
 }
 
 const TestAuthLoginContext = ({ email, password }: Login) => {
-  const { isLoading, loginAuth, currentAuth } = useAuth();
+  const { isLoading, loginAuth, currentAuth, error } = useAuth();
 
   return (
     <>
@@ -143,6 +174,7 @@ const TestAuthLoginContext = ({ email, password }: Login) => {
       <div data-testid="current-auth">
         <div data-testid="auth-email">{currentAuth?.email}</div>
         <div data-testid="auth-password">{currentAuth?.password}</div>
+        <div data-testid="auth-error">{error}</div>
         <div data-testid="loading-state">
           {isLoading ? 'loading' : 'loaded'}
         </div>
@@ -178,6 +210,98 @@ describe('Login with credentials', () => {
       const loadingState = screen.getByTestId('loading-state');
 
       expect(authEmail).toHaveTextContent(userDetails.email);
+      expect(loadingState).toHaveTextContent('loaded');
+    });
+  });
+
+  it('returns error when loggin with a wrong password', async () => {
+    const userDetails = {
+      email: 'new1@gmail.com',
+      password: 'new121kk244',
+    };
+
+    render(
+      <MemoryRouter>
+        <AuthenticationProvider>
+          <TestAuthLoginContext
+            email={userDetails.email}
+            password={userDetails.password}
+          />
+        </AuthenticationProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const loginButton = screen.getByTestId('login-user');
+      await userEvent.click(loginButton);
+    });
+
+    await waitFor(() => {
+      const authError = screen.getByTestId('auth-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(authError).toHaveTextContent('Invalid credentials');
+      expect(loadingState).toHaveTextContent('loaded');
+    });
+  });
+
+  it('returns error with a wrong credential', async () => {
+    const userDetails = {
+      email: 'new122@gmail.com',
+      password: 'new121kk244',
+    };
+
+    render(
+      <MemoryRouter>
+        <AuthenticationProvider>
+          <TestAuthLoginContext
+            email={userDetails.email}
+            password={userDetails.password}
+          />
+        </AuthenticationProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const loginButton = screen.getByTestId('login-user');
+      await userEvent.click(loginButton);
+    });
+
+    await waitFor(() => {
+      const authError = screen.getByTestId('auth-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(authError).toHaveTextContent('Invalid credentials');
+      expect(loadingState).toHaveTextContent('loaded');
+    });
+  });
+
+  it('returns error with empty credential', async () => {
+    const userDetails = {
+      email: '',
+      password: '',
+    };
+    render(
+      <MemoryRouter>
+        <AuthenticationProvider>
+          <TestAuthLoginContext
+            email={userDetails.email}
+            password={userDetails.password}
+          />
+        </AuthenticationProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const loginButton = screen.getByTestId('login-user');
+      await userEvent.click(loginButton);
+    });
+
+    await waitFor(() => {
+      const authError = screen.getByTestId('auth-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(authError).toHaveTextContent('Invalid credentials');
       expect(loadingState).toHaveTextContent('loaded');
     });
   });
@@ -236,19 +360,82 @@ describe('Signs out a user', () => {
 
       expect(authEmail).toHaveTextContent(userDetails.email);
       expect(loadingState).toHaveTextContent('loaded');
-
     });
-      await act(async () => {
-        const logoutButton = screen.getByTestId('logout-user');
-        await userEvent.click(logoutButton);
-      });
+    await act(async () => {
+      const logoutButton = screen.getByTestId('logout-user');
+      await userEvent.click(logoutButton);
+    });
 
-      await waitFor(() => {
-        const authEmail = screen.getByTestId('auth-email');
-        const loadingState = screen.getByTestId('loading-state');
-  
-        expect(authEmail).toBeEmptyDOMElement();
-        expect(loadingState).toHaveTextContent('loaded');
-      })
+    await waitFor(() => {
+      const authEmail = screen.getByTestId('auth-email');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(authEmail).toBeEmptyDOMElement();
+      expect(loadingState).toHaveTextContent('loaded');
+    });
   });
 });
+
+// describe('Error Scenarios', () => {
+//   it('should handle create auth with invalid credentials', async () => {
+//     const newUser = {
+//       id: nanoid(10),
+//       email: 'tom1@gmail.com',
+//       username: 'tom_222',
+//       password: 'tom_22_tom1',
+//     };
+//     render(
+//       <MemoryRouter>
+//         <AuthenticationProvider>
+//           <TestAuthCreateContext
+//             username={newUser.username}
+//             id={newUser.id}
+//             email={newUser.email}
+//             password={newUser.password}
+//           />
+//         </AuthenticationProvider>
+//       </MemoryRouter>
+//     );
+
+//     await act(async () => {
+//       const createButton = screen.getByTestId('create-user');
+//       await userEvent.click(createButton);
+//     });
+
+//     await waitFor(() => {
+//       const authEmail = screen.getByTestId('auth-email');
+//       expect(authEmail.textContent).toBe(newUser.email);
+//     });
+
+//     const newUser2 = {
+//       id: nanoid(10),
+//       email: 'tom1@gmail.com',
+//       username: 'tom_222',
+//       password: 'tom_22_tom1',
+//     };
+//     render(
+//       <MemoryRouter>
+//         <AuthenticationProvider>
+//           <TestAuthCreateContext
+//             username={newUser2.username}
+//             id={newUser2.id}
+//             email={newUser2.email}
+//             password={newUser2.password}
+//           />
+//         </AuthenticationProvider>
+//       </MemoryRouter>
+//     );
+//     await act(async () => {
+//       const createButton = screen.getByTestId('create-user');
+//       await userEvent.click(createButton);
+//     });
+
+//     // Check for error state
+//     await waitFor(() => {
+//       const errorElement = screen.getByTestId('auth-error');
+//       expect(errorElement.textContent).toHaveTextContent(
+//         'Email already exists'
+//       );
+//     });
+//   });
+// });

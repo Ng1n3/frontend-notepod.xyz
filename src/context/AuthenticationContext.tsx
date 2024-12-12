@@ -107,7 +107,13 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
-      if (data.errors) throw new Error(data.errors[0].message);
+      if (data.errors) {
+        dispatch({
+          type: 'rejected',
+          payload: data.errors[0].message,
+        });
+        return;
+      }
       const createdAuth = data.data.createUser;
       dispatch({ type: 'auth/created', payload: createdAuth });
     } catch (error) {
@@ -151,7 +157,13 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
 
       const data = await res.json();
-      if (data.errors) throw new Error(data.errors[0].message);
+      if (data.errors) {
+        dispatch({
+          type: 'rejected',
+          payload: data.errors[0].message,
+        });
+        return;
+      }
       const loggedUser = data.data.loginUser;
       dispatch({ type: 'auth/created', payload: loggedUser });
     } catch (error) {

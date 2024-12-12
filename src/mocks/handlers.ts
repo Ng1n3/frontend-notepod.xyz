@@ -391,6 +391,21 @@ export const handlers = [
   graphql.mutation('CreateUser', ({ variables }) => {
     const { id, email, username, password } = variables;
 
+    const isDuplicate = Array.from(initialUsers.values()).some(
+      (user) => user.email === email
+    );
+
+    if (isDuplicate) {
+      return HttpResponse.json({
+        errors: [
+          {
+            message: 'Email already exists',
+            extensions: { code: 'DUPLICATE_EMAIL' },
+          },
+        ],
+      });
+    }
+
     const newUser = {
       id,
       email,
