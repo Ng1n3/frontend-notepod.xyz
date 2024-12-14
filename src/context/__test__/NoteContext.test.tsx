@@ -120,10 +120,9 @@ describe('Get a single note using note context', () => {
 // };
 // describe('Create a single note', () => {
 //   it('should create a note and add it to the list of current notes', async () => {
-//     const noteid = nanoid();
 
 //     const newNote = {
-//       id: noteid,
+//       id: nanoid(10),
 //       title: 'This is my fourth note',
 //       body: "Here's me making fun of my self",
 //       userId: 'afadf333',
@@ -133,7 +132,7 @@ describe('Get a single note using note context', () => {
 //       <MemoryRouter>
 //         <NotesProvider>
 //           <TestCreateNoteContext
-//             id={noteid}
+//             id={newNote.id}
 //             title={newNote.title}
 //             body={newNote.body}
 //             userId={newNote.userId}
@@ -166,5 +165,4 @@ describe('Get a single note using note context', () => {
 //     );
 //   });
 // });
-
 

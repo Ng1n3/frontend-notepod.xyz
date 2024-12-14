@@ -1,5 +1,12 @@
-import { createContext, ReactNode, useEffect, useReducer } from 'react';
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useEffect,
+  useReducer,
+} from 'react';
 import { BASE_URL } from '../util/Interfaces';
+import { NotesAction } from './NotesContext';
 
 // const BASE_URL = 'http://localhost:4000/graphql';
 
@@ -59,7 +66,10 @@ interface DeletedProviderProps {
 }
 
 interface DeletedContextType extends DeletedState {
-  restoreDeletedNotes: (noteId: string) => Promise<void>;
+  restoreDeletedNotes: (
+    noteId: string,
+    notesDispatch?: Dispatch<NotesAction>
+  ) => Promise<void>;
   restoreDeletedTodo: (todoId: string) => Promise<void>;
   restoreDeletedPassword: (passwordId: string) => Promise<void>;
 }
@@ -252,7 +262,10 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     fetchDeletedItems();
   }, []);
 
-  async function restoreDeletedNotes(noteId: string) {
+  async function restoreDeletedNotes(
+    noteId: string,
+    notesDispatch?: Dispatch<NotesAction>
+  ) {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -283,8 +296,19 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       });
       const data = await res.json();
       const restoredNote = data.data.restoreNote;
-      // console.log("restoredNote", data);
-      dispatch({ type: 'deletedNote/restore', payload: restoredNote });
+      // console.log("restoredNote", data.data.restoreNote);
+      dispatch({
+        type: 'deletedNote/restore',
+        payload: { id: restoredNote.id },
+      });
+      //notify notes provider
+      if (notesDispatch) {
+        console.log("fuck i'm hit");
+        notesDispatch({
+          type: 'note/restored',
+          payload: restoredNote,
+        });
+      }
     } catch {
       dispatch({
         type: 'rejected',

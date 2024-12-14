@@ -32,19 +32,21 @@ interface NotesProvideProps {
 interface NotesContextType extends NoteState {
   createNote: (newNote: Note) => Promise<void>;
   deleteNote: (id: string) => Promise<void>;
-  fetchNotes:  () => Promise<void>;
+  fetchNotes: () => Promise<void>;
   dispatch: Dispatch<NotesAction>;
   fetchNote: (id: string) => Promise<void>;
   updateNote: (updatedNote: Note) => Promise<void>;
   setCurrentNote: (note: Note | null) => void;
   clearCurrentNote: () => void;
+  restoreNoteFromDeleted: (restoredNote: Note) => Promise<void>;
 }
 
-type NotesAction =
+export type NotesAction =
   | { type: 'loading' }
   | { type: 'notes/loaded'; payload: Note[] }
   | { type: 'note/loaded'; payload: Note }
   | { type: 'note/created'; payload: Note }
+  | { type: 'note/restored'; payload: Note }
   | { type: 'note/deleted'; payload: Note }
   | { type: 'note/cleared' }
   | { type: 'note/updated'; payload: Note }
@@ -74,6 +76,13 @@ function reducer(state: NoteState, action: NotesAction) {
         isLoading: false,
         notes: [...state.notes, action.payload],
         currentNote: action.payload,
+      };
+
+    case 'note/restored':
+      return {
+        ...state,
+        isLoaded: false,
+        notes: [...state.notes, action.payload],
       };
 
     case 'note/deleted':
@@ -204,6 +213,18 @@ function NotesProvider({ children }: NotesProvideProps) {
       dispatch({
         type: 'rejected',
         payload: 'There was an error creating a new Note...',
+      });
+    }
+  }
+
+  async function restoreNoteFromDeleted(restoreNote: Note) {
+    dispatch({ type: 'loading' });
+    try {
+      dispatch({ type: 'note/restored', payload: restoreNote });
+    } catch {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error restoring a note...',
       });
     }
   }
@@ -371,6 +392,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         createNote,
         currentNote,
         deleteNote,
+        restoreNoteFromDeleted,
         clearCurrentNote,
         fetchNote,
         updateNote,

@@ -420,10 +420,46 @@ export const handlers = [
       },
     });
   }),
+
   graphql.mutation('LogoutUser', () => {
     return HttpResponse.json({
       data: {
         logoutUser: true,
+      },
+    });
+  }),
+
+  graphql.mutation('RestoreNote', ({ variables }) => {
+    const { id } = variables;
+
+    const isNoteAvailable = Array.from(allNotes.values()).find(
+      (note) => note.id === id
+    );
+
+    if (!isNoteAvailable) {
+      return HttpResponse.json({
+        errors: [{ message: 'Note not found' }],
+      });
+    }
+
+    if (!isNoteAvailable.isDeleted) {
+      return HttpResponse.json({
+        errors: [{ message: 'Note is not in deleted state' }],
+      });
+    }
+
+    const restoredNote = {
+      ...isNoteAvailable,
+      isDeleted: false,
+      deletedAt: null,
+      updatedAt: new Date().toISOString(),
+    };
+
+    allNotes.set(id, restoredNote);
+
+    return HttpResponse.json({
+      data: {
+        restoreNote: restoredNote,
       },
     });
   }),
