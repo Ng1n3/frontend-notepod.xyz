@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { BASE_URL } from '../util/Interfaces';
 import { NotesAction } from './NotesContext';
+import { TodoActions } from './TodoContext';
 
 // const BASE_URL = 'http://localhost:4000/graphql';
 
@@ -70,7 +71,10 @@ interface DeletedContextType extends DeletedState {
     noteId: string,
     notesDispatch?: Dispatch<NotesAction>
   ) => Promise<void>;
-  restoreDeletedTodo: (todoId: string) => Promise<void>;
+  restoreDeletedTodo: (
+    todoId: string,
+    todoDispatch?: Dispatch<TodoActions>
+  ) => Promise<void>;
   restoreDeletedPassword: (passwordId: string) => Promise<void>;
 }
 
@@ -303,7 +307,6 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       });
       //notify notes provider
       if (notesDispatch) {
-        console.log("fuck i'm hit");
         notesDispatch({
           type: 'note/restored',
           payload: restoredNote,
@@ -317,7 +320,10 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     }
   }
 
-  async function restoreDeletedTodo(todoId: string) {
+  async function restoreDeletedTodo(
+    todoId: string,
+    todoDispatch?: Dispatch<TodoActions>
+  ) {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -349,7 +355,17 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       const data = await res.json();
       const restoredTodo = data.data.restoreTodo;
       // console.log("restoredTodo", data);
-      dispatch({ type: 'deletedTodo/restore', payload: restoredTodo });
+      dispatch({
+        type: 'deletedTodo/restore',
+        payload: { id: restoredTodo.id },
+      });
+
+      if (todoDispatch) {
+        todoDispatch({
+          type: 'todo/restored',
+          payload: restoredTodo,
+        });
+      }
     } catch {
       dispatch({
         type: 'rejected',

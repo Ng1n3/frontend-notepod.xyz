@@ -6,6 +6,8 @@ import useDeleted from '../../hook/useDeleted';
 import useNotes from '../../hook/useNotes';
 import { DeletedProvider } from '../DeletedContext';
 import { NotesProvider } from '../NotesContext';
+import useTodos from '../../hook/useTodos';
+import { TodoProvider } from '../TodoContext';
 
 const TestDeletedContext = () => {
   const { isLoading, deletedNotes, deletedPasswords, deletedTodos } =
@@ -73,8 +75,28 @@ const TestRestoreContext = ({ id }: { id: string }) => {
   );
 };
 
-describe('restoring a deleted note', () => {
-  it('should restore a deleted note from the id', async () => {
+const TestRestoreTodoContext = ({id}: {id: string}) => {
+  const {isLoading, restoreDeletedTodo, deletedTodos, error} = useDeleted()
+  const {todos, dispatch: todoDispatch} = useTodos()
+
+  return (
+    <>
+      <button
+        data-testid="restore-todo-button"
+        onClick={() => restoreDeletedTodo(id, todoDispatch)}
+      >
+        Restore Button
+      </button>
+      <div data-testid="deletedTodo-length">{deletedTodos.length}</div>
+      <div data-testid="todo-length">{todos.length}</div>
+      <div data-testid="restored-todo-error">{error}</div>
+      <div data-testid="loading-state">{isLoading ? 'loading' : 'loaded'}</div>
+    </>
+  );
+}
+
+describe('restoring a deleted Items', () => {
+  it('should restore a deleted note via the id', async () => {
     const id = 'BIdqeEi8Gx';
     render(
       <MemoryRouter>
@@ -103,4 +125,34 @@ describe('restoring a deleted note', () => {
       expect(loadingState.textContent).toBe('loaded');
     });
   });
+
+  it('should restore a deleted to via the id', async () => {
+    const id = 'cx3iPLO67z'
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <TodoProvider>
+            <TestRestoreTodoContext id={id} />
+          </TodoProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-todo-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const deletedTodoLength = screen.getByTestId('deletedTodo-length');
+      const todoLength = screen.getByTestId('todo-length');
+      const error = screen.getByTestId('restored-todo-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(Number(deletedTodoLength.textContent)).toBe(0);
+      expect(Number(todoLength.textContent)).toBe(4);
+      expect(error.textContent).toBe('');
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  })
 });

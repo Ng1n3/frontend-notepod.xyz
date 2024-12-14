@@ -463,4 +463,38 @@ export const handlers = [
       },
     });
   }),
+  graphql.mutation('RestoreTodo', ({ variables }) => {
+    const { id } = variables;
+
+    const isTodoAvailable = Array.from(allTodos.values()).find(
+      (todo) => todo.id === id
+    );
+
+    if (!isTodoAvailable) {
+      return HttpResponse.json({
+        errors: [{ message: 'Todo not found' }],
+      });
+    }
+
+    if (!isTodoAvailable.isDeleted) {
+      return HttpResponse.json({
+        errors: [{ message: 'Todo is not in deleted state' }],
+      });
+    }
+
+    const restoredTodo = {
+      ...isTodoAvailable,
+      isDeleted: false,
+      deletedAt: '',
+      updatedAt: new Date().toISOString(),
+    };
+
+    allTodos.set(id, restoredTodo);
+
+    return HttpResponse.json({
+      data: {
+        restoreTodo: restoredTodo,
+      },
+    });
+  }),
 ];

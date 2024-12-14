@@ -1,5 +1,6 @@
 import {
   createContext,
+  Dispatch,
   ReactNode,
   useCallback,
   useEffect,
@@ -43,16 +44,18 @@ interface TodoContextType extends TodoState {
   fetchTodo: (id: string) => Promise<void>;
   setCurrentTodo: (todo: Todo | null) => void;
   updateTodo: (update: Todo) => Promise<void>;
+  dispatch: Dispatch<TodoActions>;
   searchTodo: (searchTerm: string) => Promise<void>;
   clearCurrentTodo: () => void;
   deleteTodo: (id: string) => Promise<void>;
   fetchTodos: () => Promise<void>;
 }
 
-type TodoActions =
+export type TodoActions =
   | { type: 'loading' }
   | { type: 'todos/loaded'; payload: Todo[] }
   | { type: 'todo/loaded'; payload: Todo }
+  | { type: 'todo/restored'; payload: Todo }
   | { type: 'todo/created'; payload: Todo }
   | { type: 'todo/cleared' }
   | { type: 'todo/updated'; payload: Todo }
@@ -83,6 +86,13 @@ function reducer(state: TodoState, action: TodoActions) {
         isLoading: false,
         todos: [...state.todos, action.payload],
         currentTodo: action.payload,
+      };
+
+    case 'todo/restored':
+      return {
+        ...state,
+        isLoaded: false,
+        todos: [...state.todos, action.payload],
       };
 
     case 'todo/updated':
@@ -433,6 +443,7 @@ function TodoProvider({ children }: TodoProviderProps) {
     <TodoContext.Provider
       value={{
         error,
+        dispatch,
         clearCurrentTodo,
         fetchTodos,
         isLoading,
