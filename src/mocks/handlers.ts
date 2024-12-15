@@ -463,6 +463,7 @@ export const handlers = [
       },
     });
   }),
+
   graphql.mutation('RestoreTodo', ({ variables }) => {
     const { id } = variables;
 
@@ -497,6 +498,7 @@ export const handlers = [
       },
     });
   }),
+  
   graphql.mutation('RestorePassword', ({ variables }) => {
     const { id } = variables;
 

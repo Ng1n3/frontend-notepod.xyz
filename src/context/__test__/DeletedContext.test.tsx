@@ -8,8 +8,8 @@ import usePasswords from '../../hook/usePassword';
 import useTodos from '../../hook/useTodos';
 import { DeletedProvider } from '../DeletedContext';
 import { NotesProvider } from '../NotesContext';
-import { TodoProvider } from '../TodoContext';
 import { PasswordProvider } from '../PasswordContext';
+import { TodoProvider } from '../TodoContext';
 
 const TestDeletedContext = () => {
   const { isLoading, deletedNotes, deletedPasswords, deletedTodos } =
@@ -193,7 +193,9 @@ describe('restoring a deleted Items', () => {
     });
 
     await waitFor(() => {
-      const deletedPasswordLength = screen.getByTestId('deletedPassword-length');
+      const deletedPasswordLength = screen.getByTestId(
+        'deletedPassword-length'
+      );
       const passwordLength = screen.getByTestId('password-length');
       const error = screen.getByTestId('restored-password-error');
       const loadingState = screen.getByTestId('loading-state');
@@ -201,6 +203,172 @@ describe('restoring a deleted Items', () => {
       expect(Number(deletedPasswordLength.textContent)).toBe(0);
       expect(Number(passwordLength.textContent)).toBe(4);
       expect(error.textContent).toBe('');
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
+});
+
+describe('Should give errors from deleted items', () => {
+  it('Should give an error for a wrong deleted todo id', async () => {
+    const id = 'dafdaf13r4';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <TodoProvider>
+            <TestRestoreTodoContext id={id} />
+          </TodoProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-todo-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-todo-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(error.textContent).toBe('There was an error restoring todos...');
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
+
+  it('Should give an error for a wrong deleted note id', async () => {
+    const id = 'dafdaf13r4';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <NotesProvider>
+            <TestRestoreContext id={id} />
+          </NotesProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-note-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-note-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(error.textContent).toBe(
+        'There was an error restoring the note...'
+      );
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
+
+  it('Should give an error for a wrong deleted password id', async () => {
+    const id = 'dafdaf13r4';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <PasswordProvider>
+            <TestRestorePasswordContext id={id} />
+          </PasswordProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-password-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-password-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(error.textContent).toBe('There was an error restoring data...');
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
+
+  it('Should give an error for trying to restore a non-deleted note', async () => {
+    const id = 'u2ngZDjBiU';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <NotesProvider>
+            <TestRestoreContext id={id} />
+          </NotesProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-note-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-note-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(error.textContent).toBe(
+        'There was an error restoring the note...'
+      );
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
+
+  it('Should give an error for trying to restore a non-deleted todo', async () => {
+    const id = 'fa1gRLM79u';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <TodoProvider>
+            <TestRestoreTodoContext id={id} />
+          </TodoProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-todo-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-todo-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(error.textContent).toBe(
+        'There was an error restoring todos...'
+      );
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
+  
+  it('Should give an error for trying to restore a non-deleted password', async () => {
+    const id = 'fa1gRLM79u';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <PasswordProvider>
+            <TestRestorePasswordContext id={id} />
+          </PasswordProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-password-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-password-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(error.textContent).toBe(
+        'There was an error restoring data...'
+      );
       expect(loadingState.textContent).toBe('loaded');
     });
   });
