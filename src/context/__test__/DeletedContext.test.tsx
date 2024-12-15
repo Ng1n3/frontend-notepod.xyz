@@ -373,3 +373,82 @@ describe('Should give errors from deleted items', () => {
     });
   });
 });
+
+describe('Advanced Deleted Items Restoration', () => {
+  it('should handle multiple simultaneous restore attempts', async () => {
+    const id = 'BIdqeEi8Gx';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <NotesProvider>
+            <TestRestoreContext id={id} />
+          </NotesProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    // Simulate multiple rapid restore attempts
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-note-button');
+      await Promise.all([
+        userEvent.click(restoreButton),
+        userEvent.click(restoreButton),
+        userEvent.click(restoreButton)
+      ]);
+    });
+
+    await waitFor(() => {
+      const deletedNotelength = screen.getByTestId('deletedNote-length');
+      const noteLength = screen.getByTestId('note-length');
+      
+      // Ensure only one restoration occurred
+      expect(Number(deletedNotelength.textContent)).toBe(1);
+      expect(Number(noteLength.textContent)).toBe(3);
+    });
+  });
+
+  it('should handle restoration with empty or invalid ID', async () => {
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <NotesProvider>
+            <TestRestoreContext id="" />
+          </NotesProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-note-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-note-error');
+      expect(error.textContent).toBe('There was an error restoring the note...');
+    });
+  });
+
+  it('should handle restoration of items with special characters', async () => {
+    const specialId = 'note-with-special-chars!@#$%^&*()';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <NotesProvider>
+            <TestRestoreContext id={specialId} />
+          </NotesProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-note-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const error = screen.getByTestId('restored-note-error');
+      expect(error.textContent).toBe('There was an error restoring the note...');
+    });
+  });
+});
