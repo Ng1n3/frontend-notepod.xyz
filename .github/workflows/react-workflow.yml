@@ -10,11 +10,21 @@ jobs:
     steps:
       - name: Get Code
         uses: actions/checkout@v4
-      - name: Cache dependencies
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Cache pnpm store
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: pnpm-store-${{hashFiles('**/pnpm-lock.yaml')}}
+          restore-keys: |
+            pnpm-store-
+              
       - name: Install dependencies
         run: npm ci
       - name: Lint Code
