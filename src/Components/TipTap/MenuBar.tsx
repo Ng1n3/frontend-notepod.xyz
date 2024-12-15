@@ -1,9 +1,15 @@
 // import { useCurrentEditor } from '@tiptap/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from './MenuBar.module.css';
 import { faBold, faItalic,  faListOl,  faListUl, faParagraph, faStrikethrough } from '@fortawesome/free-solid-svg-icons';
+import { Editor } from '@tiptap/react';
 
-export default function MenuBar({editor}) {
+import styles from './MenuBar.module.css';
+
+interface MenuBarProps {
+  editor: Editor | null;
+}
+
+export default function MenuBar({editor}: MenuBarProps) {
   // const { editor } = useCurrentEditor();
 
   if (!editor) return null;

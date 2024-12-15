@@ -364,7 +364,7 @@ function NotesProvider({ children }: NotesProvideProps) {
     } catch {
       dispatch({
         type: 'rejected',
-        payload: 'There was an error updating note...',
+        payload: 'Something went wrong while trying to update...',
       });
     }
   }
@@ -383,6 +383,12 @@ function NotesProvider({ children }: NotesProvideProps) {
     dispatch({ type: 'note/cleared' });
   }, []);
 
+  // function handleApiError(error) {
+  //   dispatch({
+  //     type: 'rejected',
+  //     payload: error.message || 'Something went wrong...',
+  //   });
+  // }
   return (
     <NotesContext.Provider
       value={{

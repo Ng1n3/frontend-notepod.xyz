@@ -2,7 +2,7 @@ import Heading from '@tiptap/extension-heading';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useNotes from '../hook/useNotes';
 import Button from './Button';
 import styles from './CurrentNoteHeader.module.css';
@@ -41,7 +41,7 @@ const content = `<h1></h1>`;
 interface currentNoteHeaderProps {
   title: string;
   setTitle: (title: string) => void;
-  onSave: () => void;
+  onSave: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export default function CurrentNoteHeader({
@@ -74,11 +74,22 @@ export default function CurrentNoteHeader({
     }
   }, [title, editor]);
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Prevent default button behavior
+    // Create a synthetic form event
+    const formEvent = {
+      preventDefault: () => e.preventDefault(),
+      currentTarget: e.currentTarget.form,
+    } as React.FormEvent<HTMLFormElement>;
+    
+    onSave(formEvent);
+  };
+
   return (
     <header className={styles.title}>
       {/* <h1>Title</h1> */}
       <EditorContent editor={editor} />
-      <Button onClick={onSave}>
+      <Button onClick={handleClick}>
         {currentNote && currentNote.id ? 'Update Note' : 'Add Note'}
       </Button>
     </header>

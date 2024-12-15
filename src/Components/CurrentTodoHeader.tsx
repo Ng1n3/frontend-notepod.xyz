@@ -41,7 +41,7 @@ const content = '<h1></h1>';
 interface currentTodoHeaderProps {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  handleSubmit: () => void;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export default function CurrentTodoHeader({
@@ -72,11 +72,22 @@ export default function CurrentTodoHeader({
     }
   }, [title, editor]);
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Prevent default button behavior
+    // Create a synthetic form event
+    const formEvent = {
+      preventDefault: () => e.preventDefault(),
+      currentTarget: e.currentTarget.form,
+    } as React.FormEvent<HTMLFormElement>;
+
+    handleSubmit(formEvent);
+  };
+
   return (
     <div className={styles.title}>
       {/* <h1>Title</h1> */}
       <EditorContent editor={editor} />
-      <Button onClick={handleSubmit}>
+      <Button onClick={handleClick}>
         {currentTodo ? 'update Todo' : 'Add Todo'}
       </Button>
     </div>

@@ -38,7 +38,7 @@ export default function CurrentTodo() {
   );
 
   const handleSubmit = useCallback(
-    async function (event) {
+    async function (event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
       if (!title) return;
 

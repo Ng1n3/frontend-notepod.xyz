@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import useAuth from '../hook/useAuth';
 import useNotes from '../hook/useNotes';
 import { createNoteSchema, updateNoteSchema } from '../util/types';
@@ -26,9 +26,11 @@ export default function CurrentNote() {
   );
 
   const handleSubmit = useCallback(
-    async (event) => {
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (!title || !currentAuth) return;
+
+      const userId = currentAuth.id ?? '';
 
       if (currentNote && currentNote.id) {
         const validation = updateNoteSchema.safeParse({ title, body });
@@ -42,7 +44,7 @@ export default function CurrentNote() {
           body,
           id: currentNote.id,
           updatedAt: new Date(),
-          userId: currentAuth.id,
+          userId,
         });
       } else {
         const validation = createNoteSchema.safeParse({ title, body });
@@ -50,7 +52,7 @@ export default function CurrentNote() {
           console.error(validation.error);
           return;
         }
-        await createNote({ title, body, userId: currentAuth?.id });
+        await createNote({ title, body, userId });
       }
       setTitle('');
       setBody('');

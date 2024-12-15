@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test:watch": "vitest",
+    "test": "vitest run",
     "coverage": "vitest --coverage",
     "preview": "vite preview",
     "server": "json-server --watch data/todo.json --port 8000 --delay 500"
