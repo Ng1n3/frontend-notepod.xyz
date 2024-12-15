@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { BASE_URL } from '../util/Interfaces';
 import { NotesAction } from './NotesContext';
+import { PasswordAction } from './PasswordContext';
 import { TodoActions } from './TodoContext';
 
 // const BASE_URL = 'http://localhost:4000/graphql';
@@ -75,7 +76,10 @@ interface DeletedContextType extends DeletedState {
     todoId: string,
     todoDispatch?: Dispatch<TodoActions>
   ) => Promise<void>;
-  restoreDeletedPassword: (passwordId: string) => Promise<void>;
+  restoreDeletedPassword: (
+    passwordId: string,
+    passwordDispatch?: Dispatch<PasswordAction>
+  ) => Promise<void>;
 }
 
 type actionTypes =
@@ -374,7 +378,10 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     }
   }
 
-  async function restoreDeletedPassword(passwordId: string) {
+  async function restoreDeletedPassword(
+    passwordId: string,
+    passwordDispatch?: Dispatch<PasswordAction>
+  ) {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -408,6 +415,13 @@ function DeletedProvider({ children }: DeletedProviderProps) {
       const data = await res.json();
       const restoredPassword = data.data.restorePassword;
       dispatch({ type: 'deletedPassword/restore', payload: restoredPassword });
+
+      if (passwordDispatch) {
+        passwordDispatch({
+          type: 'password/restored',
+          payload: restoredPassword,
+        });
+      }
     } catch {
       dispatch({
         type: 'rejected',

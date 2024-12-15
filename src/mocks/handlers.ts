@@ -497,4 +497,38 @@ export const handlers = [
       },
     });
   }),
+  graphql.mutation('RestorePassword', ({ variables }) => {
+    const { id } = variables;
+
+    const isPasswordAvailable = Array.from(allPasswords.values()).find(
+      (password) => password.id === id
+    );
+
+    if (!isPasswordAvailable) {
+      return HttpResponse.json({
+        errors: [{ message: 'Password not found' }],
+      });
+    }
+
+    if (!isPasswordAvailable.isDeleted) {
+      return HttpResponse.json({
+        errors: [{ message: 'Password is not in deleted state' }],
+      });
+    }
+
+    const restoredPassword = {
+      ...isPasswordAvailable,
+      isDeleted: false,
+      deletedAt: '',
+      updatedAt: new Date().toISOString(),
+    };
+
+    allPasswords.set(id, restoredPassword);
+
+    return HttpResponse.json({
+      data: {
+        restorePassword: restoredPassword,
+      },
+    });
+  }),
 ];

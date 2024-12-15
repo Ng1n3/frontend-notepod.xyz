@@ -1,5 +1,6 @@
 import {
   createContext,
+  Dispatch,
   ReactNode,
   useCallback,
   useEffect,
@@ -33,17 +34,19 @@ interface PasswordProviderProps {
 interface PasswordContextType extends PasswordState {
   createPassword: (newPassword: Password) => Promise<void>;
   fetchPassword: (id: string) => Promise<void>;
+  dispatch: Dispatch<PasswordAction>;
   setCurrentPassword: (password: Password | null) => void;
   clearCurrentPassword: () => void;
   updatePassword: (update: Password) => Promise<void>;
   deletePassword: (passwordId: string) => Promise<void>;
 }
 
-type PasswordAction =
+export type PasswordAction =
   | { type: 'loading' }
   | { type: 'passwords/loaded'; payload: Password[] }
   | { type: 'password/loaded'; payload: Password }
   | { type: 'password/created'; payload: Password }
+  | { type: 'password/restored'; payload: Password }
   | { type: 'password/cleared' }
   | { type: 'password/updated'; payload: Password }
   | { type: 'password/deleted'; payload: Password }
@@ -77,6 +80,13 @@ function reducer(state: PasswordState, action: PasswordAction) {
         isLoading: false,
         passwords: [...state.passwords, action.payload],
         currentPassword: action.payload,
+      };
+
+    case 'password/restored':
+      return {
+        ...state,
+        isLoaded: false,
+        passwords: [...state.passwords, action.payload],
       };
 
     case 'password/updated':
@@ -269,7 +279,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     }
   }, []);
 
-  async function deletePassword(passwordId: string) {
+  async function deletePassword(passwordId: string, ) {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -378,6 +388,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     <PasswordContext.Provider
       value={{
         passwords,
+        dispatch,
         error,
         currentPassword,
         isLoading,

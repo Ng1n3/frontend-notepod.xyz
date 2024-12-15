@@ -4,10 +4,12 @@ import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import useDeleted from '../../hook/useDeleted';
 import useNotes from '../../hook/useNotes';
+import usePasswords from '../../hook/usePassword';
+import useTodos from '../../hook/useTodos';
 import { DeletedProvider } from '../DeletedContext';
 import { NotesProvider } from '../NotesContext';
-import useTodos from '../../hook/useTodos';
 import { TodoProvider } from '../TodoContext';
+import { PasswordProvider } from '../PasswordContext';
 
 const TestDeletedContext = () => {
   const { isLoading, deletedNotes, deletedPasswords, deletedTodos } =
@@ -51,12 +53,7 @@ describe('Deleted context initial state', () => {
 });
 
 const TestRestoreContext = ({ id }: { id: string }) => {
-  const {
-    isLoading,
-    restoreDeletedNotes,
-    deletedNotes,
-    error,
-  } = useDeleted();
+  const { isLoading, restoreDeletedNotes, deletedNotes, error } = useDeleted();
   const { notes, dispatch: notesDispatch } = useNotes();
 
   return (
@@ -75,9 +72,9 @@ const TestRestoreContext = ({ id }: { id: string }) => {
   );
 };
 
-const TestRestoreTodoContext = ({id}: {id: string}) => {
-  const {isLoading, restoreDeletedTodo, deletedTodos, error} = useDeleted()
-  const {todos, dispatch: todoDispatch} = useTodos()
+const TestRestoreTodoContext = ({ id }: { id: string }) => {
+  const { isLoading, restoreDeletedTodo, deletedTodos, error } = useDeleted();
+  const { todos, dispatch: todoDispatch } = useTodos();
 
   return (
     <>
@@ -93,7 +90,29 @@ const TestRestoreTodoContext = ({id}: {id: string}) => {
       <div data-testid="loading-state">{isLoading ? 'loading' : 'loaded'}</div>
     </>
   );
-}
+};
+
+const TestRestorePasswordContext = ({ id }: { id: string }) => {
+  const { isLoading, restoreDeletedPassword, deletedPasswords, error } =
+    useDeleted();
+  // const {todos, dispatch: todoDispatch} = useTodos()
+  const { passwords, dispatch: passwordDispatch } = usePasswords();
+
+  return (
+    <>
+      <button
+        data-testid="restore-password-button"
+        onClick={() => restoreDeletedPassword(id, passwordDispatch)}
+      >
+        Restore Button
+      </button>
+      <div data-testid="deletedPassword-length">{deletedPasswords.length}</div>
+      <div data-testid="password-length">{passwords.length}</div>
+      <div data-testid="restored-password-error">{error}</div>
+      <div data-testid="loading-state">{isLoading ? 'loading' : 'loaded'}</div>
+    </>
+  );
+};
 
 describe('restoring a deleted Items', () => {
   it('should restore a deleted note via the id', async () => {
@@ -126,8 +145,8 @@ describe('restoring a deleted Items', () => {
     });
   });
 
-  it('should restore a deleted to via the id', async () => {
-    const id = 'cx3iPLO67z'
+  it('should restore a deletedtodo to via the password id', async () => {
+    const id = 'cx3iPLO67z';
     render(
       <MemoryRouter>
         <DeletedProvider>
@@ -154,5 +173,35 @@ describe('restoring a deleted Items', () => {
       expect(error.textContent).toBe('');
       expect(loadingState.textContent).toBe('loaded');
     });
-  })
+  });
+
+  it('Should restore a deleted password via password id', async () => {
+    const id = 'Z9VpQrTY56';
+    render(
+      <MemoryRouter>
+        <DeletedProvider>
+          <PasswordProvider>
+            <TestRestorePasswordContext id={id} />
+          </PasswordProvider>
+        </DeletedProvider>
+      </MemoryRouter>
+    );
+
+    await act(async () => {
+      const restoreButton = screen.getByTestId('restore-password-button');
+      await userEvent.click(restoreButton);
+    });
+
+    await waitFor(() => {
+      const deletedPasswordLength = screen.getByTestId('deletedPassword-length');
+      const passwordLength = screen.getByTestId('password-length');
+      const error = screen.getByTestId('restored-password-error');
+      const loadingState = screen.getByTestId('loading-state');
+
+      expect(Number(deletedPasswordLength.textContent)).toBe(0);
+      expect(Number(passwordLength.textContent)).toBe(4);
+      expect(error.textContent).toBe('');
+      expect(loadingState.textContent).toBe('loaded');
+    });
+  });
 });
