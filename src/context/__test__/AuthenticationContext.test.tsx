@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { nanoid } from 'nanoid';
 import { MemoryRouter } from 'react-router-dom';
 import useAuth from '../../hook/useAuth';
-import AuthenticationProvider from '../AuthenticationContext';
+import AuthenticationProvider from '../AuthContext/AuthenticationContext';
 
 const InitialAuthContext = () => {
   const { isLoading, currentAuth, error, auths } = useAuth();

@@ -2,12 +2,13 @@ import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../Components/Header';
 import NotesBody from '../Components/NotesBody';
-import useNotes from '../hook/useNotes';
+import {useNotes} from '../hook/useNotes';
 
 export default function Notes() {
   const { id } = useParams();
   const { fetchNote } = useNotes();
   const fetchNoteRef = useRef(fetchNote);
+  const initalLoadDone = useRef(false);
 
   useEffect(() => {
     fetchNoteRef.current = fetchNote;
@@ -15,9 +16,10 @@ export default function Notes() {
 
   useEffect(() => {
     async function fetchData() {
-      if (id) {
+      if (id && initalLoadDone.current) {
         try {
-          await fetchNoteRef.current(id);
+          initalLoadDone.current = true;
+          await fetchNoteRef.current(id, false);
         } catch (error) {
           console.error('error fetching Notes', error);
         }

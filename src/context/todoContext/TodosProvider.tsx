@@ -1,139 +1,9 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useReducer,
-} from 'react';
-import useSafeNavigate from '../hook/useSafeNavigate';
-import { BASE_URL } from '../util/Interfaces';
-
-// const BASE_URL = 'http://localhost:8000';
-
-enum Priority {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL',
-}
-
-export interface Todo {
-  id?: string;
-  title: string;
-  body: string;
-  dueDate: Date;
-  priority: Priority;
-  userId?: string;
-}
-
-interface TodoState {
-  todos: Todo[];
-  isLoading: boolean;
-  currentTodo: Partial<Todo> | null;
-  priority: Priority;
-  error: string;
-}
-
-interface TodoProviderProps {
-  children: ReactNode;
-}
-
-interface TodoContextType extends TodoState {
-  createTodo: (newTodo: Todo) => Promise<void>;
-  fetchTodo: (id: string) => Promise<void>;
-  setCurrentTodo: (todo: Todo | null) => void;
-  updateTodo: (update: Todo) => Promise<void>;
-  dispatch: Dispatch<TodoActions>;
-  searchTodo: (searchTerm: string) => Promise<void>;
-  clearCurrentTodo: () => void;
-  deleteTodo: (id: string) => Promise<void>;
-  fetchTodos: () => Promise<void>;
-}
-
-export type TodoActions =
-  | { type: 'loading' }
-  | { type: 'todos/loaded'; payload: Todo[] }
-  | { type: 'todo/loaded'; payload: Todo }
-  | { type: 'todo/restored'; payload: Todo }
-  | { type: 'todo/created'; payload: Todo }
-  | { type: 'todo/cleared' }
-  | { type: 'todo/updated'; payload: Todo }
-  | { type: 'todo/deleted'; payload: Todo }
-  | { type: 'rejected'; payload: string };
-
-const initialState: TodoState = {
-  todos: [],
-  isLoading: false,
-  currentTodo: null,
-  priority: Priority.LOW,
-  error: '',
-};
-
-function reducer(state: TodoState, action: TodoActions) {
-  switch (action.type) {
-    case 'loading':
-      return { ...state, isLoading: true };
-    case 'todos/loaded':
-      return { ...state, isLoading: false, todos: action.payload };
-
-    case 'todo/loaded':
-      return { ...state, isLoading: false, currentTodo: action.payload };
-
-    case 'todo/created':
-      return {
-        ...state,
-        isLoading: false,
-        todos: [...state.todos, action.payload],
-        currentTodo: action.payload,
-      };
-
-    case 'todo/restored':
-      return {
-        ...state,
-        isLoaded: false,
-        todos: [...state.todos, action.payload],
-      };
-
-    case 'todo/updated':
-      return {
-        ...state,
-        isLoading: false,
-        todos: state.todos.map((todo) =>
-          todo.id === action.payload.id ? action.payload : todo
-        ),
-        currentTodo: action.payload,
-      };
-
-    case 'todo/deleted':
-      return {
-        ...state,
-        isLoading: false,
-        todos: state.todos.filter((todo) => todo.id !== action.payload.id),
-        currentTodo:
-          state.currentTodo?.id === action.payload.id
-            ? null
-            : state.currentTodo,
-      };
-
-    case 'todo/cleared':
-      return {
-        ...state,
-        isLoading: false,
-        currentTodo: null,
-      };
-
-    case 'rejected':
-      return { ...state, isLoading: false, error: action.payload };
-
-    default:
-      throw new Error('Unkown action type');
-  }
-}
-
-export const TodoContext = createContext<TodoContextType | undefined>(
-  undefined
-);
+import { useCallback, useReducer } from "react";
+import { Todo, TodoActions, TodoProviderProps, TodoState } from "./types";
+import { initialState, reducer } from "./reducer";
+import useSafeNavigate from "../../hook/useSafeNavigate";
+import { BASE_URL } from "../../util/Interfaces";
+import { TodoContext } from "./TodoContext";
 
 function TodoProvider({ children }: TodoProviderProps) {
   const [{ todos, error, currentTodo, isLoading, priority }, dispatch] =
@@ -186,14 +56,14 @@ function TodoProvider({ children }: TodoProviderProps) {
         payload: 'There was an error loading data...',
       });
     }
-  }, []);
+  }, [dispatch]);
 
-  useEffect(
-    function () {
-      fetchTodos();
-    },
-    [fetchTodos]
-  );
+  // useEffect(
+  //   function () {
+  //     fetchTodos();
+  //   },
+  //   [fetchTodos]
+  // );
 
   async function createTodo(newTodo: Todo) {
     dispatch({ type: 'loading' });

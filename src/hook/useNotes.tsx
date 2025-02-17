@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import { NotesContext } from '../context/NotesContext';
+import { NotesContext } from '../context/notesContext/';
 
-export default function useNotes() {
+export function useNotes() {
   const context = useContext(NotesContext);
   if (context === undefined)
     throw new Error('NotesContext was used outside of the NotesProvider');

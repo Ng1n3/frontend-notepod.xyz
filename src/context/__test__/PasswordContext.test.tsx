@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import usePasswords from '../../hook/usePassword';
-import { PasswordProvider } from '../PasswordContext';
+import { PasswordProvider } from '../passwordContext/PasswordContext';
 const TestPasswordListComponent = () => {
   const { passwords, isLoading } = usePasswords();
   return (

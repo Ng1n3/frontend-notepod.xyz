@@ -4,8 +4,8 @@ import user from '@testing-library/user-event';
 // import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe } from 'vitest';
-import useNotes from '../../hook/useNotes';
-import { NotesProvider } from '../NotesContext';
+import {useNotes} from '../../hook/useNotes';
+import { NotesProvider } from '../notesContext/';
 
 const TestNoteContext = () => {
   const { notes, isLoading } = useNotes();
@@ -165,4 +165,3 @@ describe('Get a single note using note context', () => {
 //     );
 //   });
 // });
-

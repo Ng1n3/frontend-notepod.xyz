@@ -1,125 +1,9 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useReducer,
-} from 'react';
-import useSafeNavigate from '../hook/useSafeNavigate';
-import { BASE_URL } from '../util/Interfaces';
-
-export interface Note {
-  id?: string;
-  title: string;
-  body: string;
-  updatedAt?: Date;
-  userId: string;
-  // deletedAt: Date;
-}
-
-interface NoteState {
-  notes: Note[];
-  isLoading: boolean;
-  currentNote: Partial<Note> | null;
-  error: string;
-}
-
-interface NotesProvideProps {
-  children: ReactNode;
-}
-
-interface NotesContextType extends NoteState {
-  createNote: (newNote: Note) => Promise<void>;
-  deleteNote: (id: string) => Promise<void>;
-  fetchNotes: () => Promise<void>;
-  dispatch: Dispatch<NotesAction>;
-  fetchNote: (id: string) => Promise<void>;
-  updateNote: (updatedNote: Note) => Promise<void>;
-  setCurrentNote: (note: Note | null) => void;
-  clearCurrentNote: () => void;
-  restoreNoteFromDeleted: (restoredNote: Note) => Promise<void>;
-}
-
-export type NotesAction =
-  | { type: 'loading' }
-  | { type: 'notes/loaded'; payload: Note[] }
-  | { type: 'note/loaded'; payload: Note }
-  | { type: 'note/created'; payload: Note }
-  | { type: 'note/restored'; payload: Note }
-  | { type: 'note/deleted'; payload: Note }
-  | { type: 'note/cleared' }
-  | { type: 'note/updated'; payload: Note }
-  | { type: 'rejected'; payload: string };
-
-const initalState: NoteState = {
-  notes: [],
-  isLoading: false,
-  currentNote: null,
-  error: '',
-};
-
-function reducer(state: NoteState, action: NotesAction) {
-  switch (action.type) {
-    case 'loading':
-      return { ...state, isLoading: true };
-
-    case 'notes/loaded':
-      return { ...state, isLoading: false, notes: action.payload };
-
-    case 'note/loaded':
-      return { ...state, isLoading: false, currentNote: action.payload };
-
-    case 'note/created':
-      return {
-        ...state,
-        isLoading: false,
-        notes: [...state.notes, action.payload],
-        currentNote: action.payload,
-      };
-
-    case 'note/restored':
-      return {
-        ...state,
-        isLoaded: false,
-        notes: [...state.notes, action.payload],
-      };
-
-    case 'note/deleted':
-      return {
-        ...state,
-        isLoading: false,
-        notes: state.notes.filter((note) => note.id !== action.payload.id),
-        currentNote:
-          state.currentNote?.id === action.payload.id
-            ? null
-            : state.currentNote,
-      };
-
-    case 'note/updated':
-      return {
-        ...state,
-        isLoading: false,
-        notes: state.notes.map((note) =>
-          note.id === action.payload.id ? action.payload : note
-        ),
-        currentNote: action.payload,
-      };
-
-    case 'note/cleared':
-      return { ...state, isLoading: false, currentNote: null };
-
-    case 'rejected':
-      return { ...state, isLoading: false, error: action.payload };
-
-    default:
-      throw new Error('Unkown action type');
-  }
-}
-
-export const NotesContext = createContext<NotesContextType | undefined>(
-  undefined
-);
+import { useCallback, useReducer } from "react";
+import { Note, NotesAction, NotesProvideProps, NoteState } from "./types";
+import useSafeNavigate from "../../hook/useSafeNavigate";
+import { BASE_URL } from "../../util/Interfaces";
+import { NotesContext } from "./NotesContext";
+import { initalState, reducer } from "./reducer";
 
 function NotesProvider({ children }: NotesProvideProps) {
   const [{ notes, isLoading, error, currentNote }, dispatch] = useReducer<
@@ -127,11 +11,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   >(reducer, initalState);
   const navigate = useSafeNavigate();
 
-  useEffect(function () {
-    fetchNotes();
-  }, []);
-
-  async function fetchNotes() {
+  const fetchNotes = useCallback(async () => {
     dispatch({ type: 'loading' });
     try {
       const res = await fetch(BASE_URL, {
@@ -171,7 +51,7 @@ function NotesProvider({ children }: NotesProvideProps) {
         payload: 'There was an error loading data...',
       });
     }
-  }
+  }, [dispatch]);
 
   async function createNote(newNote: Note) {
     dispatch({ type: 'loading' });
@@ -273,7 +153,7 @@ function NotesProvider({ children }: NotesProvideProps) {
   }
 
   const fetchNote = useCallback(
-    async (id: string) => {
+    async (id: string, shouldNaviage: boolean = false) => {
       dispatch({ type: 'loading' });
       try {
         const res = await fetch(BASE_URL, {
@@ -308,7 +188,10 @@ function NotesProvider({ children }: NotesProvideProps) {
         }
         const note = data.data.getNote;
         dispatch({ type: 'note/loaded', payload: note });
-        navigate(`/notes/${note.id}`);
+
+        if (shouldNaviage) {
+          navigate(`/notes/${note.id}`);
+        }
       } catch {
         dispatch({
           type: 'rejected',

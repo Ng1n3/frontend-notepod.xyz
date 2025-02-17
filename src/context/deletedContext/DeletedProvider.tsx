@@ -1,183 +1,11 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useEffect,
-  useReducer,
-} from 'react';
-import { BASE_URL } from '../util/Interfaces';
-import { NotesAction } from './NotesContext';
-import { PasswordAction } from './PasswordContext';
-import { TodoActions } from './TodoContext';
-
-// const BASE_URL = 'http://localhost:4000/graphql';
-
-interface deletedPasswords {
-  id: string;
-  fieldname: string;
-  username?: string;
-  email?: string;
-  password: string;
-}
-
-enum Priority {
-  Low,
-  Medium,
-  High,
-}
-
-interface deletedTodos {
-  id: string;
-  title: string;
-  body: string;
-  dueDate: Date;
-  priority: Priority;
-}
-
-interface deletedNotes {
-  id: string;
-  title: string;
-  body: string;
-  deletedAt: Date;
-}
-
-interface DeletedState {
-  deletedTodos: deletedTodos[];
-  deletedPasswords: deletedPasswords[];
-  deletedNotes: deletedNotes[];
-  currentDeletedNote: Partial<deletedNotes> | null;
-  currentDeletedTodo: Partial<deletedTodos> | null;
-  currentDeletedPassword: Partial<deletedPasswords> | null;
-  isLoading: boolean;
-  error: string;
-}
-
-const initalState: DeletedState = {
-  deletedNotes: [],
-  deletedTodos: [],
-  deletedPasswords: [],
-  isLoading: false,
-  currentDeletedTodo: null,
-  currentDeletedNote: null,
-  currentDeletedPassword: null,
-  error: '',
-};
-
-interface DeletedProviderProps {
-  children: ReactNode;
-}
-
-interface DeletedContextType extends DeletedState {
-  restoreDeletedNotes: (
-    noteId: string,
-    notesDispatch?: Dispatch<NotesAction>
-  ) => Promise<void>;
-  restoreDeletedTodo: (
-    todoId: string,
-    todoDispatch?: Dispatch<TodoActions>
-  ) => Promise<void>;
-  restoreDeletedPassword: (
-    passwordId: string,
-    passwordDispatch?: Dispatch<PasswordAction>
-  ) => Promise<void>;
-}
-
-type actionTypes =
-  | { type: 'loading' }
-  | {
-      type: 'deletedPasswords/loaded';
-      payload: { passwords: deletedPasswords[] };
-    }
-  | { type: 'deletedPassword/loaded'; payload: deletedPasswords }
-  | { type: 'deletedPassword/restore'; payload: { id: string } }
-  | { type: 'deletedNotes/loaded'; payload: { notes: deletedNotes[] } }
-  | { type: 'deletedNote/loaded'; payload: deletedNotes }
-  | { type: 'deletedNote/restore'; payload: { id: string } }
-  | {
-      type: 'deletedTodos/loaded';
-      payload: { todos: deletedTodos[] };
-    }
-  | { type: 'deletedTodo/loaded'; payload: deletedTodos }
-  | { type: 'deletedTodo/restore'; payload: { id: string } }
-  | { type: 'rejected'; payload: string };
-
-export const DeletedContext = createContext<DeletedContextType | undefined>(
-  undefined
-);
-
-function reducer(state: DeletedState, action: actionTypes) {
-  switch (action.type) {
-    case 'loading':
-      return { ...state, isLoading: true };
-
-    case 'deletedPasswords/loaded':
-      return {
-        ...state,
-        isLoading: false,
-        deletedPasswords: action.payload.passwords,
-      };
-
-    case 'deletedPassword/loaded':
-      return {
-        ...state,
-        isLoading: false,
-        currentDeletedPassword: action.payload,
-      };
-
-    case 'deletedPassword/restore':
-      return {
-        ...state,
-        isLoading: false,
-        deletedPasswords: state.deletedPasswords.filter(
-          (password) => password.id !== action.payload.id
-        ),
-      };
-
-    case 'deletedNote/loaded':
-      return { ...state, isLoading: false, currentDeletedNote: action.payload };
-
-    case 'deletedNotes/loaded':
-      return {
-        ...state,
-        isLoading: false,
-        deletedNotes: action.payload.notes || [],
-      };
-
-    case 'deletedNote/restore':
-      return {
-        ...state,
-        isLoading: false,
-        deletedNotes: state.deletedNotes.filter(
-          (note) => note.id !== action.payload.id
-        ),
-      };
-
-    case 'deletedTodos/loaded':
-      return {
-        ...state,
-        isLoading: false,
-        deletedTodos: action.payload.todos || action.payload,
-      };
-
-    case 'deletedTodo/loaded':
-      return { ...state, isLoading: false, currentDeletedTodo: action.payload };
-
-    case 'deletedTodo/restore':
-      return {
-        ...state,
-        isLoading: false,
-        deletedTodos: state.deletedTodos.filter(
-          (todo) => todo.id !== action.payload.id
-        ),
-      };
-
-    case 'rejected':
-      return { ...state, isLoading: false, error: action.payload };
-
-    default:
-      throw new Error('Unknown action type');
-  }
-}
+import { Dispatch, useReducer } from 'react';
+import { BASE_URL } from '../../util/Interfaces';
+import { NotesAction } from '../notesContext/types';
+import { PasswordAction } from '../passwordContext/types';
+import { TodoActions } from '../todoContext/types';
+import { DeletedContext } from './DeletedContext';
+import { initalState, reducer } from './reducer';
+import { actionTypes, DeletedProviderProps, DeletedState } from './types';
 
 function DeletedProvider({ children }: DeletedProviderProps) {
   const [
@@ -266,9 +94,9 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     }
   }
 
-  useEffect(function () {
-    fetchDeletedItems();
-  }, []);
+  // useEffect(function () {
+  //   fetchDeletedItems();
+  // }, []);
 
   async function restoreDeletedNotes(
     noteId: string,
@@ -433,6 +261,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
   return (
     <DeletedContext.Provider
       value={{
+        fetchDeletedItems,
         isLoading,
         deletedNotes,
         deletedPasswords,

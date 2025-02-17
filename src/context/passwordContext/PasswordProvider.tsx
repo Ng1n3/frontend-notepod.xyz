@@ -1,131 +1,9 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useReducer,
-} from 'react';
-import useSafeNavigate from '../hook/useSafeNavigate';
-import { BASE_URL } from '../util/Interfaces';
-
-// const BASE_URL = 'http://localhost:8000';
-
-export interface Password {
-  id?: string;
-  fieldname: string;
-  username?: string;
-  email?: string;
-  password: string;
-  userId?: string;
-}
-
-interface PasswordState {
-  passwords: Password[];
-  isLoading: boolean;
-  currentPassword: Partial<Password> | null;
-  error: string;
-}
-
-interface PasswordProviderProps {
-  children: ReactNode;
-}
-
-interface PasswordContextType extends PasswordState {
-  createPassword: (newPassword: Password) => Promise<void>;
-  fetchPassword: (id: string) => Promise<void>;
-  dispatch: Dispatch<PasswordAction>;
-  setCurrentPassword: (password: Password | null) => void;
-  clearCurrentPassword: () => void;
-  updatePassword: (update: Password) => Promise<void>;
-  deletePassword: (passwordId: string) => Promise<void>;
-}
-
-export type PasswordAction =
-  | { type: 'loading' }
-  | { type: 'passwords/loaded'; payload: Password[] }
-  | { type: 'password/loaded'; payload: Password }
-  | { type: 'password/created'; payload: Password }
-  | { type: 'password/restored'; payload: Password }
-  | { type: 'password/cleared' }
-  | { type: 'password/updated'; payload: Password }
-  | { type: 'password/deleted'; payload: Password }
-  | { type: 'rejected'; payload: string };
-
-const initialState: PasswordState = {
-  passwords: [],
-  isLoading: false,
-  currentPassword: null,
-  error: '',
-};
-
-function reducer(state: PasswordState, action: PasswordAction) {
-  switch (action.type) {
-    case 'loading':
-      return { ...state, isLoading: true };
-
-    case 'passwords/loaded':
-      return { ...state, isLoading: false, passwords: action.payload };
-
-    case 'password/loaded':
-      return {
-        ...state,
-        isLoading: false,
-        currentPassword: action.payload,
-      };
-
-    case 'password/created':
-      return {
-        ...state,
-        isLoading: false,
-        passwords: [...state.passwords, action.payload],
-        currentPassword: action.payload,
-      };
-
-    case 'password/restored':
-      return {
-        ...state,
-        isLoaded: false,
-        passwords: [...state.passwords, action.payload],
-      };
-
-    case 'password/updated':
-      return {
-        ...state,
-        isLoading: false,
-        passwords: state.passwords.map((password) =>
-          password.id === action.payload.id ? action.payload : password
-        ),
-        currentPassword: action.payload,
-      };
-
-    case 'password/deleted':
-      return {
-        ...state,
-        isLoading: false,
-        passwords: state.passwords.filter(
-          (password) => password.id !== action.payload.id
-        ),
-        currentPassword:
-          state.currentPassword?.id === action.payload.id
-            ? null
-            : state.currentPassword,
-      };
-
-    case 'password/cleared':
-      return { ...state, isLoading: false, currentPassword: null };
-
-    case 'rejected':
-      return { ...state, isLoading: false, error: action.payload };
-
-    default:
-      throw new Error('Unknown action type');
-  }
-}
-
-export const PasswordContext = createContext<PasswordContextType | undefined>(
-  undefined
-);
+import { useCallback, useReducer } from "react";
+import { Password, PasswordAction, PasswordProviderProps, PasswordState } from "./types";
+import { initialState, reducer } from "./reducer";
+import useSafeNavigate from "../../hook/useSafeNavigate";
+import { BASE_URL } from "../../util/Interfaces";
+import { PasswordContext } from "./PasswordContext";
 
 function PasswordProvider({ children }: PasswordProviderProps) {
   const [{ passwords, error, currentPassword, isLoading }, dispatch] =
@@ -182,9 +60,6 @@ function PasswordProvider({ children }: PasswordProviderProps) {
     }
   }, []);
 
-  useEffect(() => {
-    fetchPasswords();
-  }, [fetchPasswords]);
 
   async function createPassword(newPassword: Password) {
     dispatch({ type: 'loading' });
@@ -387,6 +262,7 @@ function PasswordProvider({ children }: PasswordProviderProps) {
   return (
     <PasswordContext.Provider
       value={{
+        fetchPasswords,
         passwords,
         dispatch,
         error,

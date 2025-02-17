@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { PasswordContext } from '../context/PasswordContext';
+import { PasswordContext } from '../context/passwordContext/PasswordContext';
 
 export default function usePasswords() {
   const context = useContext(PasswordContext);

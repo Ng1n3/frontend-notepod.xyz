@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import useTodos from '../../hook/useTodos';
-import { TodoProvider } from '../TodoContext';
+import { TodoProvider } from '../todoContext/TodoContext';
 
 const TestTodoContext = () => {
   const { todos, isLoading } = useTodos();

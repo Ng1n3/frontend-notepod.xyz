@@ -1,4 +1,4 @@
-import useNotes from '../hook/useNotes';
+import {useNotes} from '../hook/useNotes';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import useTodos from '../hook/useTodos';
 import Button from './Button';

@@ -8,7 +8,7 @@ export default function Todos() {
   const { id } = useParams();
   const { fetchTodo } = useTodos();
   const fetchTodoRef = useRef(fetchTodo);
-
+  const initalLoadDone = useRef(false);
   useEffect(() => {
     fetchTodoRef.current = fetchTodo;
   }, [fetchTodo]);
@@ -17,7 +17,7 @@ export default function Todos() {
     async function fetchData() {
       if (id) {
         try {
-          await fetchTodoRef.current(id);
+          await fetchTodoRef.current(id, false);
         } catch (error) {
           console.error('error fetching Todos', error);
         }

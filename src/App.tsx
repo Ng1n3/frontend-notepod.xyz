@@ -7,11 +7,11 @@ import NotFound from './Pages/NotFound';
 import Notes from './Pages/Notes';
 import Passwords from './Pages/Passwords';
 import Todos from './Pages/Todos';
-import AuthenticationProvider from './context/AuthenticationContext';
-import { DeletedProvider } from './context/DeletedContext';
-import { NotesProvider } from './context/NotesContext';
-import { PasswordProvider } from './context/PasswordContext';
-import { TodoProvider } from './context/TodoContext';
+import AuthenticationProvider from './context/AuthContext/AuthenticationContext';
+import { DeletedProvider } from './context/deletedContext/DeletedContext';
+import { NotesProvider } from './context/notesContext/';
+import { PasswordProvider } from './context/passwordContext/PasswordContext';
+import { TodoProvider } from './context/todoContext/TodoContext';
 // import useAuth from './context/useAuth';
 // import useNotes from './context/useNotes';
 
@@ -25,7 +25,6 @@ const ErrorFallBack: React.FC<{ error: Error }> = ({ error }) => {
 };
 
 const AuthenticatedApp: React.FC = () => {
-
   return (
     <Routes>
       <Route path="/" element={<Navigate replace to="/notes" />} />

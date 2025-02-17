@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import useDeleted from '../../hook/useDeleted';
-import useNotes from '../../hook/useNotes';
+import { useNotes } from '../../hook/useNotes';
 import usePasswords from '../../hook/usePassword';
 import useTodos from '../../hook/useTodos';
-import { DeletedProvider } from '../DeletedContext';
-import { NotesProvider } from '../NotesContext';
-import { PasswordProvider } from '../PasswordContext';
-import { TodoProvider } from '../TodoContext';
+import { DeletedProvider } from '../deletedContext/DeletedContext';
+import { NotesProvider } from '../notesContext/';
+import { PasswordProvider } from '../passwordContext/PasswordContext';
+import { TodoProvider } from '../todoContext/TodoContext';
 
 const TestDeletedContext = () => {
   const { isLoading, deletedNotes, deletedPasswords, deletedTodos } =
@@ -338,13 +338,11 @@ describe('Should give errors from deleted items', () => {
       const error = screen.getByTestId('restored-todo-error');
       const loadingState = screen.getByTestId('loading-state');
 
-      expect(error.textContent).toBe(
-        'There was an error restoring todos...'
-      );
+      expect(error.textContent).toBe('There was an error restoring todos...');
       expect(loadingState.textContent).toBe('loaded');
     });
   });
-  
+
   it('Should give an error for trying to restore a non-deleted password', async () => {
     const id = 'fa1gRLM79u';
     render(
@@ -366,9 +364,7 @@ describe('Should give errors from deleted items', () => {
       const error = screen.getByTestId('restored-password-error');
       const loadingState = screen.getByTestId('loading-state');
 
-      expect(error.textContent).toBe(
-        'There was an error restoring data...'
-      );
+      expect(error.textContent).toBe('There was an error restoring data...');
       expect(loadingState.textContent).toBe('loaded');
     });
   });
@@ -393,14 +389,14 @@ describe('Advanced Deleted Items Restoration', () => {
       await Promise.all([
         userEvent.click(restoreButton),
         userEvent.click(restoreButton),
-        userEvent.click(restoreButton)
+        userEvent.click(restoreButton),
       ]);
     });
 
     await waitFor(() => {
       const deletedNotelength = screen.getByTestId('deletedNote-length');
       const noteLength = screen.getByTestId('note-length');
-      
+
       // Ensure only one restoration occurred
       expect(Number(deletedNotelength.textContent)).toBe(1);
       expect(Number(noteLength.textContent)).toBe(3);
@@ -425,7 +421,9 @@ describe('Advanced Deleted Items Restoration', () => {
 
     await waitFor(() => {
       const error = screen.getByTestId('restored-note-error');
-      expect(error.textContent).toBe('There was an error restoring the note...');
+      expect(error.textContent).toBe(
+        'There was an error restoring the note...'
+      );
     });
   });
 
@@ -448,7 +446,9 @@ describe('Advanced Deleted Items Restoration', () => {
 
     await waitFor(() => {
       const error = screen.getByTestId('restored-note-error');
-      expect(error.textContent).toBe('There was an error restoring the note...');
+      expect(error.textContent).toBe(
+        'There was an error restoring the note...'
+      );
     });
   });
 });

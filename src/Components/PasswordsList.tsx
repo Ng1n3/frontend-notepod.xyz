@@ -2,7 +2,7 @@ import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
-import { Password } from '../context/PasswordContext';
+import { Password } from '../context/passwordContext/PasswordContext';
 import usePasswords from '../hook/usePassword';
 import styles from './PasswordsList.module.css';
 import Spinner from './Spinner';

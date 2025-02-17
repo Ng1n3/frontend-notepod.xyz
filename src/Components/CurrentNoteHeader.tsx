@@ -3,7 +3,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React, { useEffect } from 'react';
-import useNotes from '../hook/useNotes';
+import { useNotes } from '../hook/useNotes';
 import Button from './Button';
 import styles from './CurrentNoteHeader.module.css';
 
@@ -81,7 +81,7 @@ export default function CurrentNoteHeader({
       preventDefault: () => e.preventDefault(),
       currentTarget: e.currentTarget.form,
     } as React.FormEvent<HTMLFormElement>;
-    
+
     onSave(formEvent);
   };
 
