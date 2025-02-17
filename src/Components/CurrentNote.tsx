@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import useAuth from '../hook/useAuth';
-import useNotes from '../hook/useNotes';
+import { useAuth } from '../hook/useAuth';
+import {useNotes} from '../hook/useNotes';
 import { createNoteSchema, updateNoteSchema } from '../util/types';
 import styles from './CurrentNote.module.css';
 import CurrentNoteBody from './CurrentNoteBody';

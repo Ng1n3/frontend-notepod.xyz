@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { BASE_URL } from '../../util/Interfaces';
 import { AuthContext } from './AuthenticationContext';
 import { initialState, reducer } from './reducer';
@@ -45,6 +45,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       }
       const createdAuth = data.data.createUser;
       dispatch({ type: 'auth/created', payload: createdAuth });
+      await checkAuthStatus();
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -63,6 +64,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
 
   async function loginAuth(user: Auth) {
     dispatch({ type: 'loading' });
+    console.log("Login attempt with:", user.email);
+    console.log("Using BASE_URL:", BASE_URL);
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
@@ -76,26 +79,45 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
               id
               email
               username
-            }
-          }`,
+              }
+              }`,
           variables: {
             email: user.email,
             password: user.password,
           },
         }),
       });
-
+      
       const data = await res.json();
+      console.log("Resopnse data: ", data);
+
+      // Log the response status
+    console.log("Response status:", res.status);
+    
+    // If we get a 429, wait and retry
+    if (res.status === 429) {
+      console.log("Rate limited, waiting before retry...");
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+      throw new Error("Rate limited - please try again");
+    }
+
+    // Try to get the response text first
+    const textResponse = await res.text();
+    console.log("Raw response:", textResponse);
       if (data.errors) {
+        console.log("Login errors:", data.errors[0]);
         dispatch({
           type: 'rejected',
           payload: data.errors[0].message,
         });
-        return;
+        throw new Error(data.errors[0]);
       }
       const loggedUser = data.data.loginUser;
+      console.log("Logged in user", loggedUser);
       dispatch({ type: 'auth/created', payload: loggedUser });
+      await checkAuthStatus();
     } catch (error) {
+      console.error("login error details: ", error)
       dispatch({
         type: 'rejected',
         payload:
@@ -103,7 +125,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
             ? error.message
             : 'There was an error loggin Auth.',
       });
-      throw Error;
+      throw error;
     }
   }
 
@@ -142,12 +164,13 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     }
   }
 
-  // useEffect(() => {
-  //   checkAuthStatus();
-  // }, []);
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   async function signout() {
     dispatch({ type: 'loading' });
+    console.log("trying to signout");
     try {
       await fetch(BASE_URL, {
         method: 'POST',
@@ -157,10 +180,15 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         },
         body: JSON.stringify({
           query: `mutation LogoutUser {
-            logoutUser
+            logoutUser {
+              id,
+              username,
+              email
+            }
           }`,
         }),
       });
+      console.log("Signed out!!");
       dispatch({ type: 'auth/loaded', payload: null });
     } catch (error) {
       dispatch({
@@ -173,10 +201,13 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     }
   }
 
+  const isAuthenticated = Boolean(currentAuth);
+
   return (
     <AuthContext.Provider
       value={{
         createAuth,
+        isAuthenticated,
         auths,
         isLoading,
         signout,

@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Slide, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useAuth from '../hook/useAuth';
+import { useAuth } from '../hook/useAuth';
 import useSafeNavigate from '../hook/useSafeNavigate';
 import { createSigninSchema, CreateSigninSchema } from '../util/types';
 import Button from './Button';
@@ -22,6 +22,13 @@ export interface destinationProps {
 export default function Signin({ destination }: destinationProps) {
   const [showSignin, setShowSignin] = useState(false);
   const navigate = useSafeNavigate();
+  const { loginAuth, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(destination === 'notes' ? '/notes' : '/todos');
+    }
+  }, [isAuthenticated, navigate, destination]);
 
   const {
     register,
@@ -34,7 +41,6 @@ export default function Signin({ destination }: destinationProps) {
       password: '',
     },
   });
-  const { loginAuth } = useAuth();
 
   const onSubmit = async (data: CreateSigninSchema) => {
     const signinCredentials: SigninCredentials = {
@@ -51,10 +57,11 @@ export default function Signin({ destination }: destinationProps) {
         transition: Slide,
         hideProgressBar: false,
       });
-      navigate(destination === 'notes' ? '/notes' : '/todos');
+      // navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);
       let errorMessage = 'Incorrect Credentials please try again';
+
       if (error instanceof Error) {
         switch (error.message) {
           case 'INVALID_CREDENTIALS':

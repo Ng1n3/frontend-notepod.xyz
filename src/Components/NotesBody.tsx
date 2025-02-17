@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import useAuth from '../hook/useAuth';
-import {useNotes} from '../hook/useNotes';
+import { useAuth } from '../hook/useAuth';
+import { useNotes } from '../hook/useNotes';
 import CurrentNote from './CurrentNote';
 import Footer from './Footer';
 import List from './List';

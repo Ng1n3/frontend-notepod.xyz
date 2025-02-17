@@ -5,7 +5,7 @@ import Header from '../Components/Header';
 import NotAllowed from '../Components/NotAllowed';
 import PasswordInput from '../Components/PasswordInput';
 import PasswordsList from '../Components/PasswordsList';
-import useAuth from '../hook/useAuth';
+import {useAuth} from '../hook/useAuth';
 import usePasswords from '../hook/usePassword';
 
 export default function Passwords() {

@@ -7,12 +7,12 @@ import NotFound from './Pages/NotFound';
 import Notes from './Pages/Notes';
 import Passwords from './Pages/Passwords';
 import Todos from './Pages/Todos';
-import {AuthenticationProvider} from './context/AuthContext/';
+import { AuthenticationProvider } from './context/AuthContext/';
 import { DeletedProvider } from './context/deletedContext/';
 import { NotesProvider } from './context/notesContext/';
 import { PasswordProvider } from './context/passwordContext/';
 import { TodoProvider } from './context/todoContext/';
-// import useAuth from './context/useAuth';
+// import {useAuth} from './context/useAuth';
 // import useNotes from './context/useNotes';
 
 const ErrorFallBack: React.FC<{ error: Error }> = ({ error }) => {

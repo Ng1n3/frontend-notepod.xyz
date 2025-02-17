@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode } from "react";
+import { Dispatch, ReactNode } from 'react';
 
 export enum Priority {
   LOW = 'LOW',
@@ -30,7 +30,7 @@ export interface TodoProviderProps {
 
 export interface TodoContextType extends TodoState {
   createTodo: (newTodo: Todo) => Promise<void>;
-  fetchTodo: (id: string) => Promise<void>;
+  fetchTodo: (id: string, shownav: boolean) => Promise<void>;
   setCurrentTodo: (todo: Todo | null) => void;
   updateTodo: (update: Todo) => Promise<void>;
   dispatch: Dispatch<TodoActions>;

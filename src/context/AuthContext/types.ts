@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface Auth {
   id?: string;
@@ -23,6 +23,7 @@ export interface AuthContextType extends AuthState {
   loginAuth: (newUser: Auth) => Promise<void>;
   checkAuthStatus: () => Promise<void>;
   signout: () => Promise<void>;
+  isAuthenticated: boolean;
 }
 
 export type AuthAction =

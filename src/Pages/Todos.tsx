@@ -17,6 +17,7 @@ export default function Todos() {
     async function fetchData() {
       if (id) {
         try {
+          initalLoadDone.current = true
           await fetchTodoRef.current(id, false);
         } catch (error) {
           console.error('error fetching Todos', error);

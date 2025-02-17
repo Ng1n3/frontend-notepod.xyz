@@ -25,7 +25,7 @@ export interface NotesContextType extends NoteState {
   deleteNote: (id: string) => Promise<void>;
   fetchNotes: () => Promise<void>;
   dispatch: Dispatch<NotesAction>;
-  fetchNote: (id: string) => Promise<void>;
+  fetchNote: (id: string, shownav: boolean) => Promise<void>;
   updateNote: (updatedNote: Note) => Promise<void>;
   setCurrentNote: (note: Note | null) => void;
   clearCurrentNote: () => void;

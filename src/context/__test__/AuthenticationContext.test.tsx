@@ -2,8 +2,8 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { nanoid } from 'nanoid';
 import { MemoryRouter } from 'react-router-dom';
-import useAuth from '../../hook/useAuth';
-import AuthenticationProvider from '../AuthContext/AuthenticationContext';
+import { useAuth } from '../../hook/useAuth';
+import {AuthenticationProvider} from '../AuthContext/';
 
 const InitialAuthContext = () => {
   const { isLoading, currentAuth, error, auths } = useAuth();

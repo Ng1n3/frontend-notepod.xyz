@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Password } from '../context/passwordContext/PasswordContext';
-import useAuth from '../hook/useAuth';
+import { Password } from '../context/passwordContext/';
+import { useAuth } from '../hook/useAuth';
 import usePasswords from '../hook/usePassword';
 import { createPasswordSchema, CreatePasswordSchema } from '../util/types';
 import Button from './Button';
