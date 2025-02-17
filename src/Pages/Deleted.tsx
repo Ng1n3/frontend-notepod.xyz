@@ -8,10 +8,16 @@ import Footer from '../Components/Footer';
 import Header from '../Components/Header';
 import NotAllowed from '../Components/NotAllowed';
 import { useAuth } from '../hook/useAuth';
+// import useDeleted from '../hook/useDeleted';
 
 export default function Deleted() {
   const [option, setOption] = useState('password');
   const { currentAuth } = useAuth();
+  // const { fetchDeletedItems } = useDeleted();
+
+  // useEffect(() => {
+  //   fetchDeletedItems();
+  // }, [fetchDeletedItems]);
 
   return (
     <div>

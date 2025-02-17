@@ -89,10 +89,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       });
       
       const data = await res.json();
-      console.log("Resopnse data: ", data);
-
-      // Log the response status
-    console.log("Response status:", res.status);
     
     // If we get a 429, wait and retry
     if (res.status === 429) {
@@ -102,8 +98,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     }
 
     // Try to get the response text first
-    const textResponse = await res.text();
-    console.log("Raw response:", textResponse);
+    // const textResponse = await res.text();
+    // console.log("Raw response:", textResponse);
       if (data.errors) {
         console.log("Login errors:", data.errors[0]);
         dispatch({
@@ -113,7 +109,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         throw new Error(data.errors[0]);
       }
       const loggedUser = data.data.loginUser;
-      console.log("Logged in user", loggedUser);
+      // console.log("Logged in user", loggedUser);
       dispatch({ type: 'auth/created', payload: loggedUser });
       await checkAuthStatus();
     } catch (error) {

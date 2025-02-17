@@ -1,16 +1,27 @@
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
-import { Password } from '../context/passwordContext/PasswordContext';
+import React, { useEffect, useState } from 'react';
+import { Password } from '../context/passwordContext';
 import usePasswords from '../hook/usePassword';
 import styles from './PasswordsList.module.css';
 import Spinner from './Spinner';
 
 function PasswordsList() {
-  const { passwords, isLoading, error, setCurrentPassword, deletePassword } =
-    usePasswords();
+  const {
+    passwords,
+    isLoading,
+    error,
+    setCurrentPassword,
+    deletePassword,
+    fetchPasswords,
+  } = usePasswords();
   const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPasswords();
+  }, [fetchPasswords]);
+
   const handleEditing = function (password: Password) {
     setCurrentPassword(password);
   };

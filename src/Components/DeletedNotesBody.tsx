@@ -1,5 +1,6 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
 import useDeleted from '../hook/useDeleted';
 import { formatDate } from '../util/formatDate';
 import { shortentext } from '../util/shortenText';
@@ -10,7 +11,13 @@ const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
 
 export default function DeletedNotesBody() {
-  const { deletedNotes, isLoading, restoreDeletedNotes } = useDeleted();
+  const { deletedNotes, isLoading, restoreDeletedNotes, fetchDeletedItems } =
+    useDeleted();
+
+  useEffect(() => {
+    fetchDeletedItems();
+  }, [fetchDeletedItems]);
+
   if (isLoading) return <Spinner />;
 
   function handleClick(noteId: string) {

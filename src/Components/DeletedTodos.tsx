@@ -1,5 +1,6 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
 import useDeleted from '../hook/useDeleted';
 import { formatDate } from '../util/formatDate';
 import { shortentext } from '../util/shortenText';
@@ -10,7 +11,12 @@ const WORDS_BODY_LIMIT = 10;
 const WORDS_HEAD_LIMIT = 3;
 
 export default function DeletedTodos() {
-  const { deletedTodos, isLoading, restoreDeletedTodo } = useDeleted();
+  const { deletedTodos, isLoading, restoreDeletedTodo, fetchDeletedItems } =
+    useDeleted();
+
+  useEffect(() => {
+    fetchDeletedItems();
+  }, [fetchDeletedItems]);
 
   // console.log("deleted Todos: ", deletedTodos);
   function handleClick(todoId: string) {

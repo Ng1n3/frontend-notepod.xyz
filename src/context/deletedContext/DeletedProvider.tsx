@@ -1,4 +1,4 @@
-import { Dispatch, useReducer } from 'react';
+import { Dispatch, useCallback, useReducer } from 'react';
 import { BASE_URL } from '../../util/Interfaces';
 import { NotesAction } from '../notesContext/types';
 import { PasswordAction } from '../passwordContext/types';
@@ -25,7 +25,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
     initalState
   );
 
-  async function fetchDeletedItems() {
+  const fetchDeletedItems = useCallback(async () => {
     dispatch({ type: 'loading' });
 
     try {
@@ -35,8 +35,8 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: `query GetDeletedItems($isDeleted: Boolean) {
-              getNotes(isDeleted: $isDeleted) {
-                id
+            getNotes(isDeleted: $isDeleted) {
+              id
                 title
                 body
                 isDeleted
@@ -92,7 +92,7 @@ function DeletedProvider({ children }: DeletedProviderProps) {
         payload: 'There was an error loading data...',
       });
     }
-  }
+  }, [dispatch]);
 
   // useEffect(function () {
   //   fetchDeletedItems();

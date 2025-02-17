@@ -1,11 +1,22 @@
 import { faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
 import useDeleted from '../hook/useDeleted';
 import styles from './DeletedPasswordBody.module.css';
 import Spinner from './Spinner';
 
 export default function DeletedPasswordBody() {
-  const { deletedPasswords, isLoading, restoreDeletedPassword } = useDeleted();
+  const {
+    deletedPasswords,
+    isLoading,
+    restoreDeletedPassword,
+    fetchDeletedItems,
+  } = useDeleted();
+
+  useEffect(() => {
+    fetchDeletedItems();
+  }, [fetchDeletedItems]);
+
   if (isLoading) return <Spinner />;
   function handleClick(passwordId: string) {
     restoreDeletedPassword(passwordId);
