@@ -89,7 +89,7 @@ function PasswordInput() {
         <header className={styles.header}>
           <h1>{isEditing ? 'Edit Password' : 'Add Password'}</h1>
           <Button disabled={isSubmitting}>
-            {isEditing ? 'Update' : 'Add Password'}
+            {isEditing ? 'Update' : 'Add'}
           </Button>
         </header>
         <div className={styles.inputContainer}>

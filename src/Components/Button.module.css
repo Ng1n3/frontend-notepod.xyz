@@ -16,3 +16,20 @@
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   transform: scale(1.05);
 }
+
+@media (max-width: 800px) {
+  .button {
+    width: 9.5rem;
+    font-size: 1.2rem;
+    padding: 0.7rem;
+    border-radius: 3px;
+  }
+}
+
+@media (max-width: 400px) {
+  .button {
+    width: 8rem;
+    font-size: 1.1rem;
+    padding: 0.6rem;
+  }
+}

@@ -47,3 +47,18 @@
 .icon {
   color: var(--color-white-1);
 }
+
+@media (max-width: 800px) {
+  .tab {
+    width: 9.5rem;
+    padding: 0.25rem .015rem;
+  }
+
+  .tab h2 {
+    font-size: 1.25rem;
+  }
+
+  .icon {
+    font-size: 1rem;
+  }
+}

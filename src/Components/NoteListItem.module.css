@@ -1,6 +1,6 @@
 .body {
   padding: 1.2rem;
-  width: 25rem;
+  width: 100%;
   border: 1px solid var(--color-white-2);
   border-radius: 5px;
   cursor: pointer;
@@ -32,4 +32,27 @@ justify-content: space-between;
 
 .body .h3s {
   margin-top: 1.2rem;
+}
+
+@media (max-width: 1000px) {
+  .body {
+    padding: 1.2rem;
+    width: 85%;
+  }
+
+  .body:not(:first-child) {
+    margin-top: 1.5rem;
+  }
+
+  .body p {
+    font-size: 1.2rem;
+  }
+
+  .body h2 {
+    font-size: 1.35rem;
+  }
+
+  .body h3 {
+    font-size: 1.1rem;;
+  }
 }

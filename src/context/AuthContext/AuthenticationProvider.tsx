@@ -64,8 +64,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
 
   async function loginAuth(user: Auth) {
     dispatch({ type: 'loading' });
-    console.log("Login attempt with:", user.email);
-    console.log("Using BASE_URL:", BASE_URL);
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
@@ -166,7 +164,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
 
   async function signout() {
     dispatch({ type: 'loading' });
-    console.log("trying to signout");
     try {
       await fetch(BASE_URL, {
         method: 'POST',
@@ -184,7 +181,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           }`,
         }),
       });
-      console.log("Signed out!!");
       dispatch({ type: 'auth/loaded', payload: null });
     } catch (error) {
       dispatch({

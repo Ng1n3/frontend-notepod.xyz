@@ -88,7 +88,7 @@ export default function CurrentTodoHeader({
       {/* <h1>Title</h1> */}
       <EditorContent editor={editor} />
       <Button onClick={handleClick}>
-        {currentTodo ? 'update Todo' : 'Add Todo'}
+        {currentTodo ? 'update' : 'Add'}
       </Button>
     </div>
   );

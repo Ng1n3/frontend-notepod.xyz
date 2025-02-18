@@ -14,3 +14,9 @@ p {
 .note h2, .note h3 {
   color: var(--color-white-2)
 }
+
+@media (max-width: 1000px) {
+  .note {
+    width: 65%
+  }
+}

@@ -14,5 +14,11 @@
 }
 
 .todo li span {
-  margin-right: 1.2rem
+  margin-right: 1.2rem;
+}
+
+@media (max-width: 1000px) {
+  .todo {
+    width: 65%;
+  }
 }

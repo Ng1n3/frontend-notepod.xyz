@@ -4,3 +4,9 @@
   font-weight: 500;
   cursor: pointer;
 }
+
+@media (max-width: 40rem) {
+  .logo {
+    font-size: 1.5rem;
+  }
+}

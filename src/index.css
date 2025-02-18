@@ -27,7 +27,7 @@ body {
   line-height: 1.6;
   background: var(--color-bg-1);
   margin: 1.1rem auto;
-  max-width: 144rem;
+  max-width: 120rem;
   padding: 0 2.5rem;
   height: 100vh;
 }
@@ -66,4 +66,10 @@ ol {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+@media (max-width: 850px) {
+  body {
+    padding: 0 1.5rem;
+  }
 }
