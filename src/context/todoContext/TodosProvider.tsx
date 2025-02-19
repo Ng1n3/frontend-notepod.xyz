@@ -58,13 +58,6 @@ function TodoProvider({ children }: TodoProviderProps) {
     }
   }, [dispatch]);
 
-  // useEffect(
-  //   function () {
-  //     fetchTodos();
-  //   },
-  //   [fetchTodos]
-  // );
-
   async function createTodo(newTodo: Todo) {
     dispatch({ type: 'loading' });
     try {

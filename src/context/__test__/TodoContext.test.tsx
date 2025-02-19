@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import useTodos from '../../hook/useTodos';
-import { TodoProvider } from '../todoContext/TodoContext';
+import { TodoProvider } from '../todoContext/';
 
 const TestTodoContext = () => {
   const { todos, isLoading } = useTodos();
@@ -38,7 +38,7 @@ const TestSingleTodo = ({ todoId }: { todoId: string }) => {
   const { isLoading, currentTodo, fetchTodo } = useTodos();
   return (
     <>
-      <button data-testid="fetch-todo" onClick={() => fetchTodo(todoId)}>
+      <button data-testid="fetch-todo" onClick={() => fetchTodo(todoId, false)}>
         Fetch Todo
       </button>
       <div data-testid="current-todo">

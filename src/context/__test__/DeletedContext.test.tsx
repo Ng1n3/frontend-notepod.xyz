@@ -6,10 +6,10 @@ import useDeleted from '../../hook/useDeleted';
 import { useNotes } from '../../hook/useNotes';
 import usePasswords from '../../hook/usePassword';
 import useTodos from '../../hook/useTodos';
-import { DeletedProvider } from '../deletedContext/DeletedContext';
+import { DeletedProvider } from '../deletedContext/';
 import { NotesProvider } from '../notesContext/';
-import { PasswordProvider } from '../passwordContext/PasswordContext';
-import { TodoProvider } from '../todoContext/TodoContext';
+import { PasswordProvider } from '../passwordContext/';
+import { TodoProvider } from '../todoContext/';
 
 const TestDeletedContext = () => {
   const { isLoading, deletedNotes, deletedPasswords, deletedTodos } =

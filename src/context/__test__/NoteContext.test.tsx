@@ -1,7 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
-// import { nanoid } from 'nanoid';
-// import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe } from 'vitest';
 import {useNotes} from '../../hook/useNotes';
@@ -44,7 +42,7 @@ const TestSingleNoteContext = ({ noteId }: { noteId: string }) => {
 
   return (
     <>
-      <button data-testid="fetch-note" onClick={() => fetchNote(noteId)}>
+      <button data-testid="fetch-note" onClick={() => fetchNote(noteId, false)}>
         Fetch Note
       </button>
       {isLoading ? (
