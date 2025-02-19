@@ -8,6 +8,8 @@ import { createSignupSchema, CreateSignupSchema } from '../util/types';
 import Button from './Button';
 import Signin, { destinationProps } from './Signin';
 import styles from './Signup.module.css';
+import Header from './Header';
+import Footer from './Footer';
 
 interface SignUpCredentials {
   email: string;
@@ -96,37 +98,41 @@ export default function Signup({ destination }: destinationProps) {
   }
 
   return (
-    <div className={styles.body}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <header>Create your Notepod account</header>
-        <div>
-          <div className={styles.input}>
-            <input {...register('email')} type="text" placeholder="Email" />
-            {errors.email && <p>{`${errors.email?.message}`}</p>}
+    <>
+    <Header/>
+      <div className={styles.body}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <header>Create your Notepod account</header>
+          <div>
+            <div className={styles.input}>
+              <input {...register('email')} type="text" placeholder="Email" />
+              {errors.email && <p>{`${errors.email?.message}`}</p>}
+            </div>
+            <div className={styles.input}>
+              <input
+                {...register('username')}
+                type="text"
+                placeholder="Username"
+              />
+              {errors.username && <p>{`${errors.username?.message}`}</p>}
+            </div>
+            <div className={styles.input}>
+              <input
+                {...register('password')}
+                type="password"
+                placeholder="Password"
+              />
+              {errors.password && <p>{`${errors.password?.message}`}</p>}
+            </div>
+            <Button disabled={isSubmitting}>Sign up</Button>
           </div>
-          <div className={styles.input}>
-            <input
-              {...register('username')}
-              type="text"
-              placeholder="Username"
-            />
-            {errors.username && <p>{`${errors.username?.message}`}</p>}
+          <div className={styles.signup}>
+            Already a NotePoder?{' '}
+            <span onClick={() => setShowSignin(true)}>Sign in</span>
           </div>
-          <div className={styles.input}>
-            <input
-              {...register('password')}
-              type="password"
-              placeholder="Password"
-            />
-            {errors.password && <p>{`${errors.password?.message}`}</p>}
-          </div>
-          <Button disabled={isSubmitting}>Sign up</Button>
-        </div>
-        <div className={styles.signup}>
-          Already a NotePoder?{' '}
-          <span onClick={() => setShowSignin(true)}>Sign in</span>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+      <Footer/>
+    </>
   );
 }

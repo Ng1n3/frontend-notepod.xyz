@@ -186,7 +186,7 @@ function App() {
                   <ToastContainer
                     theme="light"
                     position="top-left"
-                    autoClose={5000}
+                    autoClose={1000}
                     closeOnClick
                     transition={Slide}
                   />

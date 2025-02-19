@@ -4,9 +4,10 @@ import { useForm } from 'react-hook-form';
 import { Slide, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../hook/useAuth';
-// import useSafeNavigate from '../hook/useSafeNavigate';
 import { createSigninSchema, CreateSigninSchema } from '../util/types';
 import Button from './Button';
+import Footer from './Footer';
+import Header from './Header';
 import Signup from './Signup';
 import styles from './Signup.module.css';
 
@@ -21,26 +22,7 @@ export interface destinationProps {
 
 export default function Signin({ destination }: destinationProps) {
   const [showSignin, setShowSignin] = useState(false);
-  // const navigate = useSafeNavigate();
   const { loginAuth } = useAuth();
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate(destination === 'notes' ? '/notes' : '/todos');
-  //   }
-  // }, [isAuthenticated, navigate, destination]);
-
-  // useEffect(() => {
-  //   console.log('isAuthenticated:', isAuthenticated); // Debugging
-  //   if (isAuthenticated) {
-  //     console.log(
-  //       'Redirecting to:',
-  //       destination === 'notes' ? '/notes' : '/todos'
-  //     ); // Debugging
-  //     navigate(destination === 'notes' ? '/notes' : '/todos');
-  //   }
-  // }, [isAuthenticated, navigate, destination]);
-
   const {
     register,
     handleSubmit,
@@ -68,8 +50,6 @@ export default function Signin({ destination }: destinationProps) {
         transition: Slide,
         hideProgressBar: false,
       });
-
-      // navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);
       let errorMessage = 'Incorrect Credentials please try again';
@@ -102,32 +82,36 @@ export default function Signin({ destination }: destinationProps) {
   }
 
   return (
-    <div className={styles.body}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <header>Sign in to you Notepod account</header>
-        <div>
-          <div className={styles.input}>
-            <input {...register('email')} type="text" placeholder="Email" />
-            {errors.email && <p>{`${errors.email?.message}`}</p>}
+    <>
+      <Header />
+      <div className={styles.body}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <header>Signin to use Notepod</header>
+          <div>
+            <div className={styles.input}>
+              <input {...register('email')} type="text" placeholder="Email" />
+              {errors.email && <p>{`${errors.email?.message}`}</p>}
+            </div>
+            <div className={styles.input}>
+              <input
+                {...register('password')}
+                type="password"
+                placeholder="Password"
+              />
+              {errors.password && <p>{`${errors.password?.message}`}</p>}
+            </div>
+            <Button disabled={isSubmitting}>Sign in</Button>
           </div>
-          <div className={styles.input}>
-            <input
-              {...register('password')}
-              type="password"
-              placeholder="Password"
-            />
-            {errors.password && <p>{`${errors.password?.message}`}</p>}
+          <div className={styles.forgotPassword}>
+            Forgot NotePod <span>Password?</span>
           </div>
-          <Button disabled={isSubmitting}>Sign in</Button>
-        </div>
-        <div className={styles.forgotPassword}>
-          Forgot NotePod <span>Password?</span>
-        </div>
-        <div className={styles.signup}>
-          New to NotePod?{' '}
-          <span onClick={() => setShowSignin(true)}>Sign up</span>
-        </div>
-      </form>
-    </div>
+          <div className={styles.signup}>
+            New to NotePod?{' '}
+            <span onClick={() => setShowSignin(true)}>Sign up</span>
+          </div>
+        </form>
+      </div>
+      <Footer />
+    </>
   );
 }
