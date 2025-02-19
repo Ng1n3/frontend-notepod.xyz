@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Slide, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../hook/useAuth';
-import useSafeNavigate from '../hook/useSafeNavigate';
+// import useSafeNavigate from '../hook/useSafeNavigate';
 import { createSigninSchema, CreateSigninSchema } from '../util/types';
 import Button from './Button';
 import Signup from './Signup';
@@ -21,14 +21,25 @@ export interface destinationProps {
 
 export default function Signin({ destination }: destinationProps) {
   const [showSignin, setShowSignin] = useState(false);
-  const navigate = useSafeNavigate();
-  const { loginAuth, isAuthenticated } = useAuth();
+  // const navigate = useSafeNavigate();
+  const { loginAuth } = useAuth();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(destination === 'notes' ? '/notes' : '/todos');
-    }
-  }, [isAuthenticated, navigate, destination]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate(destination === 'notes' ? '/notes' : '/todos');
+  //   }
+  // }, [isAuthenticated, navigate, destination]);
+
+  // useEffect(() => {
+  //   console.log('isAuthenticated:', isAuthenticated); // Debugging
+  //   if (isAuthenticated) {
+  //     console.log(
+  //       'Redirecting to:',
+  //       destination === 'notes' ? '/notes' : '/todos'
+  //     ); // Debugging
+  //     navigate(destination === 'notes' ? '/notes' : '/todos');
+  //   }
+  // }, [isAuthenticated, navigate, destination]);
 
   const {
     register,
@@ -57,6 +68,7 @@ export default function Signin({ destination }: destinationProps) {
         transition: Slide,
         hideProgressBar: false,
       });
+
       // navigate(destination === 'notes' ? '/notes' : '/todos');
     } catch (error) {
       console.error(error);

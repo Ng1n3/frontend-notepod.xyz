@@ -9,3 +9,11 @@
     margin: 0rem;
   }
 }
+
+@media (max-width: 600px) {
+  .body {
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 0 1.5rem;
+  }
+}

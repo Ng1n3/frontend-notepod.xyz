@@ -67,3 +67,43 @@
   font-size: 1.4rem;
   color: var(--color-white-1);
 }
+
+@media (max-width: 1000px) {
+  .body button {
+    width: 25rem;
+  }
+
+  .body header {
+    font-size: 1.7rem;
+   }
+}
+
+@media (max-width: 800px) {
+  .body button {
+    width: 22rem;
+    padding: 1rem;
+  }
+
+  .body header {
+    font-size: 1.6rem;
+   }
+
+   .body .forgotPassword {
+    font-size: 1.1rem;
+  }
+
+   .body .forgotPassword span {
+    font-size: 1.2rem;
+  }
+
+  .body input {
+    padding: .7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .body {
+    width: 100%;
+    margin-top: 3.5rem;
+  }
+}

@@ -29,6 +29,7 @@ export default function Header() {
   }
   function handleSignout() {
     signout();
+    navigate('/signin')
   }
   return (
     <div className={styles.header}>

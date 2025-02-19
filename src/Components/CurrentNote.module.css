@@ -20,3 +20,12 @@ p {
     width: 65%
   }
 }
+
+@media (max-width: 600px) {
+  .note {
+    width: 100%;
+    border: none;
+    padding: 0 1.5rem;
+    margin: 1.5rem 0;
+  }
+}
