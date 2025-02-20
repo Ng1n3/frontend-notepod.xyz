@@ -82,10 +82,10 @@ export default function NotesBody() {
   return (
     <>
       {windowWidth > 600 ? (
-        <>
+        <div className={styles.body}>
           <CurrentNote />
           <List type="note" />
-        </>
+        </div>
       ) : (
         <>
           {showCurrentNote ? <CurrentNote /> : <List type="note" />}
